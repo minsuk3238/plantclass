@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>스누피가든 식물 탐험대</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 유저가 발급받은 Client ID 적용 완료 -->
+    <script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=8t7c3mzp0c"></script>
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+            background-color: #f3f4f6;
+        }
+        #map {
+            width: 100%;
+            height: calc(100% - 60px);
+        }
+        .bottom-bar {
+            height: 60px;
+        }
+        
+        .marker-label {
+            background-color: white;
+            border: 2px solid #10b981;
+            border-radius: 20px;
+            padding: 4px 10px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #1f2937;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transform: translate(-50%, -100%);
+            margin-top: -10px;
+            white-space: nowrap;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .spinner {
+            border: 4px solid rgba(0,0,0,0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: #10b981;
+            animation: spin 1s linear infinite;
+        }
+    </style>
+</head>
+<body class="flex flex-col h-screen relative">
+
+    <!-- 헤더 -->
+    <header class="bg-white shadow-sm z-10 p-4 flex justify-between items-center h-[60px] shrink-0">
+        <div class="flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
+            </svg>
+            <h1 class="text-lg font-bold text-gray-800">스누피가든 탐험대</h1>
+        </div>
+        <div class="text-sm font-medium text-green-600 bg-green-50 px-3 py-1 rounded-full">
+            수집: 0/3
+        </div>
+    </header>
+
+    <!-- 지도 컨테이너 -->
+    <div class="relative flex-grow h-full w-full">
+        <div id="map"></div>
+        
+        <!-- 로딩 오버레이 -->
+        <div id="loadingOverlay" class="absolute inset-0 bg-white flex flex-col justify-center items-center z-20">
+            <div class="spinner mb-4"></div>
+            <p class="text-gray-600 font-medium">지도를 불러오는 중...</p>
+        </div>
+
+        <!-- 내 위치 버튼 -->
+        <button id="myLocationBtn" class="absolute bottom-6 right-4 bg-white p-3 rounded-full shadow-lg border border-gray-100 text-gray-700 hover:text-green-500 hover:bg-gray-50 focus:outline-none transition-colors z-10">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+        </button>
+    </div>
+
+    <!-- 하단 바 -->
+    <div class="bottom-bar bg-white border-t border-gray-200 shadow-[0_-2px_10px_rgba(0,0,0,0.05)] px-4 flex items-center justify-between z-10 shrink-0">
+        <div class="flex-1 truncate">
+            <p class="text-xs text-gray-500 font-medium mb-0.5">다음 목표</p>
+            <p class="text-sm font-bold text-gray-800 truncate" id="currentMissionText">지도에서 식물 스팟을 찾아보세요!</p>
+        </div>
+        <button id="missionListBtn" class="ml-3 bg-green-500 hover:bg-green-600 text-white text-sm font-bold py-2 px-4 rounded-lg transition-colors shadow-sm whitespace-nowrap">
+            미션 목록
+        </button>
+    </div>
+
+    <!-- 식물 정보 모달 -->
+    <div id="infoModal" class="fixed inset-0 bg-black/50 hidden flex-col justify-end z-50 transition-opacity">
+        <div class="bg-white w-full rounded-t-3xl p-6 transform transition-transform translate-y-full" id="infoModalContent">
+            <div class="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-5"></div>
+            
+            <div class="flex justify-between items-start mb-4">
+                <h2 id="modalTitle" class="text-xl font-bold text-gray-900">식물 이름</h2>
+                <span id="modalCategory" class="text-xs font-bold px-2 py-1 bg-green-100 text-green-700 rounded text-center min-w-[50px]">분류</span>
+            </div>
+            
+            <div class="w-full h-40 bg-gray-100 rounded-xl mb-4 flex items-center justify-center overflow-hidden">
+                <img id="modalImage" src="https://placehold.co/400x200/e2e8f0/64748b?text=Plant+Image" alt="식물 이미지" class="w-full h-full object-cover">
+            </div>
+            
+            <p id="modalDesc" class="text-sm text-gray-600 mb-6 leading-relaxed"></p>
+            
+            <div class="flex gap-3">
+                <button id="closeModalBtn" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-3 rounded-xl transition-colors">
+                    닫기
+                </button>
+                <button id="completeMissionBtn" class="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl transition-colors shadow-sm flex justify-center items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                    </svg>
+                    탐험 완료
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 토스트 메시지 컨테이너 -->
+    <div id="toastContainer" class="fixed top-20 left-1/2 transform -translate-x-1/2 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <script>
+        const SNOOPY_GARDEN_LAT = 33.4398; 
+        const SNOOPY_GARDEN_LNG = 126.7865;
+
+        const missionSpots = [
+            {
+                id: 1,
+                title: "비자나무 숲",
+                category: "희귀식물",
+                lat: 33.4402,
+                lng: 126.7860,
+                desc: "수백 년 된 비자나무가 가득한 신비로운 숲입니다. 우드스탁이 좋아하는 아늑한 장소일지도 몰라요.",
+                completed: false
+            },
+            {
+                id: 2,
+                title: "동백꽃 정원",
+                category: "꽃",
+                lat: 33.4395,
+                lng: 126.7872,
+                desc: "겨울에 붉게 피어나는 아름다운 동백꽃을 볼 수 있습니다. 샐리가 좋아할 만한 화려한 색감이네요.",
+                completed: false
+            },
+            {
+                id: 3,
+                title: "고사리 언덕",
+                category: "양치식물",
+                lat: 33.4390,
+                lng: 126.7862,
+                desc: "제주도의 곶자왈 느낌을 살린 고사리가 무성한 곳입니다. 스누피와 함께 정글 탐험을 떠나볼까요?",
+                completed: false
+            }
+        ];
+
+        let map = null;
+        let markers = [];
+        let userMarker = null;
+
+        // 알림창(alert) 대체용 토스트 메시지 함수
+        function showToast(message) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'bg-gray-800/90 text-white px-5 py-3 rounded-full shadow-lg text-sm transition-all duration-300 transform translate-y-[-20px] opacity-0';
+            toast.textContent = message;
+            
+            container.appendChild(toast);
+            
+            // 나타나는 애니메이션
+            requestAnimationFrame(() => {
+                toast.classList.remove('translate-y-[-20px]', 'opacity-0');
+            });
+            
+            // 3초 후 사라지는 애니메이션
+            setTimeout(() => {
+                toast.classList.add('opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        function initMap() {
+            if (typeof naver === 'undefined' || typeof naver.maps === 'undefined') {
+                document.getElementById('loadingOverlay').innerHTML = `
+                    <div class="text-red-500 mb-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                    </div>
+                    <p class="text-gray-800 font-bold mb-1">지도 로딩 실패</p>
+                    <p class="text-sm text-gray-500 text-center px-4">네이버 콘솔에서 도메인(Web 서비스 URL) 등록을 확인해주세요.</p>
+                `;
+                return;
+            }
+
+            const mapOptions = {
+                center: new naver.maps.LatLng(SNOOPY_GARDEN_LAT, SNOOPY_GARDEN_LNG),
+                zoom: 16,
+                minZoom: 14,
+                maxZoom: 20,
+                mapTypeId: naver.maps.MapTypeId.NORMAL,
+                zoomControl: true,
+                zoomControlOptions: { position: naver.maps.Position.TOP_RIGHT }
+            };
+
+            map = new naver.maps.Map('map', mapOptions);
+
+            naver.maps.Event.once(map, 'init', function() {
+                document.getElementById('loadingOverlay').style.display = 'none';
+                addMissionMarkers();
+            });
+        }
+
+        function addMissionMarkers() {
+            missionSpots.forEach(spot => {
+                const markerHtml = `
+                    <div class="relative cursor-pointer hover:scale-110 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-${spot.completed ? 'gray-400' : 'green-600'} drop-shadow-md" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+                        </svg>
+                        <div class="marker-label absolute left-1/2 top-0">${spot.title}</div>
+                    </div>
+                `;
+
+                const marker = new naver.maps.Marker({
+                    position: new naver.maps.LatLng(spot.lat, spot.lng),
+                    map: map,
+                    icon: {
+                        content: markerHtml,
+                        size: new naver.maps.Size(40, 40),
+                        anchor: new naver.maps.Point(20, 40)
+                    }
+                });
+
+                markers.push(marker);
+
+                naver.maps.Event.addListener(marker, 'click', function(e) {
+                    openInfoModal(spot);
+                });
+            });
+        }
+
+        const infoModal = document.getElementById('infoModal');
+        const infoModalContent = document.getElementById('infoModalContent');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const completeMissionBtn = document.getElementById('completeMissionBtn');
+
+        let currentActiveSpot = null;
+
+        function openInfoModal(spot) {
+            currentActiveSpot = spot;
+            
+            document.getElementById('modalTitle').textContent = spot.title;
+            document.getElementById('modalCategory').textContent = spot.category;
+            document.getElementById('modalDesc').textContent = spot.desc;
+            
+            if (spot.completed) {
+                completeMissionBtn.textContent = "탐험 완료됨";
+                completeMissionBtn.classList.replace('bg-green-500', 'bg-gray-400');
+                completeMissionBtn.classList.replace('hover:bg-green-600', 'hover:bg-gray-500');
+                completeMissionBtn.disabled = true;
+            } else {
+                completeMissionBtn.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                    </svg>
+                    탐험 완료하기
+                `;
+                completeMissionBtn.classList.replace('bg-gray-400', 'bg-green-500');
+                completeMissionBtn.classList.replace('hover:bg-gray-500', 'hover:bg-green-600');
+                completeMissionBtn.disabled = false;
+            }
+
+            infoModal.classList.remove('hidden');
+            infoModal.classList.add('flex');
+            
+            setTimeout(() => {
+                infoModalContent.classList.remove('translate-y-full');
+            }, 10);
+        }
+
+        function closeInfoModal() {
+            infoModalContent.classList.add('translate-y-full');
+            setTimeout(() => {
+                infoModal.classList.add('hidden');
+                infoModal.classList.remove('flex');
+                currentActiveSpot = null;
+            }, 300);
+        }
+
+        closeModalBtn.addEventListener('click', closeInfoModal);
+        infoModal.addEventListener('click', function(e) {
+            if (e.target === infoModal) closeInfoModal();
+        });
+
+        completeMissionBtn.addEventListener('click', function() {
+            if (currentActiveSpot && !currentActiveSpot.completed) {
+                currentActiveSpot.completed = true;
+                
+                document.getElementById('currentMissionText').textContent = `${currentActiveSpot.title} 탐험 완료!`;
+                document.getElementById('currentMissionText').classList.add('text-green-600');
+                showToast(`🎉 ${currentActiveSpot.title} 탐험을 완료했습니다!`);
+                
+                setTimeout(() => {
+                    document.getElementById('currentMissionText').classList.remove('text-green-600');
+                    document.getElementById('currentMissionText').textContent = "다른 식물 스팟을 찾아보세요!";
+                }, 3000);
+
+                closeInfoModal();
+            }
+        });
+
+        document.getElementById('myLocationBtn').addEventListener('click', function() {
+            if (navigator.geolocation) {
+                this.classList.add('animate-pulse');
+                
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+                        const currentLatLng = new naver.maps.LatLng(lat, lng);
+
+                        if (map) {
+                            map.setCenter(currentLatLng);
+                            map.setZoom(17, true);
+                        }
+
+                        if (!userMarker) {
+                            userMarker = new naver.maps.Marker({
+                                position: currentLatLng,
+                                map: map,
+                                icon: {
+                                    content: '<div style="width:16px;height:16px;background-color:#3b82f6;border:3px solid white;border-radius:50%;box-shadow:0 2px 4px rgba(0,0,0,0.3);"></div>',
+                                    anchor: new naver.maps.Point(8, 8)
+                                }
+                            });
+                        } else {
+                            userMarker.setPosition(currentLatLng);
+                        }
+                        
+                        document.getElementById('myLocationBtn').classList.remove('animate-pulse');
+                        showToast('현재 위치를 확인했습니다.');
+                    },
+                    function(error) {
+                        console.error("Geolocation 에러:", error);
+                        showToast('위치 권한을 확인해주세요.');
+                        document.getElementById('myLocationBtn').classList.remove('animate-pulse');
+                    },
+                    { enableHighAccuracy: true, maximumAge: 0, timeout: 5000 }
+                );
+            } else {
+                showToast('브라우저에서 위치 정보를 지원하지 않습니다.');
+            }
+        });
+
+        window.onload = function() {
+            initMap();
+        };
+    </script>
+</body>
+</html>
