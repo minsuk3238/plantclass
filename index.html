@@ -129,6 +129,14 @@
         .view-content.active {
             display: block;
         }
+        
+        /* 맵 뷰 전용 Flex 활성화 */
+        #view-map.active {
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+            padding-bottom: 7rem; /* 하단 네비게이션 공간 여백 */
+        }
 
         .bottom-nav {
             position: absolute;
@@ -169,7 +177,7 @@
 
         .map-container {
             width: 100%;
-            height: calc(100% - 70px);
+            flex-grow: 1; /* 가용 영역을 모두 채우도록 변경 */
             position: relative;
             overflow: hidden;
             background-color: #e5e7eb;
@@ -184,7 +192,6 @@
             left: 0;
             transform-origin: 0 0;
             transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            /* 첨부된 지도 이미지(.jpg)의 실제 비율에 맞게 캔버스 사이즈 확장 */
             width: 1200px; 
             height: 1060px;
             background-image: url('./snoopy_garden_map.jpg'); 
@@ -296,6 +303,8 @@
             background-repeat: no-repeat;
             background-position: center;
         }
+        
+        /* 스탬프 디자인 업데이트 */
         .stamp-mark {
             position: absolute;
             top: 50%;
@@ -304,11 +313,25 @@
             color: var(--snoopy-red);
             font-family: 'NeutraText-Bold', 'Noto Sans KR', sans-serif;
             font-weight: 900;
-            font-size: 1.2rem;
+            font-size: 1.4rem;
             white-space: nowrap;
             text-shadow: 2px 2px 0px white, -2px -2px 0px white, 2px -2px 0px white, -2px 2px 0px white; 
+            border: 3px solid var(--snoopy-red);
+            padding: 4px 10px;
+            border-radius: 6px;
+            background-color: rgba(255, 255, 255, 0.75);
+            box-shadow: 0 0 4px rgba(255, 255, 255, 1);
             z-index: 10;
-            opacity: 0.9;
+        }
+
+        /* 스탬프 찍히는 애니메이션 */
+        @keyframes stampIn {
+            0% { transform: translate(-50%, -50%) rotate(-15deg) scale(3); opacity: 0; }
+            50% { transform: translate(-50%, -50%) rotate(-15deg) scale(0.9); opacity: 1; }
+            100% { transform: translate(-50%, -50%) rotate(-15deg) scale(1); opacity: 1; }
+        }
+        .stamp-anim {
+            animation: stampIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
     </style>
 </head>
@@ -328,8 +351,8 @@
                     THE DOCTOR IS IN
                 </div>
                 <div class="flex justify-center mb-4 mt-2">
-                    <div class="w-24 h-24 bg-blue-100 rounded-full border-3 border-black flex items-center justify-center overflow-hidden">
-                        <i class="fa-solid fa-user-doctor text-4xl text-blue-500"></i>
+                    <div class="w-24 h-24 bg-yellow-100 rounded-full border-[3px] border-black flex items-center justify-center overflow-hidden">
+                        <img src="./lucy_doctor.png" alt="의사 루시" class="w-full h-full object-contain pt-2 scale-110">
                     </div>
                 </div>
                 <p class="font-bold text-center text-gray-800 leading-relaxed mb-4">
@@ -363,8 +386,8 @@
             </div>
 
             <div class="flex items-end mb-6">
-                <div class="w-12 h-12 bg-blue-100 rounded-full border-2 border-black flex items-center justify-center shrink-0 z-10 mr-[-10px]">
-                    <i class="fa-solid fa-user-doctor text-xl text-blue-500"></i>
+                <div class="w-12 h-12 bg-yellow-100 rounded-full border-2 border-black flex items-center justify-center shrink-0 z-10 mr-[-10px] overflow-hidden">
+                    <img src="./lucy_doctor.png" alt="루시" class="w-full h-full object-contain pt-1 scale-125 transform origin-bottom">
                 </div>
                 <div class="comic-bubble text-sm font-bold leading-relaxed flex-1" id="lucy-dialogue">
                     로딩중...
@@ -381,8 +404,9 @@
         </div>
 
         <!-- VIEW 3: MAP -->
-        <div id="view-map" class="view-content" style="padding: 0;">
-            <div class="absolute top-0 left-0 w-full bg-[#2E9441] border-b-3 border-black p-3 z-50 flex justify-between items-center shadow-sm text-white">
+        <div id="view-map" class="view-content" style="padding: 0; display: none;">
+            <!-- 지도가 겹치지 않게 absolute 제거하고 플렉스로 배치 -->
+            <div class="w-full bg-[#2E9441] border-b-3 border-black p-3 z-50 flex justify-between items-center shadow-sm text-white shrink-0">
                 <h2 class="text-xl font-black title-font">루시의 야외가든 지도</h2>
             </div>
             
@@ -414,7 +438,8 @@
                 
                 <div class="w-32 h-32 mx-auto relative mb-4 rounded-lg comic-border overflow-hidden bg-white flex items-center justify-center p-2">
                     <img id="success-comic-img" src="" class="w-full h-full object-contain">
-                    <div class="stamp-mark" style="font-size: 1.5rem;">처방완료</div>
+                    <!-- ID를 부여하여 애니메이션 조작 -->
+                    <div id="success-stamp" class="stamp-mark opacity-0" style="font-size: 1.5rem;">CLEAR</div>
                 </div>
                 
                 <h3 class="font-black text-xl mb-2" id="success-plant-name">식물명</h3>
@@ -446,7 +471,6 @@
             map: { scale: 1, x: 0, y: 0, isDragging: false, startX: 0, startY: 0 }
         };
 
-        // 지도가 넓어졌으므로 핀포인트들의 좌표를 1200x1060 영역 안에서 골고루 분산되도록 조정했습니다.
         const DB_PLANTS = {
             "p_canaria": {
                 id: "p_canaria", name: "카나리아야자", type: "상록수", month: "5월",
@@ -629,7 +653,7 @@
             
             let popupHtml = `<span>${plant.name}</span>`;
             if(isCollected) {
-                popupHtml += `<button class="mt-1 bg-gray-400 text-white text-xs px-3 py-1 rounded-full font-bold cursor-default">처방완료</button>`;
+                popupHtml += `<button class="mt-1 bg-gray-400 text-white text-xs px-3 py-1 rounded-full font-bold cursor-default">CLEAR</button>`;
             } else {
                 popupHtml += `<button onclick="loadMission('${plant.id}')" class="mt-1 bg-[#2E9441] text-white text-xs px-3 py-1 rounded-full font-bold shadow-md active:scale-95 transition-transform">상담 시작</button>`;
             }
@@ -654,10 +678,15 @@
 
     function resetMapZoom() {
         const container = document.getElementById('map-container');
-        // 가로가 1200px인 지도이므로 비율 스케일 계산 조정
-        state.map.scale = Math.min(container.clientWidth / 1200, 1);
-        state.map.x = 0; 
-        state.map.y = 0; 
+        
+        // 지도가 컨테이너 너비에 맞게 시작하도록 스케일 조정 (가로 1200px 기준)
+        const scale = container.clientWidth / 1200;
+        state.map.scale = Math.max(scale, 0.3); // 너무 작아지는 것 방지
+        
+        // 지도를 가로축 가운데, 세로축은 살짝 내려오게 초기 위치 계산
+        state.map.x = (container.clientWidth - (1200 * state.map.scale)) / 2;
+        state.map.y = 20; 
+        
         document.querySelectorAll('.pin-popup').forEach(p => p.classList.remove('show'));
         document.querySelectorAll('.map-pin').forEach(p => p.classList.remove('active-pin'));
         updateMapTransform();
@@ -778,9 +807,23 @@
         
         const modal = document.getElementById('success-modal');
         const card = document.getElementById('success-card');
+        const stamp = document.getElementById('success-stamp');
+        
+        // 애니메이션 초기화
+        stamp.classList.remove('stamp-anim');
+        stamp.style.opacity = '0';
         
         modal.classList.remove('opacity-0', 'pointer-events-none');
-        setTimeout(() => { card.classList.remove('scale-90'); card.classList.add('scale-100'); }, 50);
+        
+        setTimeout(() => { 
+            card.classList.remove('scale-90'); 
+            card.classList.add('scale-100'); 
+            
+            // 모달 카드가 다 튀어나온 뒤(0.3초 뒤)에 스탬프 꽝!
+            setTimeout(() => {
+                stamp.classList.add('stamp-anim');
+            }, 300);
+        }, 50);
     }
 
     function closeSuccessAndGoToCollection() {
@@ -805,7 +848,7 @@
             if(isCollected) {
                 slot.className = "stamp-slot collected";
                 slot.style.backgroundImage = `url('${plant.comicImg}'), url('https://placehold.co/400x400/FFCC00/000?text=${plant.name}+Comic')`;
-                slot.innerHTML = `<div class="stamp-mark">처방완료</div>`;
+                slot.innerHTML = `<div class="stamp-mark">CLEAR</div>`;
             } else {
                 slot.className = "stamp-slot";
                 slot.innerHTML = `
