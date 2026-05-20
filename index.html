@@ -8,6 +8,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;700;900&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- 이미지 저장을 위한 라이브러리 추가 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <style>
         @font-face {
@@ -320,10 +323,12 @@
 
         #view-certificate {
             padding: 0;
-            background-color: #1a1a1a;
+            background-color: #f3f4f6;
             display: none;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
+            overflow-y: auto;
         }
         #view-certificate.active {
             display: flex;
@@ -332,66 +337,90 @@
         .cert-wrapper {
             position: relative;
             width: 100%;
-            max-width: 420px; /* 모바일 폭에 맞춤 */
+            max-width: 420px; 
             aspect-ratio: 1536 / 2754;
-            /* 파일명을 업로드하신 이미지 이름으로 변경했습니다 */
             background-image: url('./certification background.png'); 
             background-size: cover;
             background-position: center;
-            container-type: inline-size; /* 컨테이너 쿼리로 내부 폰트 크기 조절 */
+            container-type: inline-size; 
             box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            background-color: white; /* html2canvas 투명 방지 */
         }
 
+        /* 텍스트 줄임 및 크기 조정 */
         .cert-header-title {
             position: absolute;
-            top: 7.98%; /* 220 / 2754 */
+            top: 7%; /* 약간 위로 조정 */
             left: 50%;
             transform: translateX(-50%);
-            font-family: 'NeutraText-Bold', sans-serif;
-            font-size: 8cqi;
+            width: 80%;
+            text-align: center;
+            font-family: 'NeutraText-Bold', 'Jua', sans-serif;
+            font-size: 6.5cqi; /* 폰트 축소 */
             color: var(--main-green);
             white-space: nowrap;
+            letter-spacing: -0.5px;
         }
 
+        /* 두루마리 내부 레이아웃 재정비 */
         .cert-content-box {
             position: absolute;
-            /* 좌표 계산: X(418/1536)=27.21%, Y(1673/2754)=60.74%, W(709/1536)=46.15%, H(558/2754)=20.26% */
             left: 27.21%;
             top: 60.74%;
             width: 46.15%;
-            height: 20.26%;
+            height: 18%; /* 도장에 닿지 않게 높이 축소 */
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: flex-start;
-            padding: 2%;
-            /* border: 1px dashed red; 가이드라인 확인용 (필요시 삭제) */
+            justify-content: center; /* 수직 중앙 정렬 */
+            align-items: center;     /* 가로 중앙 정렬 */
+            gap: 1.5cqi;             /* 행 간격 */
         }
 
         .cert-user-row {
             display: flex;
-            align-items: flex-end;
-            gap: 10px;
-            margin-bottom: 5%;
+            align-items: center; /* 이름과 이미지가 나란히 중앙 정렬되도록 */
+            justify-content: center;
+            gap: 2cqi;
+            width: 100%;
         }
 
         .cert-name-text {
-            font-size: 15cqi; /* 컨테이너 기준 폰트 스케일링 */
+            /* 폰트 크기는 JS에서 글자 수에 따라 12cqi ~ 8cqi 로 동적 변경됨 */
             line-height: 1;
             color: #000;
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        /* 액자 느낌의 프레임 추가 */
+        .cert-plant-img-wrapper {
+            width: 14cqi;
+            height: 14cqi;
+            background-color: white;
+            padding: 0.8cqi;
+            border: 2px solid #5a3d2b;
+            border-radius: 4px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+            transform: rotate(3deg); /* 살짝 삐뚤게 연출 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
         }
 
         .cert-plant-img {
-            width: 15cqi;
-            height: 15cqi;
+            width: 100%;
+            height: 100%;
             object-fit: contain;
         }
 
         .cert-desc-text {
-            font-size: 7.5cqi;
-            line-height: 1.3;
+            font-size: 6cqi; /* 텍스트 크기 축소 */
+            line-height: 1.4;
             color: #333;
+            text-align: center; /* 가운데 정렬로 예쁘게 */
             word-break: keep-all;
+            margin-top: 2cqi;
         }
 
     </style>
@@ -531,38 +560,39 @@
             </div>
 
             <button onclick="generateCertificate()" class="comic-btn w-full bg-[#2E9441] text-white py-4 text-xl">
-                인증서 발급받기!
+                인증서 만들기!
             </button>
         </div>
 
         <div id="view-certificate" class="view-content">
+            <!-- 캡처 대상 영역 -->
             <div class="cert-wrapper" id="cert-capture-area">
                 <div class="cert-header-title">Gardener Certification</div>
                 
                 <div class="cert-content-box handwriting">
                     <div class="cert-user-row">
                         <span class="cert-name-text" id="final-cert-name">찰리 브라운</span>
-                        <img class="cert-plant-img" id="final-cert-img" src="" alt="선택한 식물">
+                        <div class="cert-plant-img-wrapper">
+                            <img class="cert-plant-img" id="final-cert-img" src="" alt="선택한 식물">
+                        </div>
                     </div>
                     <p class="cert-desc-text">
-                        이 프로그램을 참여해서<br>
+                        이 프로그램을<br>참여해서<br>
                         너에게 루시 가든에<br>
                         가드너로 임명한다.
                     </p>
                 </div>
             </div>
             
-            <!-- 안내 문구 (캡처 영역 밖) -->
-            <div class="absolute bottom-5 left-0 w-full text-center z-50">
-                <p class="text-white font-bold text-sm bg-black/50 inline-block px-4 py-2 rounded-full backdrop-blur-sm">
-                    <i class="fa-solid fa-camera mr-1"></i> 화면을 캡처해서 인증서를 간직하세요!
-                </p>
+            <!-- 인증서 하단 액션 버튼들 (캡처 시 제외됨) -->
+            <div class="w-full max-w-[420px] px-4 mt-6 flex flex-col gap-3" id="cert-action-buttons">
+                <button onclick="downloadCertificate()" class="comic-btn w-full bg-[#FFCC00] text-black py-4 text-lg">
+                    <i class="fa-solid fa-download mr-2"></i> 내 폰에 이미지로 저장하기
+                </button>
+                <button onclick="switchTab('collection')" class="comic-btn w-full bg-white text-gray-600 py-3 text-sm">
+                    도감으로 돌아가기
+                </button>
             </div>
-            
-            <!-- 닫기 버튼 -->
-            <button onclick="switchTab('collection')" class="absolute top-5 right-5 w-10 h-10 bg-white rounded-full border-2 border-black flex justify-center items-center font-bold z-50 shadow-md">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
         </div>
 
         <div id="toast" class="fixed top-20 left-1/2 transform -translate-x-1/2 bg-black text-white font-bold px-6 py-3 rounded-full z-50 transition-all duration-300 opacity-0 pointer-events-none shadow-lg flex items-center">
@@ -1034,7 +1064,6 @@
                     grid.appendChild(slot);
                 });
 
-                // 디버깅/테스트를 위해 조건을 1개 이상 수집 시 버튼 노출로 변경 원하시면 === 11 대신 > 0 으로 수정 가능
                 const btn = document.getElementById('final-test-btn');
                 if(state.collectedIds.length === ALL_PLANTS_LIST.length) { 
                     btn.classList.remove('hidden');
@@ -1059,11 +1088,9 @@
                 
                 document.getElementById('test-step-badge').innerText = `문제 ${step + 1} / 2`;
                 
-                // 루시의 메시지나 퀴즈 질문을 힌트로 제공
                 const hint = Math.random() > 0.5 ? plant.lucyMessage : plant.quiz.question;
                 document.getElementById('final-quiz-desc').innerText = `"${hint}"`;
 
-                // 보기 생성 (정답 1개 + 오답 3개 섞기)
                 const optionsContainer = document.getElementById('final-quiz-options');
                 optionsContainer.innerHTML = '';
                 
@@ -1105,7 +1132,6 @@
                 const grid = document.getElementById('cert-plant-grid');
                 grid.innerHTML = '';
                 
-                // 선택 초기화
                 state.certCustom.plantId = null;
 
                 ALL_PLANTS_LIST.forEach(plant => {
@@ -1140,15 +1166,41 @@
                     return;
                 }
 
-                // 정보 렌더링
                 const selectedPlant = DB_PLANTS[state.certCustom.plantId];
-                document.getElementById('final-cert-name').innerText = nameInput;
+                const nameEl = document.getElementById('final-cert-name');
+                
+                // 이름 길이에 따른 폰트 크기 동적 할당
+                nameEl.innerText = nameInput;
+                if (nameInput.length >= 5) {
+                    nameEl.style.fontSize = "8cqi";
+                } else if (nameInput.length >= 3) {
+                    nameEl.style.fontSize = "10cqi";
+                } else {
+                    nameEl.style.fontSize = "14cqi";
+                }
                 
                 const certImgEl = document.getElementById('final-cert-img');
                 certImgEl.src = selectedPlant.comicImg;
                 certImgEl.onerror = () => { certImgEl.src = `https://placehold.co/400x400/FFCC00/000?text=${selectedPlant.name}`; };
 
                 switchTab('certificate');
+            }
+
+            /* 인증서 자동 캡처 후 기기에 다운로드 하는 함수 */
+            function downloadCertificate() {
+                const certArea = document.getElementById('cert-capture-area');
+                
+                // 화질을 높이기 위해 scale 값을 3으로 설정
+                html2canvas(certArea, { scale: 3, useCORS: true, backgroundColor: null }).then(canvas => {
+                    const link = document.createElement('a');
+                    link.download = 'Lucy_Gardener_Certificate.png';
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                    showToast('인증서가 성공적으로 저장되었습니다!');
+                }).catch(err => {
+                    console.error('인증서 저장 실패:', err);
+                    showToast('인증서를 저장하는 데 문제가 생겼어요.');
+                });
             }
         </script>
     </div>
