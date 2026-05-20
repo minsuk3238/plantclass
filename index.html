@@ -191,8 +191,8 @@
             left: 0;
             transform-origin: 0 0;
             transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            width: 1200px; 
-            height: 1060px;
+            width: 851px; 
+            height: 737px;
             background-image: url('./snoopy_garden_map.jpg'); 
             background-size: 100% 100%;
             background-repeat: no-repeat;
@@ -674,23 +674,23 @@
             document.getElementById('map-content').style.transform = `translate(${state.map.x}px, ${state.map.y}px) scale(${state.map.scale})`;
         }
 
-        function resetMapZoom() {
-            const container = document.getElementById('map-container');
-            
-            // 지도가 컨테이너 너비에 맞게 시작하도록 스케일 조정 (가로 1200px 기준)
-            const scale = container.clientWidth / 1200;
-            state.map.scale = Math.max(scale, 0.3); // 너무 작아지는 것 방지
-            
-            // 지도를 가로축 가운데, 세로축은 살짝 내려오게 초기 위치 계산
-            state.map.x = (container.clientWidth - (1200 * state.map.scale)) / 2;
-            state.map.y = 20; 
-            
-            document.querySelectorAll('.pin-popup').forEach(p => p.classList.remove('show'));
-            document.querySelectorAll('.map-pin').forEach(p => p.classList.remove('active-pin'));
-            updateMapTransform();
-        }
+    function resetMapZoom() {
+        const container = document.getElementById('map-container');
+        
+        // 지도가 컨테이너 너비에 맞게 시작하도록 스케일 조정 (가로 851px 기준)
+        const scale = container.clientWidth / 851;
+        state.map.scale = Math.max(scale, 0.3); // 너무 작아지는 것 방지
+        
+        // 지도를 가로축 가운데, 세로축은 살짝 내려오게 초기 위치 계산
+        state.map.x = (container.clientWidth - (851 * state.map.scale)) / 2;
+        state.map.y = 20; 
+        
+        document.querySelectorAll('.pin-popup').forEach(p => p.classList.remove('show'));
+        document.querySelectorAll('.map-pin').forEach(p => p.classList.remove('active-pin'));
+        updateMapTransform();
+    }
 
-        function focusOnPin(pinX, pinY, activePinElement, popupElement) {
+    function focusOnPin(pinX, pinY, activePinElement, popupElement) {
             const container = document.getElementById('map-container');
             const targetScale = 1.3; 
             state.map.scale = targetScale;
