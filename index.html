@@ -46,7 +46,6 @@
             font-family: 'NeutraText-Bold', 'Noto Sans KR', sans-serif;
         }
 
-        /* Mobile App Container */
         .app-container {
             width: 100%;
             max-width: 420px;
@@ -135,7 +134,7 @@
             display: flex;
             flex-direction: column;
             padding: 0;
-            padding-bottom: 7rem; /* 하단 네비게이션 공간 여백 */
+            padding-bottom: 7rem; 
         }
 
         .bottom-nav {
@@ -177,7 +176,7 @@
 
         .map-container {
             width: 100%;
-            flex-grow: 1; /* 가용 영역을 모두 채우도록 변경 */
+            flex-grow: 1; 
             position: relative;
             overflow: hidden;
             background-color: #e5e7eb;
@@ -304,7 +303,6 @@
             background-position: center;
         }
         
-        /* 스탬프 디자인 업데이트 */
         .stamp-mark {
             position: absolute;
             top: 50%;
@@ -324,7 +322,6 @@
             z-index: 10;
         }
 
-        /* 스탬프 찍히는 애니메이션 */
         @keyframes stampIn {
             0% { transform: translate(-50%, -50%) rotate(-15deg) scale(3); opacity: 0; }
             50% { transform: translate(-50%, -50%) rotate(-15deg) scale(0.9); opacity: 1; }
@@ -403,8 +400,8 @@
             </div>
         </div>
 
-        <!-- VIEW 3: MAP -->
-        <div id="view-map" class="view-content" style="padding: 0; display: none;">
+        <!-- VIEW 3: MAP (수정됨: display none 등 방해되는 인라인 스타일 제거) -->
+        <div id="view-map" class="view-content">
             <!-- 지도가 겹치지 않게 absolute 제거하고 플렉스로 배치 -->
             <div class="w-full bg-[#2E9441] border-b-3 border-black p-3 z-50 flex justify-between items-center shadow-sm text-white shrink-0">
                 <h2 class="text-xl font-black title-font">루시의 야외가든 지도</h2>
@@ -427,6 +424,7 @@
         </div>
     </div>
 
+    <!-- Modals & Toasts -->
     <div id="toast" class="fixed top-20 left-1/2 transform -translate-x-1/2 bg-black text-white font-bold px-6 py-3 rounded-full z-50 transition-all duration-300 opacity-0 pointer-events-none shadow-lg flex items-center">
         <i class="fa-solid fa-xmark text-red-400 mr-2 text-lg"></i>
         <span id="toast-msg">다시 한번 생각해봐!</span>
@@ -438,7 +436,6 @@
                 
                 <div class="w-32 h-32 mx-auto relative mb-4 rounded-lg comic-border overflow-hidden bg-white flex items-center justify-center p-2">
                     <img id="success-comic-img" src="" class="w-full h-full object-contain">
-                    <!-- ID를 부여하여 애니메이션 조작 -->
                     <div id="success-stamp" class="stamp-mark opacity-0" style="font-size: 1.5rem;">CLEAR</div>
                 </div>
                 
@@ -596,120 +593,121 @@
         };
 
         const ALL_PLANTS_LIST = [
-        DB_PLANTS.p_canaria, DB_PLANTS.p_naku, DB_PLANTS.p_pal, DB_PLANTS.p_kkamagi, 
-        DB_PLANTS.p_kkwang, DB_PLANTS.p_mal, DB_PLANTS.p_yukbak, DB_PLANTS.p_chija, 
-        DB_PLANTS.p_awe, DB_PLANTS.p_hubak, DB_PLANTS.p_donnamu
-    ];
+            DB_PLANTS.p_canaria, DB_PLANTS.p_naku, DB_PLANTS.p_pal, DB_PLANTS.p_kkamagi, 
+            DB_PLANTS.p_kkwang, DB_PLANTS.p_mal, DB_PLANTS.p_yukbak, DB_PLANTS.p_chija, 
+            DB_PLANTS.p_awe, DB_PLANTS.p_hubak, DB_PLANTS.p_donnamu
+        ];
 
-    function switchTab(tabName) {
-        document.querySelectorAll('.view-content').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-        
-        if(tabName === 'home') {
-            document.getElementById('view-home').classList.add('active');
-            document.querySelectorAll('.nav-item')[0].classList.add('active');
-        } else if(tabName === 'mission') {
-            document.getElementById('view-mission').classList.add('active');
-        } else if(tabName === 'map') {
-            document.getElementById('view-map').classList.add('active');
-            document.querySelectorAll('.nav-item')[1].classList.add('active');
+        function switchTab(tabName) {
+            document.querySelectorAll('.view-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             
-            if(document.getElementById('map-content').children.length === 0) {
-                initMap(); 
-                setupMapDragging(document.getElementById('map-container'), document.getElementById('map-content'));
-            } else {
-                renderMapPins();
+            if(tabName === 'home') {
+                document.getElementById('view-home').classList.add('active');
+                document.querySelectorAll('.nav-item')[0].classList.add('active');
+            } else if(tabName === 'mission') {
+                document.getElementById('view-mission').classList.add('active');
+            } else if(tabName === 'map') {
+                // 이 시점에 CSS class 적용을 통해 display 속성이 나타남
+                document.getElementById('view-map').classList.add('active');
+                document.querySelectorAll('.nav-item')[1].classList.add('active');
+                
+                if(document.getElementById('map-content').children.length === 0) {
+                    initMap(); 
+                    setupMapDragging(document.getElementById('map-container'), document.getElementById('map-content'));
+                } else {
+                    renderMapPins();
+                }
+            } else if(tabName === 'collection') {
+                renderCollection();
+                document.getElementById('view-collection').classList.add('active');
+                document.querySelectorAll('.nav-item')[2].classList.add('active');
             }
-        } else if(tabName === 'collection') {
-            renderCollection();
-            document.getElementById('view-collection').classList.add('active');
-            document.querySelectorAll('.nav-item')[2].classList.add('active');
         }
-    }
 
-    function initMap() {
-        renderMapPins();
-        resetMapZoom();
-    }
+        function initMap() {
+            renderMapPins();
+            resetMapZoom();
+        }
 
-    function renderMapPins() {
-        const mapContent = document.getElementById('map-content');
-        mapContent.innerHTML = ''; 
-        
-        Object.values(DB_PLANTS).forEach(plant => {
-            const pin = document.createElement('div');
-            pin.className = 'map-pin';
-            const isCollected = state.collectedIds.includes(plant.id);
+        function renderMapPins() {
+            const mapContent = document.getElementById('map-content');
+            mapContent.innerHTML = ''; 
             
-            if(isCollected) {
-                pin.classList.add('collected-pin');
-            }
+            Object.values(DB_PLANTS).forEach(plant => {
+                const pin = document.createElement('div');
+                pin.className = 'map-pin';
+                const isCollected = state.collectedIds.includes(plant.id);
+                
+                if(isCollected) {
+                    pin.classList.add('collected-pin');
+                }
 
-            pin.style.left = `${plant.mapCoords.x}px`;
-            pin.style.top = `${plant.mapCoords.y}px`;
-            
-            const popup = document.createElement('div');
-            popup.className = 'pin-popup';
-            
-            let popupHtml = `<span>${plant.name}</span>`;
-            if(isCollected) {
-                popupHtml += `<button class="mt-1 bg-gray-400 text-white text-xs px-3 py-1 rounded-full font-bold cursor-default">CLEAR</button>`;
-            } else {
-                popupHtml += `<button onclick="loadMission('${plant.id}')" class="mt-1 bg-[#2E9441] text-white text-xs px-3 py-1 rounded-full font-bold shadow-md active:scale-95 transition-transform">상담 시작</button>`;
-            }
-            popup.innerHTML = popupHtml;
+                pin.style.left = `${plant.mapCoords.x}px`;
+                pin.style.top = `${plant.mapCoords.y}px`;
+                
+                const popup = document.createElement('div');
+                popup.className = 'pin-popup';
+                
+                let popupHtml = `<span>${plant.name}</span>`;
+                if(isCollected) {
+                    popupHtml += `<button class="mt-1 bg-gray-400 text-white text-xs px-3 py-1 rounded-full font-bold cursor-default">CLEAR</button>`;
+                } else {
+                    popupHtml += `<button onclick="loadMission('${plant.id}')" class="mt-1 bg-[#2E9441] text-white text-xs px-3 py-1 rounded-full font-bold shadow-md active:scale-95 transition-transform">상담 시작</button>`;
+                }
+                popup.innerHTML = popupHtml;
 
-            popup.style.left = `${plant.mapCoords.x}px`;
-            popup.style.top = `${plant.mapCoords.y - 45}px`; 
-            
-            pin.onclick = (e) => {
-                e.stopPropagation();
-                focusOnPin(plant.mapCoords.x, plant.mapCoords.y, pin, popup);
-            };
+                popup.style.left = `${plant.mapCoords.x}px`;
+                popup.style.top = `${plant.mapCoords.y - 45}px`; 
+                
+                pin.onclick = (e) => {
+                    e.stopPropagation();
+                    focusOnPin(plant.mapCoords.x, plant.mapCoords.y, pin, popup);
+                };
 
-            mapContent.appendChild(pin);
-            mapContent.appendChild(popup);
-        });
-    }
+                mapContent.appendChild(pin);
+                mapContent.appendChild(popup);
+            });
+        }
 
-    function updateMapTransform() {
+        function updateMapTransform() {
             document.getElementById('map-content').style.transform = `translate(${state.map.x}px, ${state.map.y}px) scale(${state.map.scale})`;
         }
 
-    function resetMapZoom() {
-        const container = document.getElementById('map-container');
-        
-        // 지도가 컨테이너 너비에 맞게 시작하도록 스케일 조정 (가로 1200px 기준)
-        const scale = container.clientWidth / 1200;
-        state.map.scale = Math.max(scale, 0.3); // 너무 작아지는 것 방지
-        
-        // 지도를 가로축 가운데, 세로축은 살짝 내려오게 초기 위치 계산
-        state.map.x = (container.clientWidth - (1200 * state.map.scale)) / 2;
-        state.map.y = 20; 
-        
-        document.querySelectorAll('.pin-popup').forEach(p => p.classList.remove('show'));
-        document.querySelectorAll('.map-pin').forEach(p => p.classList.remove('active-pin'));
-        updateMapTransform();
-    }
-
-    function focusOnPin(pinX, pinY, activePinElement, popupElement) {
-        const container = document.getElementById('map-container');
-        const targetScale = 1.3; 
-        state.map.scale = targetScale;
-        state.map.x = (container.clientWidth / 2) - (pinX * targetScale);
-        state.map.y = (container.clientHeight / 2) - (pinY * targetScale) + 50; 
-        
-        updateMapTransform();
-        document.querySelectorAll('.pin-popup').forEach(p => p.classList.remove('show'));
-        document.querySelectorAll('.map-pin').forEach(p => p.classList.remove('active-pin'));
-        popupElement.classList.add('show');
-        
-        if (!activePinElement.classList.contains('collected-pin')) {
-            activePinElement.classList.add('active-pin');
+        function resetMapZoom() {
+            const container = document.getElementById('map-container');
+            
+            // 지도가 컨테이너 너비에 맞게 시작하도록 스케일 조정 (가로 1200px 기준)
+            const scale = container.clientWidth / 1200;
+            state.map.scale = Math.max(scale, 0.3); // 너무 작아지는 것 방지
+            
+            // 지도를 가로축 가운데, 세로축은 살짝 내려오게 초기 위치 계산
+            state.map.x = (container.clientWidth - (1200 * state.map.scale)) / 2;
+            state.map.y = 20; 
+            
+            document.querySelectorAll('.pin-popup').forEach(p => p.classList.remove('show'));
+            document.querySelectorAll('.map-pin').forEach(p => p.classList.remove('active-pin'));
+            updateMapTransform();
         }
-    }
 
-    function setupMapDragging(container, content) {
+        function focusOnPin(pinX, pinY, activePinElement, popupElement) {
+            const container = document.getElementById('map-container');
+            const targetScale = 1.3; 
+            state.map.scale = targetScale;
+            state.map.x = (container.clientWidth / 2) - (pinX * targetScale);
+            state.map.y = (container.clientHeight / 2) - (pinY * targetScale) + 50; 
+            
+            updateMapTransform();
+            document.querySelectorAll('.pin-popup').forEach(p => p.classList.remove('show'));
+            document.querySelectorAll('.map-pin').forEach(p => p.classList.remove('active-pin'));
+            popupElement.classList.add('show');
+            
+            if (!activePinElement.classList.contains('collected-pin')) {
+                activePinElement.classList.add('active-pin');
+            }
+        }
+
+        function setupMapDragging(container, content) {
             const startDrag = (e) => {
                 state.map.isDragging = true;
                 const clientX = e.touches ? e.touches[0].clientX : e.clientX;
@@ -736,129 +734,127 @@
             window.addEventListener('mousemove', onDrag);
         }
 
-    function loadMission(qrId) {
-        const data = DB_PLANTS[qrId];
-        if(!data) return;
+        function loadMission(qrId) {
+            const data = DB_PLANTS[qrId];
+            if(!data) return;
 
-        state.currentPlantId = qrId;
-        document.getElementById('plant-name').innerText = data.name;
-        document.getElementById('plant-month').innerText = data.month;
-        
-        const imgEl = document.getElementById('comic-strip-img');
-        imgEl.src = data.comicImg;
-        imgEl.onerror = () => { imgEl.src = `https://placehold.co/400x400/FFCC00/000?text=${data.name}+Comic`; };
-        
-        document.getElementById('lucy-dialogue').innerText = data.lucyMessage;
-        
-        const badge = document.getElementById('mission-type-badge');
-        badge.innerText = data.type;
-        badge.className = `text-white text-xs font-bold px-2 py-1 rounded-full ${data.type === '상록수' ? 'bg-green-700' : 'bg-orange-500'}`;
-
-        document.getElementById('quiz-question').innerText = data.quiz.question;
-        const optionsContainer = document.getElementById('quiz-options');
-        optionsContainer.innerHTML = '';
-        
-        data.quiz.options.forEach((opt, index) => {
-            const btn = document.createElement('button');
-            btn.className = "comic-btn py-3 px-4 text-left w-full hover:bg-gray-50 text-sm";
-            btn.innerHTML = `<span class="font-black mr-2 text-lg text-gray-400">${index + 1}.</span> <span>${opt}</span>`;
-            btn.onclick = () => checkAnswer(btn, index, data.quiz.correctIndex, data);
-            optionsContainer.appendChild(btn);
-        });
-
-        switchTab('mission');
-    }
-
-    function checkAnswer(btnElement, selectedIndex, correctIndex, plantData) {
-        if(selectedIndex === correctIndex) {
-            if(!state.collectedIds.includes(plantData.id)) {
-                state.collectedIds.push(plantData.id);
-            }
-            showSuccessModal(plantData);
-        } else {
-            const container = document.getElementById('quiz-container');
-            container.classList.remove('shake');
-            void container.offsetWidth; 
-            container.classList.add('shake');
+            state.currentPlantId = qrId;
+            document.getElementById('plant-name').innerText = data.name;
+            document.getElementById('plant-month').innerText = data.month;
             
-            const messages = ["땡! 다시 생각해, 바보 찰리 브라운!", "식물 공부 안 했어?", "패찰을 다시 꼼꼼히 읽어봐!"];
-            showToast(messages[Math.floor(Math.random() * messages.length)]);
+            const imgEl = document.getElementById('comic-strip-img');
+            imgEl.src = data.comicImg;
+            imgEl.onerror = () => { imgEl.src = `https://placehold.co/400x400/FFCC00/000?text=${data.name}+Comic`; };
+            
+            document.getElementById('lucy-dialogue').innerText = data.lucyMessage;
+            
+            const badge = document.getElementById('mission-type-badge');
+            badge.innerText = data.type;
+            badge.className = `text-white text-xs font-bold px-2 py-1 rounded-full ${data.type === '상록수' ? 'bg-green-700' : 'bg-orange-500'}`;
+
+            document.getElementById('quiz-question').innerText = data.quiz.question;
+            const optionsContainer = document.getElementById('quiz-options');
+            optionsContainer.innerHTML = '';
+            
+            data.quiz.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = "comic-btn py-3 px-4 text-left w-full hover:bg-gray-50 text-sm";
+                btn.innerHTML = `<span class="font-black mr-2 text-lg text-gray-400">${index + 1}.</span> <span>${opt}</span>`;
+                btn.onclick = () => checkAnswer(btn, index, data.quiz.correctIndex, data);
+                optionsContainer.appendChild(btn);
+            });
+
+            switchTab('mission');
         }
-    }
 
-    function showToast(msg) {
-        const toast = document.getElementById('toast');
-        document.getElementById('toast-msg').innerText = msg;
-        toast.classList.remove('opacity-0', 'translate-y-[-20px]');
-        toast.classList.add('opacity-100', 'translate-y-0');
-        
-        setTimeout(() => {
-            toast.classList.remove('opacity-100', 'translate-y-0');
-            toast.classList.add('opacity-0', 'translate-y-[-20px]');
-        }, 2000);
-    }
-
-    function showSuccessModal(plantData) {
-        document.getElementById('success-plant-name').innerText = plantData.name;
-        
-        const imgEl = document.getElementById('success-comic-img');
-        imgEl.src = plantData.comicImg;
-        imgEl.onerror = () => { imgEl.src = `https://placehold.co/400x400/FFCC00/000?text=${plantData.name}+Comic`; };
-        
-        const modal = document.getElementById('success-modal');
-        const card = document.getElementById('success-card');
-        const stamp = document.getElementById('success-stamp');
-        
-        // 애니메이션 초기화
-        stamp.classList.remove('stamp-anim');
-        stamp.style.opacity = '0';
-        
-        modal.classList.remove('opacity-0', 'pointer-events-none');
-        
-        setTimeout(() => { 
-            card.classList.remove('scale-90'); 
-            card.classList.add('scale-100'); 
-            
-            // 모달 카드가 다 튀어나온 뒤(0.3초 뒤)에 스탬프 꽝!
-            setTimeout(() => {
-                stamp.classList.add('stamp-anim');
-            }, 300);
-        }, 50);
-    }
-
-    function closeSuccessAndGoToCollection() {
-        const modal = document.getElementById('success-modal');
-        const card = document.getElementById('success-card');
-        
-        card.classList.remove('scale-100'); card.classList.add('scale-90');
-        modal.classList.add('opacity-0', 'pointer-events-none');
-        
-        setTimeout(() => { switchTab('collection'); }, 300);
-    }
-
-    function renderCollection() {
-        document.getElementById('collection-count').innerText = state.collectedIds.length;
-        const grid = document.getElementById('stamp-grid');
-        grid.innerHTML = '';
-
-        ALL_PLANTS_LIST.forEach((plant, index) => {
-            const isCollected = state.collectedIds.includes(plant.id);
-            const slot = document.createElement('div');
-            
-            if(isCollected) {
-                slot.className = "stamp-slot collected";
-                slot.style.backgroundImage = `url('${plant.comicImg}'), url('https://placehold.co/400x400/FFCC00/000?text=${plant.name}+Comic')`;
-                slot.innerHTML = `<div class="stamp-mark">CLEAR</div>`;
+        function checkAnswer(btnElement, selectedIndex, correctIndex, plantData) {
+            if(selectedIndex === correctIndex) {
+                if(!state.collectedIds.includes(plantData.id)) {
+                    state.collectedIds.push(plantData.id);
+                }
+                showSuccessModal(plantData);
             } else {
-                slot.className = "stamp-slot";
-                slot.innerHTML = `
-                    <i class="fa-solid fa-lock text-gray-400 text-xl mb-1"></i>
-                    <span class="text-[10px] font-bold text-gray-400">No.${index + 1}</span>
-                `;
+                const container = document.getElementById('quiz-container');
+                container.classList.remove('shake');
+                void container.offsetWidth; 
+                container.classList.add('shake');
+                
+                const messages = ["땡! 다시 생각해, 바보 찰리 브라운!", "식물 공부 안 했어?", "패찰을 다시 꼼꼼히 읽어봐!"];
+                showToast(messages[Math.floor(Math.random() * messages.length)]);
             }
-            grid.appendChild(slot);
-        });
-    }
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = msg;
+            toast.classList.remove('opacity-0', 'translate-y-[-20px]');
+            toast.classList.add('opacity-100', 'translate-y-0');
+            
+            setTimeout(() => {
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', 'translate-y-[-20px]');
+            }, 2000);
+        }
+
+        function showSuccessModal(plantData) {
+            document.getElementById('success-plant-name').innerText = plantData.name;
+            
+            const imgEl = document.getElementById('success-comic-img');
+            imgEl.src = plantData.comicImg;
+            imgEl.onerror = () => { imgEl.src = `https://placehold.co/400x400/FFCC00/000?text=${plantData.name}+Comic`; };
+            
+            const modal = document.getElementById('success-modal');
+            const card = document.getElementById('success-card');
+            const stamp = document.getElementById('success-stamp');
+            
+            stamp.classList.remove('stamp-anim');
+            stamp.style.opacity = '0';
+            
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            
+            setTimeout(() => { 
+                card.classList.remove('scale-90'); 
+                card.classList.add('scale-100'); 
+                
+                setTimeout(() => {
+                    stamp.classList.add('stamp-anim');
+                }, 300);
+            }, 50);
+        }
+
+        function closeSuccessAndGoToCollection() {
+            const modal = document.getElementById('success-modal');
+            const card = document.getElementById('success-card');
+            
+            card.classList.remove('scale-100'); card.classList.add('scale-90');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            
+            setTimeout(() => { switchTab('collection'); }, 300);
+        }
+
+        function renderCollection() {
+            document.getElementById('collection-count').innerText = state.collectedIds.length;
+            const grid = document.getElementById('stamp-grid');
+            grid.innerHTML = '';
+
+            ALL_PLANTS_LIST.forEach((plant, index) => {
+                const isCollected = state.collectedIds.includes(plant.id);
+                const slot = document.createElement('div');
+                
+                if(isCollected) {
+                    slot.className = "stamp-slot collected";
+                    slot.style.backgroundImage = `url('${plant.comicImg}'), url('https://placehold.co/400x400/FFCC00/000?text=${plant.name}+Comic')`;
+                    slot.innerHTML = `<div class="stamp-mark">CLEAR</div>`;
+                } else {
+                    slot.className = "stamp-slot";
+                    slot.innerHTML = `
+                        <i class="fa-solid fa-lock text-gray-400 text-xl mb-1"></i>
+                        <span class="text-[10px] font-bold text-gray-400">No.${index + 1}</span>
+                    `;
+                }
+                grid.appendChild(slot);
+            });
+        }
     </script>
 </div>
 </body>
