@@ -465,7 +465,8 @@
         const state = {
             collectedIds: [],
             currentPlantId: null,
-            map: { scale: 1, x: 0, y: 0, isDragging: false, startX: 0, startY: 0 }
+            // 줌 확대를 위한 최소/최대 스케일 값을 상태에 추가했습니다.
+            map: { scale: 1, x: 0, y: 0, isDragging: false, startX: 0, startY: 0, minScale: 0.3, maxScale: 3 }
         };
 
         const DB_PLANTS = {
@@ -631,10 +632,10 @@
         }
 
         function renderMapPins() {
-            const mapContent = document.getElementById('map-content');
-            mapContent.innerHTML = ''; 
-            
-            Object.values(DB_PLANTS).forEach(plant => {
+        const mapContent = document.getElementById('map-content');
+        mapContent.innerHTML = ''; 
+        
+        Object.values(DB_PLANTS).forEach(plant => {
                 const pin = document.createElement('div');
                 pin.className = 'map-pin';
                 const isCollected = state.collectedIds.includes(plant.id);
@@ -666,22 +667,51 @@
                 };
 
                 mapContent.appendChild(pin);
-                mapContent.appendChild(popup);
-            });
+            mapContent.appendChild(popup);
+        });
+    }
+
+    function updateMapTransform() {
+        // 이동하거나 확대할 때마다 이탈 방지 검사를 먼저 실행합니다.
+        constrainMap();
+        document.getElementById('map-content').style.transform = `translate(${state.map.x}px, ${state.map.y}px) scale(${state.map.scale})`;
+    }
+
+    // 지도 이탈 방지 로직 (경계선 검사)
+    function constrainMap() {
+        const container = document.getElementById('map-container');
+        if(!container) return;
+        
+        const mapWidth = 851 * state.map.scale;
+        const mapHeight = 737 * state.map.scale;
+        const containerWidth = container.clientWidth;
+        const containerHeight = container.clientHeight;
+
+        // X축 제한: 지도가 컨테이너보다 작으면 중앙 정렬, 크면 화면 밖으로 나가지 못하게 고정
+        if (mapWidth <= containerWidth) {
+            state.map.x = (containerWidth - mapWidth) / 2;
+        } else {
+            if (state.map.x > 0) state.map.x = 0;
+            if (state.map.x < containerWidth - mapWidth) state.map.x = containerWidth - mapWidth;
         }
 
-        function updateMapTransform() {
-            document.getElementById('map-content').style.transform = `translate(${state.map.x}px, ${state.map.y}px) scale(${state.map.scale})`;
+        // Y축 제한: 지도가 컨테이너보다 작으면 중앙 정렬, 크면 화면 밖으로 나가지 못하게 고정
+        if (mapHeight <= containerHeight) {
+            state.map.y = (containerHeight - mapHeight) / 2;
+        } else {
+            if (state.map.y > 0) state.map.y = 0;
+            if (state.map.y < containerHeight - mapHeight) state.map.y = containerHeight - mapHeight;
         }
+    }
 
     function resetMapZoom() {
         const container = document.getElementById('map-container');
         
-        // 지도가 컨테이너 너비에 맞게 시작하도록 스케일 조정 (가로 851px 기준)
         const scale = container.clientWidth / 851;
-        state.map.scale = Math.max(scale, 0.3); // 너무 작아지는 것 방지
+        // 컨테이너 너비에 맞춘 비율을 최소 축소 한계점으로 설정합니다.
+        state.map.minScale = Math.max(scale, 0.3); 
+        state.map.scale = state.map.minScale;
         
-        // 지도를 가로축 가운데, 세로축은 살짝 내려오게 초기 위치 계산
         state.map.x = (container.clientWidth - (851 * state.map.scale)) / 2;
         state.map.y = 20; 
         
@@ -691,50 +721,126 @@
     }
 
     function focusOnPin(pinX, pinY, activePinElement, popupElement) {
-            const container = document.getElementById('map-container');
-            const targetScale = 1.3; 
-            state.map.scale = targetScale;
-            state.map.x = (container.clientWidth / 2) - (pinX * targetScale);
-            state.map.y = (container.clientHeight / 2) - (pinY * targetScale) + 50; 
-            
-            updateMapTransform();
-            document.querySelectorAll('.pin-popup').forEach(p => p.classList.remove('show'));
-            document.querySelectorAll('.map-pin').forEach(p => p.classList.remove('active-pin'));
-            popupElement.classList.add('show');
-            
-            if (!activePinElement.classList.contains('collected-pin')) {
-                activePinElement.classList.add('active-pin');
+        const container = document.getElementById('map-container');
+        const targetScale = 1.5; 
+        state.map.scale = targetScale;
+        state.map.x = (container.clientWidth / 2) - (pinX * targetScale);
+        state.map.y = (container.clientHeight / 2) - (pinY * targetScale) + 50; 
+        
+        updateMapTransform();
+        document.querySelectorAll('.pin-popup').forEach(p => p.classList.remove('show'));
+        document.querySelectorAll('.map-pin').forEach(p => p.classList.remove('active-pin'));
+        popupElement.classList.add('show');
+        
+        if (!activePinElement.classList.contains('collected-pin')) {
+            activePinElement.classList.add('active-pin');
+        }
+    }
+
+    // 마우스/터치 위치를 중심으로 확대/축소하는 헬퍼 함수
+    function zoomMap(newScale, pointerX, pointerY) {
+        newScale = Math.max(state.map.minScale, Math.min(newScale, state.map.maxScale));
+        const scaleRatio = newScale / state.map.scale;
+        
+        // 포인터 중심 좌표 보정 (확대 시 엉뚱한 곳으로 튀는 것 방지)
+        state.map.x = pointerX - (pointerX - state.map.x) * scaleRatio;
+        state.map.y = pointerY - (pointerY - state.map.y) * scaleRatio;
+        
+        state.map.scale = newScale;
+        updateMapTransform();
+    }
+
+    function setupMapDragging(container, content) {
+        let initialDistance = 0;
+        let initialScale = 1;
+
+        const startDrag = (e) => {
+            // 두 손가락 핀치 줌 시작 감지
+            if (e.touches && e.touches.length === 2) {
+                state.map.isDragging = false;
+                initialDistance = Math.hypot(
+                    e.touches[0].clientX - e.touches[1].clientX,
+                    e.touches[0].clientY - e.touches[1].clientY
+                );
+                initialScale = state.map.scale;
+                return;
             }
-        }
+            if (e.touches && e.touches.length > 1) return;
 
-        function setupMapDragging(container, content) {
-            const startDrag = (e) => {
-                state.map.isDragging = true;
-                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-                state.map.startX = clientX - state.map.x;
-                state.map.startY = clientY - state.map.y;
-            };
-            const onDrag = (e) => {
-                if (!state.map.isDragging) return;
+            state.map.isDragging = true;
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            state.map.startX = clientX - state.map.x;
+            state.map.startY = clientY - state.map.y;
+        };
+
+        const onDrag = (e) => {
+            // 두 손가락 핀치 줌 진행
+            if (e.touches && e.touches.length === 2) {
                 e.preventDefault(); 
-                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-                state.map.x = clientX - state.map.startX;
-                state.map.y = clientY - state.map.startY;
-                updateMapTransform();
-            };
-            const endDrag = () => { state.map.isDragging = false; };
+                const currentDistance = Math.hypot(
+                    e.touches[0].clientX - e.touches[1].clientX,
+                    e.touches[0].clientY - e.touches[1].clientY
+                );
+                
+                // 두 터치의 중심점 계산
+                const touchCenterX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+                const touchCenterY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+                
+                const rect = container.getBoundingClientRect();
+                const pointerX = touchCenterX - rect.left;
+                const pointerY = touchCenterY - rect.top;
 
-            container.addEventListener('touchstart', startDrag, {passive: false});
-            container.addEventListener('touchmove', onDrag, {passive: false});
-            container.addEventListener('touchend', endDrag);
-            container.addEventListener('mousedown', startDrag);
-            window.addEventListener('mouseup', endDrag);
-            window.addEventListener('mousemove', onDrag);
-        }
+                const newScale = initialScale * (currentDistance / initialDistance);
+                zoomMap(newScale, pointerX, pointerY);
+                return;
+            }
 
-        function loadMission(qrId) {
+            // 일반 화면 드래그
+            if (!state.map.isDragging) return;
+            e.preventDefault(); 
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            state.map.x = clientX - state.map.startX;
+            state.map.y = clientY - state.map.startY;
+            updateMapTransform();
+        };
+
+        const endDrag = (e) => { 
+            state.map.isDragging = false; 
+            // 두 손가락 중 하나만 뗐을 때 지도가 튀는 현상 방지
+            if (e && e.touches && e.touches.length === 1) {
+               state.map.startX = e.touches[0].clientX - state.map.x;
+               state.map.startY = e.touches[0].clientY - state.map.y;
+               state.map.isDragging = true;
+            }
+        };
+
+        // 데스크톱 마우스 휠 줌 지원
+        const onWheel = (e) => {
+            e.preventDefault();
+            const rect = container.getBoundingClientRect();
+            const pointerX = e.clientX - rect.left;
+            const pointerY = e.clientY - rect.top;
+            
+            // 휠 방향에 따라 약 10% 단위로 스케일 조정
+            const zoomSpeed = 0.1;
+            const delta = e.deltaY > 0 ? -1 : 1; 
+            const newScale = state.map.scale * (1 + (delta * zoomSpeed));
+            
+            zoomMap(newScale, pointerX, pointerY);
+        };
+
+        container.addEventListener('touchstart', startDrag, {passive: false});
+        container.addEventListener('touchmove', onDrag, {passive: false});
+        container.addEventListener('touchend', endDrag);
+        container.addEventListener('mousedown', startDrag);
+        container.addEventListener('wheel', onWheel, {passive: false});
+        window.addEventListener('mouseup', endDrag);
+        window.addEventListener('mousemove', onDrag);
+    }
+
+    function loadMission(qrId) {
             const data = DB_PLANTS[qrId];
             if(!data) return;
 
