@@ -6,7 +6,7 @@
     <title>루시의 식물 상담소</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;700;900&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
@@ -42,9 +42,8 @@
             min-height: 100vh;
         }
 
-        .title-font {
-            font-family: 'NeutraText-Bold', 'Noto Sans KR', sans-serif;
-        }
+        .title-font { font-family: 'NeutraText-Bold', 'Noto Sans KR', sans-serif; }
+        .handwriting { font-family: 'Nanum Pen Script', cursive; }
 
         .app-container {
             width: 100%;
@@ -125,11 +124,8 @@
             animation: fadeSlideUp 0.3s ease forwards;
         }
         
-        .view-content.active {
-            display: block;
-        }
+        .view-content.active { display: block; }
         
-        /* 맵 뷰 전용 Flex 활성화 */
         #view-map.active {
             display: flex;
             flex-direction: column;
@@ -163,16 +159,8 @@
             cursor: pointer;
             transition: color 0.2s;
         }
-
-        .nav-item.active {
-            color: var(--main-green);
-        }
-
-        .nav-item i {
-            font-size: 1.5rem;
-            margin-bottom: 4px;
-            transition: transform 0.2s;
-        }
+        .nav-item.active { color: var(--main-green); }
+        .nav-item i { font-size: 1.5rem; margin-bottom: 4px; transition: transform 0.2s; }
 
         .map-container {
             width: 100%;
@@ -182,7 +170,6 @@
             background-color: #e5e7eb;
             cursor: grab;
         }
-        
         .map-container:active { cursor: grabbing; }
 
         .map-content {
@@ -265,10 +252,7 @@
             border-color: #4B5563;
             transform: translate(-50%, -100%) rotate(-45deg) scale(0.9);
         }
-        
-        .map-pin.collected-pin::after {
-            background-color: #D1D5DB;
-        }
+        .map-pin.collected-pin::after { background-color: #D1D5DB; }
 
         @keyframes fadeSlideUp {
             from { opacity: 0; transform: translateY(20px); }
@@ -294,6 +278,7 @@
             background-color: rgba(255,255,255,0.5);
             position: relative;
             overflow: hidden; 
+            cursor: pointer;
         }
         .stamp-slot.collected {
             border: 3px solid var(--comic-black);
@@ -301,6 +286,10 @@
             background-size: contain; 
             background-repeat: no-repeat;
             background-position: center;
+        }
+        .stamp-slot.selected-fav {
+            border: 4px solid var(--snoopy-red);
+            box-shadow: 0 0 10px rgba(229, 46, 45, 0.5);
         }
         
         .stamp-mark {
@@ -327,21 +316,94 @@
             50% { transform: translate(-50%, -50%) rotate(-15deg) scale(0.9); opacity: 1; }
             100% { transform: translate(-50%, -50%) rotate(-15deg) scale(1); opacity: 1; }
         }
-        .stamp-anim {
-            animation: stampIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        .stamp-anim { animation: stampIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+
+        #view-certificate {
+            padding: 0;
+            background-color: #1a1a1a;
+            display: none;
+            align-items: center;
+            justify-content: center;
         }
+        #view-certificate.active {
+            display: flex;
+        }
+
+        .cert-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 420px; /* 모바일 폭에 맞춤 */
+            aspect-ratio: 1536 / 2754;
+            /* 파일명을 업로드하신 이미지 이름으로 변경했습니다 */
+            background-image: url('./certification background.png'); 
+            background-size: cover;
+            background-position: center;
+            container-type: inline-size; /* 컨테이너 쿼리로 내부 폰트 크기 조절 */
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+
+        .cert-header-title {
+            position: absolute;
+            top: 7.98%; /* 220 / 2754 */
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'NeutraText-Bold', sans-serif;
+            font-size: 8cqi;
+            color: var(--main-green);
+            white-space: nowrap;
+        }
+
+        .cert-content-box {
+            position: absolute;
+            /* 좌표 계산: X(418/1536)=27.21%, Y(1673/2754)=60.74%, W(709/1536)=46.15%, H(558/2754)=20.26% */
+            left: 27.21%;
+            top: 60.74%;
+            width: 46.15%;
+            height: 20.26%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 2%;
+            /* border: 1px dashed red; 가이드라인 확인용 (필요시 삭제) */
+        }
+
+        .cert-user-row {
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+            margin-bottom: 5%;
+        }
+
+        .cert-name-text {
+            font-size: 15cqi; /* 컨테이너 기준 폰트 스케일링 */
+            line-height: 1;
+            color: #000;
+        }
+
+        .cert-plant-img {
+            width: 15cqi;
+            height: 15cqi;
+            object-fit: contain;
+        }
+
+        .cert-desc-text {
+            font-size: 7.5cqi;
+            line-height: 1.3;
+            color: #333;
+            word-break: keep-all;
+        }
+
     </style>
 </head>
 <body>
 
     <div class="app-container">
-        
         <!-- HEADER -->
-        <header class="bg-[#2E9441] border-b-3 border-black p-4 pt-6 relative z-10 flex items-center justify-center shadow-sm">
+        <header id="main-header" class="bg-[#2E9441] border-b-3 border-black p-4 pt-6 relative z-10 flex items-center justify-center shadow-sm">
             <h1 class="text-2xl font-black title-font tracking-wide text-white">루시의 식물 상담소</h1>
         </header>
 
-        <!-- VIEW 1: HOME (인트로) -->
         <div id="view-home" class="view-content active">
             <div class="comic-border bg-white p-4 mb-6 relative mt-4">
                 <div class="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-black text-white px-4 py-1 rounded-full font-bold text-sm whitespace-nowrap">
@@ -366,7 +428,6 @@
         </div>
     </div>
 
-    <!-- VIEW 2: MISSION (퀴즈 화면) -->
         <div id="view-mission" class="view-content">
             <div class="flex justify-between items-center border-b-2 border-black pb-2 mb-5">
                 <div class="font-black text-sm"><i class="fa-solid fa-leaf text-green-600 mr-1"></i> 관찰 보고서</div>
@@ -400,9 +461,7 @@
             </div>
         </div>
 
-        <!-- VIEW 3: MAP (수정됨: display none 등 방해되는 인라인 스타일 제거) -->
         <div id="view-map" class="view-content">
-            <!-- 지도가 겹치지 않게 absolute 제거하고 플렉스로 배치 -->
             <div class="w-full bg-[#2E9441] border-b-3 border-black p-3 z-50 flex justify-between items-center shadow-sm text-white shrink-0">
                 <h2 class="text-xl font-black title-font">루시의 야외가든 지도</h2>
             </div>
@@ -414,554 +473,684 @@
             </div>
         </div>
 
-        <!-- VIEW 4: COLLECTION -->
         <div id="view-collection" class="view-content">
-        <h2 class="text-2xl font-black title-font mb-2">내 식물 도감</h2>
-        <p class="text-sm font-bold text-gray-600 mb-6">수집한 식물 처방전: <span id="collection-count" class="text-red-500 text-lg">0</span>/11</p>
+            <h2 class="text-2xl font-black title-font mb-2">내 식물 도감</h2>
+            <p class="text-sm font-bold text-gray-600 mb-6">수집한 식물 처방전: <span id="collection-count" class="text-red-500 text-lg">0</span>/11</p>
 
-        <div class="grid grid-cols-3 gap-3" id="stamp-grid">
-            <!-- 스탬프 슬롯 주입 -->
-        </div>
-    </div>
-
-    <!-- Modals & Toasts -->
-    <div id="toast" class="fixed top-20 left-1/2 transform -translate-x-1/2 bg-black text-white font-bold px-6 py-3 rounded-full z-50 transition-all duration-300 opacity-0 pointer-events-none shadow-lg flex items-center">
-        <i class="fa-solid fa-xmark text-red-400 mr-2 text-lg"></i>
-        <span id="toast-msg">다시 한번 생각해봐!</span>
-    </div>
-
-    <div id="success-modal" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
-            <div class="bg-white p-6 rounded-2xl comic-border w-10/12 max-w-sm text-center transform scale-90 transition-transform duration-300" id="success-card">
-                <h2 class="text-4xl font-black title-font text-[#2E9441] mb-2">정답!</h2>
-                
-                <div class="w-32 h-32 mx-auto relative mb-4 rounded-lg comic-border overflow-hidden bg-white flex items-center justify-center p-2">
-                    <img id="success-comic-img" src="" class="w-full h-full object-contain">
-                    <div id="success-stamp" class="stamp-mark opacity-0" style="font-size: 1.5rem;">CLEAR</div>
-                </div>
-                
-                <h3 class="font-black text-xl mb-2" id="success-plant-name">식물명</h3>
-                <p class="font-bold text-sm text-gray-600 mb-6" id="success-desc">도감에 등록되었습니다!</p>
-                <button onclick="closeSuccessAndGoToCollection()" class="comic-btn w-full bg-blue-500 text-white py-3 text-lg">도감 확인하기</button>
-        </div>
-    </div>
-
-    <!-- 하단 네비게이션 탭 -->
-    <nav class="bottom-nav">
-        <div class="nav-item active" onclick="switchTab('home')">
-            <i class="fa-solid fa-house"></i>
-            <span>홈</span>
-        </div>
-        <div class="nav-item" onclick="switchTab('map')">
-            <i class="fa-solid fa-map"></i>
-            <span>지도보기</span>
-        </div>
-        <div class="nav-item" onclick="switchTab('collection')">
-            <i class="fa-solid fa-book"></i>
-            <span>내 도감</span>
-        </div>
-    </nav>
-
-    <script>
-        const state = {
-            collectedIds: [],
-            currentPlantId: null,
-            // 줌 확대를 위한 최소/최대 스케일 값을 상태에 추가했습니다.
-            map: { scale: 1, x: 0, y: 0, isDragging: false, startX: 0, startY: 0, minScale: 0.3, maxScale: 3 }
-        };
-
-        const DB_PLANTS = {
-            "p_canaria": {
-                id: "p_canaria", name: "카나리아야자", type: "상록수", month: "5월",
-                mapCoords: { x: 350, y: 343 },
-                comicImg: "./카나리아야자.png",
-                lucyMessage: "이봐, 찰리 브라운! 이국적인 느낌이 물씬 나지? 원산지는 이름에 힌트가 숨어있어! 추위에도 아주 강하다고.",
-                quiz: {
-                    question: "연 노란색 꽃이 피는 '카나리아야자'의 원산지는 어디일까요?",
-                    options: ["카나리아 제도", "제주도", "하와이"],
-                    correctIndex: 0
-                }
-            },
-            "p_naku": {
-                id: "p_naku", name: "낙우송", type: "낙엽수", month: "봄~여름",
-                mapCoords: { x: 493, y: 227 },
-                comicImg: "./낙우송.png",
-                lucyMessage: "이 나무는 잎이 떨어지는 모습이 아주 예뻐서 이름이 지어졌어! 한자 뜻을 잘 풀이해 보라구.",
-                quiz: {
-                    question: "'낙우송'이라는 이름은 어떤 모습에서 유래했을까요?",
-                    options: ["낙타의 털을 닮아서", "새의 깃털이 떨어지는 모습 같아서", "소의 뿔처럼 뾰족해서"],
-                    correctIndex: 1
-                }
-            },
-            "p_pal": {
-                id: "p_pal", name: "팔손이", type: "상록수", month: "9~11월",
-                mapCoords: { x: 537, y: 398 },
-                comicImg: "./팔손이.png",
-                lucyMessage: "내 손가락은 다섯 개지만 이 친구는 달라! 이름부터 몇 개인지 대놓고 알려주고 있잖아. 공기 정화에도 최고라고!",
-                quiz: {
-                    question: "실내 공기 정화에 좋은 '팔손이'의 잎은 보통 몇 개로 갈라져 있을까요?",
-                    options: ["4개", "8개", "12개"],
-                    correctIndex: 1
-                }
-            },
-            "p_kkamagi": {
-                id: "p_kkamagi", name: "까마귀쪽나무", type: "상록수", month: "9~11월",
-                mapCoords: { x: 574, y: 278 },
-                comicImg: "./까마귀쪽나무.png",
-                lucyMessage: "까마귀가 이 나무의 열매를 따먹을 때 재미있는 소리가 나서 이름이 이렇게 붙었어! 내가 힌트를 줄까?",
-                quiz: {
-                    question: "열매를 먹을 때 무슨 소리가 난다고 해서 까마귀'쪽'나무가 되었을까요?",
-                    options: ["깍깍", "쪽", "후루룩"],
-                    correctIndex: 1
-                }
-            },
-            "p_kkwang": {
-                id: "p_kkwang", name: "꽝꽝나무", type: "상록수", month: "5월",
-                mapCoords: { x: 651, y: 154 },
-                comicImg: "./꽝꽝나무.png",
-                lucyMessage: "모양을 내서 자르기 좋아서 토피어리로 많이 쓰지! 잎을 불에 태우면 아주 깜짝 놀랄 소리가 나!",
-                quiz: {
-                    question: "이 나무의 잎이 불에 탈 때 어떤 소리가 나서 '꽝꽝나무'일까요?",
-                    options: ["지글지글", "꽝꽝", "펑펑"],
-                    correctIndex: 1
-                }
-            },
-            "p_mal": {
-                id: "p_mal", name: "말오줌때나무", type: "낙엽수", month: "5월",
-                mapCoords: { x: 757, y: 107 },
-                comicImg: "./말오줌때나무.png",
-                lucyMessage: "으웩! 가지를 꺾어서 냄새를 맡아보면 이름이 왜 이런지 바로 알 수 있어. 옛날엔 줄기로 말채찍을 만들었대.",
-                quiz: {
-                    question: "잎이나 가지를 꺾으면 무슨 냄새가 날까요?",
-                    options: ["말 오줌 냄새", "향긋한 꽃 냄새", "시원한 박하 냄새"],
-                    correctIndex: 0
-                }
-            },
-            "p_yukbak": {
-                id: "p_yukbak", name: "육박나무", type: "상록수", month: "7~8월",
-                mapCoords: { x: 703, y: 286 },
-                comicImg: "./육박나무.png",
-                lucyMessage: "나무껍질이 육각형으로 벗겨져서 무늬가 아주 독특해. 무늬를 가만히 보고 있으면 군인들이 입는 옷이 생각나지 않아?",
-                quiz: {
-                    question: "수피 무늬 때문에 불리는 육박나무의 또 다른 별명은 무엇일까요?",
-                    options: ["경찰나무", "해병대나무 (국방나무)", "소방관나무"],
-                    correctIndex: 1
-                }
-            },
-            "p_chija": {
-                id: "p_chija", name: "치자나무", type: "상록수", month: "6월",
-                mapCoords: { x: 673, y: 530 },
-                comicImg: "./치자나무.png",
-                lucyMessage: "내 향수보다 더 좋은 재스민 향기가 나! 가을에 익는 열매는 천연 염색약으로도 쓴단다.",
-                quiz: {
-                    question: "염료로도 쓰이는 치자나무의 열매가 가을에 익으면 무슨 색이 될까요?",
-                    options: ["검은색", "보라색", "주황색"],
-                    correctIndex: 2
-                }
-            },
-            "p_awe": {
-                id: "p_awe", name: "아왜나무", type: "상록수", month: "5월",
-                mapCoords: { x: 559, y: 585 },
-                comicImg: "./아왜나무.png",
-                lucyMessage: "이 나무는 불이 나면 스스로를 보호하려고 아주 특별한 행동을 해! 그래서 방화수로 아주 좋지.",
-                quiz: {
-                    question: "불과 만나면 거품을 내는 특성 때문에 불리는 아왜나무의 별명은?",
-                    options: ["물기둥 나무", "거품 나무", "얼음 나무"],
-                    correctIndex: 1
-                }
-            },
-            "p_hubak": {
-                id: "p_hubak", name: "후박나무", type: "상록수", month: "5월",
-                mapCoords: { x: 480, y: 535 },
-                comicImg: "./후박나무.png", 
-                lucyMessage: "나무껍질이 두껍고 커서 지어진 이름이야. 배가 아플 때 이 껍질을 달여 먹으면 내 처방만큼이나 완벽하게 낫는다고!",
-                quiz: {
-                    question: "후박나무 껍질은 어떤 증상에 달여 먹으면 효험이 있을까요?",
-                    options: ["소화불량이나 헛배가 부를 때", "눈이 침침할 때", "잠이 안 올 때"],
-                    correctIndex: 0
-                }
-            },
-            "p_donnamu": {
-                id: "p_donnamu", name: "돈나무", type: "상록수", month: "5월",
-                mapCoords: { x: 417, y: 304 },
-                comicImg: "./돈나무.png",
-                lucyMessage: "찰리 브라운 셔츠의 지그재그 패턴 모양 수벽이야! 이름도 아주 맘에 들어. 왜 이런 이름이 붙었는지 맞춰봐!",
-                quiz: {
-                    question: "'돈나무'라는 이름의 유래는 무엇일까요?",
-                    options: ["잎이 동전처럼 생겨서", "열매 속 붉은 종자들처럼 돈이 많아 부자가 되길 바라서", "나무를 팔면 비싸서"],
-                    correctIndex: 1
-                }
-            }
-        };
-
-        const ALL_PLANTS_LIST = [
-            DB_PLANTS.p_canaria, DB_PLANTS.p_naku, DB_PLANTS.p_pal, DB_PLANTS.p_kkamagi, 
-            DB_PLANTS.p_kkwang, DB_PLANTS.p_mal, DB_PLANTS.p_yukbak, DB_PLANTS.p_chija, 
-            DB_PLANTS.p_awe, DB_PLANTS.p_hubak, DB_PLANTS.p_donnamu
-        ];
-
-        function switchTab(tabName) {
-            document.querySelectorAll('.view-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            <div class="grid grid-cols-3 gap-3" id="stamp-grid">
+                <!-- 스탬프 슬롯 주입 -->
+            </div>
             
-            if(tabName === 'home') {
-                document.getElementById('view-home').classList.add('active');
-                document.querySelectorAll('.nav-item')[0].classList.add('active');
-            } else if(tabName === 'mission') {
-                document.getElementById('view-mission').classList.add('active');
-            } else if(tabName === 'map') {
-                // 이 시점에 CSS class 적용을 통해 display 속성이 나타남
-                document.getElementById('view-map').classList.add('active');
-                document.querySelectorAll('.nav-item')[1].classList.add('active');
+            <button id="final-test-btn" onclick="startFinalTest()" class="comic-btn w-full bg-orange-500 text-white py-4 text-lg mt-8 hidden animate-bounce">
+                <i class="fa-solid fa-graduation-cap mr-2"></i> 최종 자격 검사 보기!
+            </button>
+        </div>
+
+        <div id="view-final-test" class="view-content">
+            <div class="text-center mb-6 mt-4">
+                <h2 class="text-3xl font-black title-font text-orange-500 mb-2">최종 자격 검사</h2>
+                <div class="inline-block bg-black text-white px-4 py-1 rounded-full font-bold text-sm" id="test-step-badge">
+                    문제 1 / 2
+                </div>
+            </div>
+
+            <div class="flex items-end mb-6">
+                <div class="w-16 h-16 bg-yellow-100 rounded-full border-2 border-black flex items-center justify-center shrink-0 z-10 mr-[-10px] overflow-hidden">
+                    <img src="./lucy_doctor.png" alt="루시" class="w-full h-full object-contain pt-1 scale-125 transform origin-bottom">
+                </div>
+                <div class="comic-bubble text-sm font-bold leading-relaxed flex-1">
+                    지금까지 배운 걸 테스트해볼까?<br>아래 설명을 읽고 <strong>어떤 나무</strong>인지 이름을 맞춰봐!
+                </div>
+            </div>
+
+            <div class="comic-border bg-white p-5" id="final-quiz-container">
+                <h4 class="font-black text-lg mb-3 text-center title-font text-[#2E9441]"><i class="fa-solid fa-leaf"></i> 식물 맞추기</h4>
+                <p class="font-bold text-sm mb-6 text-gray-800 p-3 bg-gray-100 rounded-lg border-2 border-dashed border-gray-300" id="final-quiz-desc">
+                    설명 내용
+                </p>
+                <div class="flex flex-col gap-3" id="final-quiz-options">
+                    <!-- 최종 옵션 버튼 주입 -->
+                </div>
+            </div>
+        </div>
+
+        <div id="view-cert-form" class="view-content">
+            <h2 class="text-3xl font-black title-font text-center text-[#2E9441] mb-2 mt-4">자격 시험 통과!</h2>
+            <p class="text-sm font-bold text-center text-gray-600 mb-6">마지막으로 가드너 인증서를 발급해줄게.</p>
+
+            <div class="comic-border bg-white p-5 mb-6">
+                <label class="block font-black text-lg mb-2">1. 네 이름을 알려줘!</label>
+                <input type="text" id="user-name-input" placeholder="이름 입력 (예: 찰리)" class="w-full border-3 border-black rounded-lg p-3 font-bold text-lg focus:outline-none focus:border-[#2E9441]" maxlength="10">
+            </div>
+
+            <div class="comic-border bg-white p-5 mb-6">
+                <label class="block font-black text-lg mb-3">2. 가장 마음에 드는 식물을 선택해!</label>
+                <div class="grid grid-cols-4 gap-2" id="cert-plant-grid">
+                    <!-- 수집한 에셋 주입 -->
+                </div>
+            </div>
+
+            <button onclick="generateCertificate()" class="comic-btn w-full bg-[#2E9441] text-white py-4 text-xl">
+                인증서 발급받기!
+            </button>
+        </div>
+
+        <div id="view-certificate" class="view-content">
+            <div class="cert-wrapper" id="cert-capture-area">
+                <div class="cert-header-title">Gardener Certification</div>
                 
-                if(document.getElementById('map-content').children.length === 0) {
-                    initMap(); 
-                    setupMapDragging(document.getElementById('map-container'), document.getElementById('map-content'));
-                } else {
-                    renderMapPins();
+                <div class="cert-content-box handwriting">
+                    <div class="cert-user-row">
+                        <span class="cert-name-text" id="final-cert-name">찰리 브라운</span>
+                        <img class="cert-plant-img" id="final-cert-img" src="" alt="선택한 식물">
+                    </div>
+                    <p class="cert-desc-text">
+                        이 프로그램을 참여해서<br>
+                        너에게 루시 가든에<br>
+                        가드너로 임명한다.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- 안내 문구 (캡처 영역 밖) -->
+            <div class="absolute bottom-5 left-0 w-full text-center z-50">
+                <p class="text-white font-bold text-sm bg-black/50 inline-block px-4 py-2 rounded-full backdrop-blur-sm">
+                    <i class="fa-solid fa-camera mr-1"></i> 화면을 캡처해서 인증서를 간직하세요!
+                </p>
+            </div>
+            
+            <!-- 닫기 버튼 -->
+            <button onclick="switchTab('collection')" class="absolute top-5 right-5 w-10 h-10 bg-white rounded-full border-2 border-black flex justify-center items-center font-bold z-50 shadow-md">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div id="toast" class="fixed top-20 left-1/2 transform -translate-x-1/2 bg-black text-white font-bold px-6 py-3 rounded-full z-50 transition-all duration-300 opacity-0 pointer-events-none shadow-lg flex items-center">
+            <i class="fa-solid fa-xmark text-red-400 mr-2 text-lg"></i>
+            <span id="toast-msg">다시 한번 생각해봐!</span>
+        </div>
+
+        <div id="success-modal" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+                <div class="bg-white p-6 rounded-2xl comic-border w-10/12 max-w-sm text-center transform scale-90 transition-transform duration-300" id="success-card">
+                    <h2 class="text-4xl font-black title-font text-[#2E9441] mb-2">정답!</h2>
+                    
+                    <div class="w-32 h-32 mx-auto relative mb-4 rounded-lg comic-border overflow-hidden bg-white flex items-center justify-center p-2">
+                        <img id="success-comic-img" src="" class="w-full h-full object-contain">
+                        <div id="success-stamp" class="stamp-mark opacity-0" style="font-size: 1.5rem;">CLEAR</div>
+                    </div>
+                    
+                    <h3 class="font-black text-xl mb-2" id="success-plant-name">식물명</h3>
+                    <p class="font-bold text-sm text-gray-600 mb-6" id="success-desc">도감에 등록되었습니다!</p>
+                    <button onclick="closeSuccessAndGoToCollection()" class="comic-btn w-full bg-blue-500 text-white py-3 text-lg">도감 확인하기</button>
+            </div>
+        </div>
+
+        <!-- 하단 네비게이션 탭 -->
+        <nav class="bottom-nav" id="bottom-nav">
+            <div class="nav-item active" onclick="switchTab('home')">
+                <i class="fa-solid fa-house"></i>
+                <span>홈</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('map')">
+                <i class="fa-solid fa-map"></i>
+                <span>지도보기</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('collection')">
+                <i class="fa-solid fa-book"></i>
+                <span>내 도감</span>
+            </div>
+        </nav>
+
+        <script>
+            const state = {
+                collectedIds: [],
+                currentPlantId: null,
+                map: { scale: 1, x: 0, y: 0, isDragging: false, startX: 0, startY: 0, minScale: 0.3, maxScale: 3 },
+                finalTest: { questions: [], currentStep: 0 },
+                certCustom: { plantId: null }
+            };
+
+            const DB_PLANTS = {
+                "p_canaria": {
+                    id: "p_canaria", name: "카나리아야자", type: "상록수", month: "5월",
+                    mapCoords: { x: 350, y: 343 },
+                    comicImg: "./카나리아야자.png",
+                    lucyMessage: "이봐, 찰리 브라운! 이국적인 느낌이 물씬 나지? 원산지는 이름에 힌트가 숨어있어! 추위에도 아주 강하다고.",
+                    quiz: { question: "연 노란색 꽃이 피는 '카나리아야자'의 원산지는 어디일까요?", options: ["카나리아 제도", "제주도", "하와이"], correctIndex: 0 }
+                },
+                "p_naku": {
+                    id: "p_naku", name: "낙우송", type: "낙엽수", month: "봄~여름",
+                    mapCoords: { x: 493, y: 227 },
+                    comicImg: "./낙우송.png",
+                    lucyMessage: "이 나무는 잎이 떨어지는 모습이 아주 예뻐서 이름이 지어졌어! 한자 뜻을 잘 풀이해 보라구.",
+                    quiz: { question: "'낙우송'이라는 이름은 어떤 모습에서 유래했을까요?", options: ["낙타의 털을 닮아서", "새의 깃털이 떨어지는 모습 같아서", "소의 뿔처럼 뾰족해서"], correctIndex: 1 }
+                },
+                "p_pal": {
+                    id: "p_pal", name: "팔손이", type: "상록수", month: "9~11월",
+                    mapCoords: { x: 537, y: 398 },
+                    comicImg: "./팔손이.png",
+                    lucyMessage: "내 손가락은 다섯 개지만 이 친구는 달라! 이름부터 몇 개인지 대놓고 알려주고 있잖아. 공기 정화에도 최고라고!",
+                    quiz: { question: "실내 공기 정화에 좋은 '팔손이'의 잎은 보통 몇 개로 갈라져 있을까요?", options: ["4개", "8개", "12개"], correctIndex: 1 }
+                },
+                "p_kkamagi": {
+                    id: "p_kkamagi", name: "까마귀쪽나무", type: "상록수", month: "9~11월",
+                    mapCoords: { x: 574, y: 278 },
+                    comicImg: "./까마귀쪽나무.png",
+                    lucyMessage: "까마귀가 이 나무의 열매를 따먹을 때 재미있는 소리가 나서 이름이 이렇게 붙었어! 내가 힌트를 줄까?",
+                    quiz: { question: "열매를 먹을 때 무슨 소리가 난다고 해서 까마귀'쪽'나무가 되었을까요?", options: ["깍깍", "쪽", "후루룩"], correctIndex: 1 }
+                },
+                "p_kkwang": {
+                    id: "p_kkwang", name: "꽝꽝나무", type: "상록수", month: "5월",
+                    mapCoords: { x: 651, y: 154 },
+                    comicImg: "./꽝꽝나무.png",
+                    lucyMessage: "모양을 내서 자르기 좋아서 토피어리로 많이 쓰지! 잎을 불에 태우면 아주 깜짝 놀랄 소리가 나!",
+                    quiz: { question: "이 나무의 잎이 불에 탈 때 어떤 소리가 나서 '꽝꽝나무'일까요?", options: ["지글지글", "꽝꽝", "펑펑"], correctIndex: 1 }
+                },
+                "p_mal": {
+                    id: "p_mal", name: "말오줌때나무", type: "낙엽수", month: "5월",
+                    mapCoords: { x: 757, y: 107 },
+                    comicImg: "./말오줌때나무.png",
+                    lucyMessage: "으웩! 가지를 꺾어서 냄새를 맡아보면 이름이 왜 이런지 바로 알 수 있어. 옛날엔 줄기로 말채찍을 만들었대.",
+                    quiz: { question: "잎이나 가지를 꺾으면 무슨 냄새가 날까요?", options: ["말 오줌 냄새", "향긋한 꽃 냄새", "시원한 박하 냄새"], correctIndex: 0 }
+                },
+                "p_yukbak": {
+                    id: "p_yukbak", name: "육박나무", type: "상록수", month: "7~8월",
+                    mapCoords: { x: 703, y: 286 },
+                    comicImg: "./육박나무.png",
+                    lucyMessage: "나무껍질이 육각형으로 벗겨져서 무늬가 아주 독특해. 무늬를 가만히 보고 있으면 군인들이 입는 옷이 생각나지 않아?",
+                    quiz: { question: "수피 무늬 때문에 불리는 육박나무의 또 다른 별명은 무엇일까요?", options: ["경찰나무", "해병대나무 (국방나무)", "소방관나무"], correctIndex: 1 }
+                },
+                "p_chija": {
+                    id: "p_chija", name: "치자나무", type: "상록수", month: "6월",
+                    mapCoords: { x: 673, y: 530 },
+                    comicImg: "./치자나무.png",
+                    lucyMessage: "내 향수보다 더 좋은 재스민 향기가 나! 가을에 익는 열매는 천연 염색약으로도 쓴단다.",
+                    quiz: { question: "염료로도 쓰이는 치자나무의 열매가 가을에 익으면 무슨 색이 될까요?", options: ["검은색", "보라색", "주황색"], correctIndex: 2 }
+                },
+                "p_awe": {
+                    id: "p_awe", name: "아왜나무", type: "상록수", month: "5월",
+                    mapCoords: { x: 559, y: 585 },
+                    comicImg: "./아왜나무.png",
+                    lucyMessage: "이 나무는 불이 나면 스스로를 보호하려고 아주 특별한 행동을 해! 그래서 방화수로 아주 좋지.",
+                    quiz: { question: "불과 만나면 거품을 내는 특성 때문에 불리는 아왜나무의 별명은?", options: ["물기둥 나무", "거품 나무", "얼음 나무"], correctIndex: 1 }
+                },
+                "p_hubak": {
+                    id: "p_hubak", name: "후박나무", type: "상록수", month: "5월",
+                    mapCoords: { x: 480, y: 535 },
+                    comicImg: "./후박나무.png", 
+                    lucyMessage: "나무껍질이 두껍고 커서 지어진 이름이야. 배가 아플 때 이 껍질을 달여 먹으면 내 처방만큼이나 완벽하게 낫는다고!",
+                    quiz: { question: "후박나무 껍질은 어떤 증상에 달여 먹으면 효험이 있을까요?", options: ["소화불량이나 헛배가 부를 때", "눈이 침침할 때", "잠이 안 올 때"], correctIndex: 0 }
+                },
+                "p_donnamu": {
+                    id: "p_donnamu", name: "돈나무", type: "상록수", month: "5월",
+                    mapCoords: { x: 417, y: 304 },
+                    comicImg: "./돈나무.png",
+                    lucyMessage: "찰리 브라운 셔츠의 지그재그 패턴 모양 수벽이야! 이름도 아주 맘에 들어. 왜 이런 이름이 붙었는지 맞춰봐!",
+                    quiz: { question: "'돈나무'라는 이름의 유래는 무엇일까요?", options: ["잎이 동전처럼 생겨서", "열매 속 붉은 종자들처럼 돈이 많아 부자가 되길 바라서", "나무를 팔면 비싸서"], correctIndex: 1 }
                 }
-            } else if(tabName === 'collection') {
-                renderCollection();
-                document.getElementById('view-collection').classList.add('active');
-                document.querySelectorAll('.nav-item')[2].classList.add('active');
+            };
+
+            const ALL_PLANTS_LIST = [
+                DB_PLANTS.p_canaria, DB_PLANTS.p_naku, DB_PLANTS.p_pal, DB_PLANTS.p_kkamagi, 
+                DB_PLANTS.p_kkwang, DB_PLANTS.p_mal, DB_PLANTS.p_yukbak, DB_PLANTS.p_chija, 
+                DB_PLANTS.p_awe, DB_PLANTS.p_hubak, DB_PLANTS.p_donnamu
+            ];
+
+            function switchTab(tabName) {
+                document.querySelectorAll('.view-content').forEach(el => el.classList.remove('active'));
+                
+                // 네비게이션 제어 (인증서 관련 화면은 네비게이션 숨김 처리)
+                const nav = document.getElementById('bottom-nav');
+                const header = document.getElementById('main-header');
+                
+                if (['final-test', 'cert-form', 'certificate'].includes(tabName)) {
+                    nav.style.display = 'none';
+                    if(tabName === 'certificate') header.style.display = 'none';
+                    else header.style.display = 'flex';
+                } else {
+                    nav.style.display = 'flex';
+                    header.style.display = 'flex';
+                    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+                }
+                
+                if(tabName === 'home') {
+                    document.getElementById('view-home').classList.add('active');
+                    document.querySelectorAll('.nav-item')[0].classList.add('active');
+                } else if(tabName === 'mission') {
+                    document.getElementById('view-mission').classList.add('active');
+                } else if(tabName === 'map') {
+                    document.getElementById('view-map').classList.add('active');
+                    document.querySelectorAll('.nav-item')[1].classList.add('active');
+                    
+                    if(document.getElementById('map-content').children.length === 0) {
+                        initMap(); 
+                        setupMapDragging(document.getElementById('map-container'), document.getElementById('map-content'));
+                    } else {
+                        renderMapPins();
+                    }
+                } else if(tabName === 'collection') {
+                    renderCollection();
+                    document.getElementById('view-collection').classList.add('active');
+                    document.querySelectorAll('.nav-item')[2].classList.add('active');
+                } else if(tabName === 'final-test') {
+                    document.getElementById('view-final-test').classList.add('active');
+                } else if(tabName === 'cert-form') {
+                    document.getElementById('view-cert-form').classList.add('active');
+                } else if(tabName === 'certificate') {
+                    document.getElementById('view-certificate').classList.add('active');
+                }
             }
-        }
 
-        function initMap() {
-            renderMapPins();
-            resetMapZoom();
-        }
+            /* 지도 관련 기능 */
+            function initMap() {
+                renderMapPins();
+                resetMapZoom();
+            }
 
-        function renderMapPins() {
-        const mapContent = document.getElementById('map-content');
-        mapContent.innerHTML = ''; 
-        
-        Object.values(DB_PLANTS).forEach(plant => {
-                const pin = document.createElement('div');
-                pin.className = 'map-pin';
-                const isCollected = state.collectedIds.includes(plant.id);
-                
-                if(isCollected) {
-                    pin.classList.add('collected-pin');
+            function renderMapPins() {
+            const mapContent = document.getElementById('map-content');
+            mapContent.innerHTML = ''; 
+            
+            Object.values(DB_PLANTS).forEach(plant => {
+                    const pin = document.createElement('div');
+                    pin.className = 'map-pin';
+                    const isCollected = state.collectedIds.includes(plant.id);
+                    
+                    if(isCollected) pin.classList.add('collected-pin');
+                    pin.style.left = `${plant.mapCoords.x}px`;
+                    pin.style.top = `${plant.mapCoords.y}px`;
+                    
+                    const popup = document.createElement('div');
+                    popup.className = 'pin-popup';
+                    
+                    let popupHtml = `<span>${plant.name}</span>`;
+                    if(isCollected) {
+                        popupHtml += `<button class="mt-1 bg-gray-400 text-white text-xs px-3 py-1 rounded-full font-bold cursor-default">CLEAR</button>`;
+                    } else {
+                        popupHtml += `<button onclick="loadMission('${plant.id}')" class="mt-1 bg-[#2E9441] text-white text-xs px-3 py-1 rounded-full font-bold shadow-md active:scale-95 transition-transform">상담 시작</button>`;
+                    }
+                    popup.innerHTML = popupHtml;
+                    popup.style.left = `${plant.mapCoords.x}px`;
+                    popup.style.top = `${plant.mapCoords.y - 45}px`; 
+                    
+                    pin.onclick = (e) => {
+                        e.stopPropagation();
+                        focusOnPin(plant.mapCoords.x, plant.mapCoords.y, pin, popup);
+                    };
+
+                    mapContent.appendChild(pin);
+                    mapContent.appendChild(popup);
+                });
+            }
+
+            function updateMapTransform() {
+                constrainMap();
+                document.getElementById('map-content').style.transform = `translate(${state.map.x}px, ${state.map.y}px) scale(${state.map.scale})`;
+            }
+
+            function constrainMap() {
+                const container = document.getElementById('map-container');
+                if(!container) return;
+                const mapWidth = 851 * state.map.scale;
+                const mapHeight = 737 * state.map.scale;
+                const containerWidth = container.clientWidth;
+                const containerHeight = container.clientHeight;
+
+                if (mapWidth <= containerWidth) state.map.x = (containerWidth - mapWidth) / 2;
+                else {
+                    if (state.map.x > 0) state.map.x = 0;
+                    if (state.map.x < containerWidth - mapWidth) state.map.x = containerWidth - mapWidth;
                 }
 
-                pin.style.left = `${plant.mapCoords.x}px`;
-                pin.style.top = `${plant.mapCoords.y}px`;
-                
-                const popup = document.createElement('div');
-                popup.className = 'pin-popup';
-                
-                let popupHtml = `<span>${plant.name}</span>`;
-                if(isCollected) {
-                    popupHtml += `<button class="mt-1 bg-gray-400 text-white text-xs px-3 py-1 rounded-full font-bold cursor-default">CLEAR</button>`;
-                } else {
-                    popupHtml += `<button onclick="loadMission('${plant.id}')" class="mt-1 bg-[#2E9441] text-white text-xs px-3 py-1 rounded-full font-bold shadow-md active:scale-95 transition-transform">상담 시작</button>`;
+                if (mapHeight <= containerHeight) state.map.y = (containerHeight - mapHeight) / 2;
+                else {
+                    if (state.map.y > 0) state.map.y = 0;
+                    if (state.map.y < containerHeight - mapHeight) state.map.y = containerHeight - mapHeight;
                 }
-                popup.innerHTML = popupHtml;
+            }
 
-                popup.style.left = `${plant.mapCoords.x}px`;
-                popup.style.top = `${plant.mapCoords.y - 45}px`; 
+            function resetMapZoom() {
+                const container = document.getElementById('map-container');
+                const scale = container.clientWidth / 851;
+                state.map.minScale = Math.max(scale, 0.3); 
+                state.map.scale = state.map.minScale;
+                state.map.x = (container.clientWidth - (851 * state.map.scale)) / 2;
+                state.map.y = 20; 
                 
-                pin.onclick = (e) => {
-                    e.stopPropagation();
-                    focusOnPin(plant.mapCoords.x, plant.mapCoords.y, pin, popup);
+                document.querySelectorAll('.pin-popup').forEach(p => p.classList.remove('show'));
+                document.querySelectorAll('.map-pin').forEach(p => p.classList.remove('active-pin'));
+                updateMapTransform();
+            }
+
+            function focusOnPin(pinX, pinY, activePinElement, popupElement) {
+                const container = document.getElementById('map-container');
+                const targetScale = 1.5; 
+                state.map.scale = targetScale;
+                state.map.x = (container.clientWidth / 2) - (pinX * targetScale);
+                state.map.y = (container.clientHeight / 2) - (pinY * targetScale) + 50; 
+                
+                updateMapTransform();
+                document.querySelectorAll('.pin-popup').forEach(p => p.classList.remove('show'));
+                document.querySelectorAll('.map-pin').forEach(p => p.classList.remove('active-pin'));
+                popupElement.classList.add('show');
+                
+                if (!activePinElement.classList.contains('collected-pin')) {
+                    activePinElement.classList.add('active-pin');
+                }
+            }
+
+            function zoomMap(newScale, pointerX, pointerY) {
+                newScale = Math.max(state.map.minScale, Math.min(newScale, state.map.maxScale));
+                const scaleRatio = newScale / state.map.scale;
+                state.map.x = pointerX - (pointerX - state.map.x) * scaleRatio;
+                state.map.y = pointerY - (pointerY - state.map.y) * scaleRatio;
+                state.map.scale = newScale;
+                updateMapTransform();
+            }
+
+            function setupMapDragging(container, content) {
+                let initialDistance = 0;
+                let initialScale = 1;
+
+                const startDrag = (e) => {
+                    if (e.touches && e.touches.length === 2) {
+                        state.map.isDragging = false;
+                        initialDistance = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+                        initialScale = state.map.scale;
+                        return;
+                    }
+                    if (e.touches && e.touches.length > 1) return;
+                    state.map.isDragging = true;
+                    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                    state.map.startX = clientX - state.map.x;
+                    state.map.startY = clientY - state.map.y;
                 };
 
-                mapContent.appendChild(pin);
-            mapContent.appendChild(popup);
-        });
-    }
+                const onDrag = (e) => {
+                    if (e.touches && e.touches.length === 2) {
+                        e.preventDefault(); 
+                        const currentDistance = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+                        const touchCenterX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+                        const touchCenterY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+                        const rect = container.getBoundingClientRect();
+                        const pointerX = touchCenterX - rect.left;
+                        const pointerY = touchCenterY - rect.top;
+                        const newScale = initialScale * (currentDistance / initialDistance);
+                        zoomMap(newScale, pointerX, pointerY);
+                        return;
+                    }
+                    if (!state.map.isDragging) return;
+                    e.preventDefault(); 
+                    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                    state.map.x = clientX - state.map.startX;
+                    state.map.y = clientY - state.map.startY;
+                    updateMapTransform();
+                };
 
-    function updateMapTransform() {
-        // 이동하거나 확대할 때마다 이탈 방지 검사를 먼저 실행합니다.
-        constrainMap();
-        document.getElementById('map-content').style.transform = `translate(${state.map.x}px, ${state.map.y}px) scale(${state.map.scale})`;
-    }
+                const endDrag = (e) => { 
+                    state.map.isDragging = false; 
+                    if (e && e.touches && e.touches.length === 1) {
+                        state.map.startX = e.touches[0].clientX - state.map.x;
+                        state.map.startY = e.touches[0].clientY - state.map.y;
+                        state.map.isDragging = true;
+                    }
+                };
 
-    // 지도 이탈 방지 로직 (경계선 검사)
-    function constrainMap() {
-        const container = document.getElementById('map-container');
-        if(!container) return;
-        
-        const mapWidth = 851 * state.map.scale;
-        const mapHeight = 737 * state.map.scale;
-        const containerWidth = container.clientWidth;
-        const containerHeight = container.clientHeight;
+                const onWheel = (e) => {
+                    e.preventDefault();
+                    const rect = container.getBoundingClientRect();
+                    const pointerX = e.clientX - rect.left;
+                    const pointerY = e.clientY - rect.top;
+                    const zoomSpeed = 0.1;
+                    const delta = e.deltaY > 0 ? -1 : 1; 
+                    const newScale = state.map.scale * (1 + (delta * zoomSpeed));
+                    zoomMap(newScale, pointerX, pointerY);
+                };
 
-        // X축 제한: 지도가 컨테이너보다 작으면 중앙 정렬, 크면 화면 밖으로 나가지 못하게 고정
-        if (mapWidth <= containerWidth) {
-            state.map.x = (containerWidth - mapWidth) / 2;
-        } else {
-            if (state.map.x > 0) state.map.x = 0;
-            if (state.map.x < containerWidth - mapWidth) state.map.x = containerWidth - mapWidth;
-        }
-
-        // Y축 제한: 지도가 컨테이너보다 작으면 중앙 정렬, 크면 화면 밖으로 나가지 못하게 고정
-        if (mapHeight <= containerHeight) {
-            state.map.y = (containerHeight - mapHeight) / 2;
-        } else {
-            if (state.map.y > 0) state.map.y = 0;
-            if (state.map.y < containerHeight - mapHeight) state.map.y = containerHeight - mapHeight;
-        }
-    }
-
-    function resetMapZoom() {
-        const container = document.getElementById('map-container');
-        
-        const scale = container.clientWidth / 851;
-        // 컨테이너 너비에 맞춘 비율을 최소 축소 한계점으로 설정합니다.
-        state.map.minScale = Math.max(scale, 0.3); 
-        state.map.scale = state.map.minScale;
-        
-        state.map.x = (container.clientWidth - (851 * state.map.scale)) / 2;
-        state.map.y = 20; 
-        
-        document.querySelectorAll('.pin-popup').forEach(p => p.classList.remove('show'));
-        document.querySelectorAll('.map-pin').forEach(p => p.classList.remove('active-pin'));
-        updateMapTransform();
-    }
-
-    function focusOnPin(pinX, pinY, activePinElement, popupElement) {
-        const container = document.getElementById('map-container');
-        const targetScale = 1.5; 
-        state.map.scale = targetScale;
-        state.map.x = (container.clientWidth / 2) - (pinX * targetScale);
-        state.map.y = (container.clientHeight / 2) - (pinY * targetScale) + 50; 
-        
-        updateMapTransform();
-        document.querySelectorAll('.pin-popup').forEach(p => p.classList.remove('show'));
-        document.querySelectorAll('.map-pin').forEach(p => p.classList.remove('active-pin'));
-        popupElement.classList.add('show');
-        
-        if (!activePinElement.classList.contains('collected-pin')) {
-            activePinElement.classList.add('active-pin');
-        }
-    }
-
-    // 마우스/터치 위치를 중심으로 확대/축소하는 헬퍼 함수
-    function zoomMap(newScale, pointerX, pointerY) {
-        newScale = Math.max(state.map.minScale, Math.min(newScale, state.map.maxScale));
-        const scaleRatio = newScale / state.map.scale;
-        
-        // 포인터 중심 좌표 보정 (확대 시 엉뚱한 곳으로 튀는 것 방지)
-        state.map.x = pointerX - (pointerX - state.map.x) * scaleRatio;
-        state.map.y = pointerY - (pointerY - state.map.y) * scaleRatio;
-        
-        state.map.scale = newScale;
-        updateMapTransform();
-    }
-
-    function setupMapDragging(container, content) {
-        let initialDistance = 0;
-        let initialScale = 1;
-
-        const startDrag = (e) => {
-            // 두 손가락 핀치 줌 시작 감지
-            if (e.touches && e.touches.length === 2) {
-                state.map.isDragging = false;
-                initialDistance = Math.hypot(
-                    e.touches[0].clientX - e.touches[1].clientX,
-                    e.touches[0].clientY - e.touches[1].clientY
-                );
-                initialScale = state.map.scale;
-                return;
-            }
-            if (e.touches && e.touches.length > 1) return;
-
-            state.map.isDragging = true;
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-            state.map.startX = clientX - state.map.x;
-            state.map.startY = clientY - state.map.y;
-        };
-
-        const onDrag = (e) => {
-            // 두 손가락 핀치 줌 진행
-            if (e.touches && e.touches.length === 2) {
-                e.preventDefault(); 
-                const currentDistance = Math.hypot(
-                    e.touches[0].clientX - e.touches[1].clientX,
-                    e.touches[0].clientY - e.touches[1].clientY
-                );
-                
-                // 두 터치의 중심점 계산
-                const touchCenterX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
-                const touchCenterY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
-                
-                const rect = container.getBoundingClientRect();
-                const pointerX = touchCenterX - rect.left;
-                const pointerY = touchCenterY - rect.top;
-
-                const newScale = initialScale * (currentDistance / initialDistance);
-                zoomMap(newScale, pointerX, pointerY);
-                return;
+                container.addEventListener('touchstart', startDrag, {passive: false});
+                container.addEventListener('touchmove', onDrag, {passive: false});
+                container.addEventListener('touchend', endDrag);
+                container.addEventListener('mousedown', startDrag);
+                container.addEventListener('wheel', onWheel, {passive: false});
+                window.addEventListener('mouseup', endDrag);
+                window.addEventListener('mousemove', onDrag);
             }
 
-            // 일반 화면 드래그
-            if (!state.map.isDragging) return;
-            e.preventDefault(); 
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-            state.map.x = clientX - state.map.startX;
-            state.map.y = clientY - state.map.startY;
-            updateMapTransform();
-        };
+            /* 상담 미션 로직 */
+            function loadMission(qrId) {
+                const data = DB_PLANTS[qrId];
+                if(!data) return;
 
-        const endDrag = (e) => { 
-            state.map.isDragging = false; 
-            // 두 손가락 중 하나만 뗐을 때 지도가 튀는 현상 방지
-            if (e && e.touches && e.touches.length === 1) {
-               state.map.startX = e.touches[0].clientX - state.map.x;
-               state.map.startY = e.touches[0].clientY - state.map.y;
-               state.map.isDragging = true;
+                state.currentPlantId = qrId;
+                document.getElementById('plant-name').innerText = data.name;
+                document.getElementById('plant-month').innerText = data.month;
+                
+                const imgEl = document.getElementById('comic-strip-img');
+                imgEl.src = data.comicImg;
+                imgEl.onerror = () => { imgEl.src = `https://placehold.co/400x400/FFCC00/000?text=${data.name}+Comic`; };
+                
+                document.getElementById('lucy-dialogue').innerText = data.lucyMessage;
+                
+                const badge = document.getElementById('mission-type-badge');
+                badge.innerText = data.type;
+                badge.className = `text-white text-xs font-bold px-2 py-1 rounded-full ${data.type === '상록수' ? 'bg-green-700' : 'bg-orange-500'}`;
+
+                document.getElementById('quiz-question').innerText = data.quiz.question;
+                const optionsContainer = document.getElementById('quiz-options');
+                optionsContainer.innerHTML = '';
+                
+                data.quiz.options.forEach((opt, index) => {
+                    const btn = document.createElement('button');
+                    btn.className = "comic-btn py-3 px-4 text-left w-full hover:bg-gray-50 text-sm";
+                    btn.innerHTML = `<span class="font-black mr-2 text-lg text-gray-400">${index + 1}.</span> <span>${opt}</span>`;
+                    btn.onclick = () => checkAnswer(btn, index, data.quiz.correctIndex, data);
+                    optionsContainer.appendChild(btn);
+                });
+
+                switchTab('mission');
             }
-        };
 
-        // 데스크톱 마우스 휠 줌 지원
-        const onWheel = (e) => {
-            e.preventDefault();
-            const rect = container.getBoundingClientRect();
-            const pointerX = e.clientX - rect.left;
-            const pointerY = e.clientY - rect.top;
-            
-            // 휠 방향에 따라 약 10% 단위로 스케일 조정
-            const zoomSpeed = 0.1;
-            const delta = e.deltaY > 0 ? -1 : 1; 
-            const newScale = state.map.scale * (1 + (delta * zoomSpeed));
-            
-            zoomMap(newScale, pointerX, pointerY);
-        };
-
-        container.addEventListener('touchstart', startDrag, {passive: false});
-        container.addEventListener('touchmove', onDrag, {passive: false});
-        container.addEventListener('touchend', endDrag);
-        container.addEventListener('mousedown', startDrag);
-        container.addEventListener('wheel', onWheel, {passive: false});
-        window.addEventListener('mouseup', endDrag);
-        window.addEventListener('mousemove', onDrag);
-    }
-
-    function loadMission(qrId) {
-            const data = DB_PLANTS[qrId];
-            if(!data) return;
-
-            state.currentPlantId = qrId;
-            document.getElementById('plant-name').innerText = data.name;
-            document.getElementById('plant-month').innerText = data.month;
-            
-            const imgEl = document.getElementById('comic-strip-img');
-            imgEl.src = data.comicImg;
-            imgEl.onerror = () => { imgEl.src = `https://placehold.co/400x400/FFCC00/000?text=${data.name}+Comic`; };
-            
-            document.getElementById('lucy-dialogue').innerText = data.lucyMessage;
-            
-            const badge = document.getElementById('mission-type-badge');
-            badge.innerText = data.type;
-            badge.className = `text-white text-xs font-bold px-2 py-1 rounded-full ${data.type === '상록수' ? 'bg-green-700' : 'bg-orange-500'}`;
-
-            document.getElementById('quiz-question').innerText = data.quiz.question;
-            const optionsContainer = document.getElementById('quiz-options');
-            optionsContainer.innerHTML = '';
-            
-            data.quiz.options.forEach((opt, index) => {
-                const btn = document.createElement('button');
-                btn.className = "comic-btn py-3 px-4 text-left w-full hover:bg-gray-50 text-sm";
-                btn.innerHTML = `<span class="font-black mr-2 text-lg text-gray-400">${index + 1}.</span> <span>${opt}</span>`;
-                btn.onclick = () => checkAnswer(btn, index, data.quiz.correctIndex, data);
-                optionsContainer.appendChild(btn);
-            });
-
-            switchTab('mission');
-        }
-
-        function checkAnswer(btnElement, selectedIndex, correctIndex, plantData) {
-            if(selectedIndex === correctIndex) {
-                if(!state.collectedIds.includes(plantData.id)) {
-                    state.collectedIds.push(plantData.id);
-                }
-                showSuccessModal(plantData);
-            } else {
-                const container = document.getElementById('quiz-container');
-                container.classList.remove('shake');
-                void container.offsetWidth; 
-                container.classList.add('shake');
-                
-                const messages = ["땡! 다시 생각해, 바보 찰리 브라운!", "식물 공부 안 했어?", "패찰을 다시 꼼꼼히 읽어봐!"];
-                showToast(messages[Math.floor(Math.random() * messages.length)]);
-            }
-        }
-
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            document.getElementById('toast-msg').innerText = msg;
-            toast.classList.remove('opacity-0', 'translate-y-[-20px]');
-            toast.classList.add('opacity-100', 'translate-y-0');
-            
-            setTimeout(() => {
-                toast.classList.remove('opacity-100', 'translate-y-0');
-                toast.classList.add('opacity-0', 'translate-y-[-20px]');
-            }, 2000);
-        }
-
-        function showSuccessModal(plantData) {
-            document.getElementById('success-plant-name').innerText = plantData.name;
-            
-            const imgEl = document.getElementById('success-comic-img');
-            imgEl.src = plantData.comicImg;
-            imgEl.onerror = () => { imgEl.src = `https://placehold.co/400x400/FFCC00/000?text=${plantData.name}+Comic`; };
-            
-            const modal = document.getElementById('success-modal');
-            const card = document.getElementById('success-card');
-            const stamp = document.getElementById('success-stamp');
-            
-            stamp.classList.remove('stamp-anim');
-            stamp.style.opacity = '0';
-            
-            modal.classList.remove('opacity-0', 'pointer-events-none');
-            
-            setTimeout(() => { 
-                card.classList.remove('scale-90'); 
-                card.classList.add('scale-100'); 
-                
-                setTimeout(() => {
-                    stamp.classList.add('stamp-anim');
-                }, 300);
-            }, 50);
-        }
-
-        function closeSuccessAndGoToCollection() {
-            const modal = document.getElementById('success-modal');
-            const card = document.getElementById('success-card');
-            
-            card.classList.remove('scale-100'); card.classList.add('scale-90');
-            modal.classList.add('opacity-0', 'pointer-events-none');
-            
-            setTimeout(() => { switchTab('collection'); }, 300);
-        }
-
-        function renderCollection() {
-            document.getElementById('collection-count').innerText = state.collectedIds.length;
-            const grid = document.getElementById('stamp-grid');
-            grid.innerHTML = '';
-
-            ALL_PLANTS_LIST.forEach((plant, index) => {
-                const isCollected = state.collectedIds.includes(plant.id);
-                const slot = document.createElement('div');
-                
-                if(isCollected) {
-                    slot.className = "stamp-slot collected";
-                    slot.style.backgroundImage = `url('${plant.comicImg}'), url('https://placehold.co/400x400/FFCC00/000?text=${plant.name}+Comic')`;
-                    slot.innerHTML = `<div class="stamp-mark">CLEAR</div>`;
+            function checkAnswer(btnElement, selectedIndex, correctIndex, plantData) {
+                if(selectedIndex === correctIndex) {
+                    if(!state.collectedIds.includes(plantData.id)) {
+                        state.collectedIds.push(plantData.id);
+                    }
+                    showSuccessModal(plantData);
                 } else {
-                    slot.className = "stamp-slot";
-                    slot.innerHTML = `
-                        <i class="fa-solid fa-lock text-gray-400 text-xl mb-1"></i>
-                        <span class="text-[10px] font-bold text-gray-400">No.${index + 1}</span>
-                    `;
+                    const container = document.getElementById('quiz-container');
+                    container.classList.remove('shake');
+                    void container.offsetWidth; 
+                    container.classList.add('shake');
+                    
+                    const messages = ["땡! 다시 생각해, 바보 찰리 브라운!", "식물 공부 안 했어?", "패찰을 다시 꼼꼼히 읽어봐!"];
+                    showToast(messages[Math.floor(Math.random() * messages.length)]);
                 }
-                grid.appendChild(slot);
-            });
-        }
-    </script>
-</div>
+            }
+
+            function showToast(msg) {
+                const toast = document.getElementById('toast');
+                document.getElementById('toast-msg').innerText = msg;
+                toast.classList.remove('opacity-0', 'translate-y-[-20px]');
+                toast.classList.add('opacity-100', 'translate-y-0');
+                setTimeout(() => {
+                    toast.classList.remove('opacity-100', 'translate-y-0');
+                    toast.classList.add('opacity-0', 'translate-y-[-20px]');
+                }, 2000);
+            }
+
+            function showSuccessModal(plantData) {
+                document.getElementById('success-plant-name').innerText = plantData.name;
+                const imgEl = document.getElementById('success-comic-img');
+                imgEl.src = plantData.comicImg;
+                imgEl.onerror = () => { imgEl.src = `https://placehold.co/400x400/FFCC00/000?text=${plantData.name}+Comic`; };
+                
+                const modal = document.getElementById('success-modal');
+                const card = document.getElementById('success-card');
+                const stamp = document.getElementById('success-stamp');
+                
+                stamp.classList.remove('stamp-anim');
+                stamp.style.opacity = '0';
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                
+                setTimeout(() => { 
+                    card.classList.remove('scale-90'); 
+                    card.classList.add('scale-100'); 
+                    setTimeout(() => { stamp.classList.add('stamp-anim'); }, 300);
+                }, 50);
+            }
+
+            function closeSuccessAndGoToCollection() {
+                const modal = document.getElementById('success-modal');
+                const card = document.getElementById('success-card');
+                
+                card.classList.remove('scale-100'); card.classList.add('scale-90');
+                modal.classList.add('opacity-0', 'pointer-events-none');
+                
+                setTimeout(() => { switchTab('collection'); }, 300);
+            }
+
+            function renderCollection() {
+                document.getElementById('collection-count').innerText = state.collectedIds.length;
+                const grid = document.getElementById('stamp-grid');
+                grid.innerHTML = '';
+
+                ALL_PLANTS_LIST.forEach((plant, index) => {
+                    const isCollected = state.collectedIds.includes(plant.id);
+                    const slot = document.createElement('div');
+                    
+                    if(isCollected) {
+                        slot.className = "stamp-slot collected";
+                        slot.style.backgroundImage = `url('${plant.comicImg}'), url('https://placehold.co/400x400/FFCC00/000?text=${plant.name}+Comic')`;
+                        slot.innerHTML = `<div class="stamp-mark" style="font-size: 1rem;">CLEAR</div>`;
+                    } else {
+                        slot.className = "stamp-slot";
+                        slot.innerHTML = `
+                            <i class="fa-solid fa-lock text-gray-400 text-xl mb-1"></i>
+                            <span class="text-[10px] font-bold text-gray-400">No.${index + 1}</span>
+                        `;
+                    }
+                    grid.appendChild(slot);
+                });
+
+                // 디버깅/테스트를 위해 조건을 1개 이상 수집 시 버튼 노출로 변경 원하시면 === 11 대신 > 0 으로 수정 가능
+                const btn = document.getElementById('final-test-btn');
+                if(state.collectedIds.length === ALL_PLANTS_LIST.length) { 
+                    btn.classList.remove('hidden');
+                } else {
+                    btn.classList.add('hidden');
+                }
+            }
+
+            function startFinalTest() {
+                // 11개 중 랜덤으로 2개 식물 선택
+                const shuffled = [...ALL_PLANTS_LIST].sort(() => 0.5 - Math.random());
+                state.finalTest.questions = shuffled.slice(0, 2);
+                state.finalTest.currentStep = 0;
+                
+                renderFinalTestQuestion();
+                switchTab('final-test');
+            }
+
+            function renderFinalTestQuestion() {
+                const step = state.finalTest.currentStep;
+                const plant = state.finalTest.questions[step];
+                
+                document.getElementById('test-step-badge').innerText = `문제 ${step + 1} / 2`;
+                
+                // 루시의 메시지나 퀴즈 질문을 힌트로 제공
+                const hint = Math.random() > 0.5 ? plant.lucyMessage : plant.quiz.question;
+                document.getElementById('final-quiz-desc').innerText = `"${hint}"`;
+
+                // 보기 생성 (정답 1개 + 오답 3개 섞기)
+                const optionsContainer = document.getElementById('final-quiz-options');
+                optionsContainer.innerHTML = '';
+                
+                const wrongOptions = ALL_PLANTS_LIST.filter(p => p.id !== plant.id).sort(() => 0.5 - Math.random()).slice(0, 3);
+                const finalOptions = [plant, ...wrongOptions].sort(() => 0.5 - Math.random());
+
+                finalOptions.forEach((opt, index) => {
+                    const btn = document.createElement('button');
+                    btn.className = "comic-btn py-3 px-4 text-center w-full hover:bg-gray-50 text-base text-gray-700";
+                    btn.innerText = opt.name;
+                    btn.onclick = () => handleFinalTestAnswer(opt.id, plant.id, btn);
+                    optionsContainer.appendChild(btn);
+                });
+            }
+
+            function handleFinalTestAnswer(selectedId, correctId, btnElement) {
+                if(selectedId === correctId) {
+                    btnElement.classList.replace('bg-white', 'bg-green-500');
+                    btnElement.classList.replace('text-gray-700', 'text-white');
+                    
+                    setTimeout(() => {
+                        state.finalTest.currentStep++;
+                        if (state.finalTest.currentStep >= 2) {
+                            showCertForm();
+                        } else {
+                            renderFinalTestQuestion();
+                        }
+                    }, 600);
+                } else {
+                    const container = document.getElementById('final-quiz-container');
+                    container.classList.remove('shake');
+                    void container.offsetWidth; 
+                    container.classList.add('shake');
+                    showToast("어라? 아닌 것 같은데!");
+                }
+            }
+
+            function showCertForm() {
+                const grid = document.getElementById('cert-plant-grid');
+                grid.innerHTML = '';
+                
+                // 선택 초기화
+                state.certCustom.plantId = null;
+
+                ALL_PLANTS_LIST.forEach(plant => {
+                    const slot = document.createElement('div');
+                    slot.className = "stamp-slot";
+                    slot.style.backgroundImage = `url('${plant.comicImg}'), url('https://placehold.co/400x400/FFCC00/000?text=${plant.name}')`;
+                    slot.style.backgroundSize = "contain";
+                    slot.style.backgroundRepeat = "no-repeat";
+                    slot.style.backgroundPosition = "center";
+                    slot.style.backgroundColor = "white";
+                    
+                    slot.onclick = () => {
+                        document.querySelectorAll('#cert-plant-grid .stamp-slot').forEach(el => el.classList.remove('selected-fav'));
+                        slot.classList.add('selected-fav');
+                        state.certCustom.plantId = plant.id;
+                    };
+                    grid.appendChild(slot);
+                });
+
+                switchTab('cert-form');
+            }
+
+            function generateCertificate() {
+                const nameInput = document.getElementById('user-name-input').value.trim();
+                
+                if (!nameInput) {
+                    showToast("이름을 적어줘!");
+                    return;
+                }
+                if (!state.certCustom.plantId) {
+                    showToast("마음에 드는 식물을 하나 골라줘!");
+                    return;
+                }
+
+                // 정보 렌더링
+                const selectedPlant = DB_PLANTS[state.certCustom.plantId];
+                document.getElementById('final-cert-name').innerText = nameInput;
+                
+                const certImgEl = document.getElementById('final-cert-img');
+                certImgEl.src = selectedPlant.comicImg;
+                certImgEl.onerror = () => { certImgEl.src = `https://placehold.co/400x400/FFCC00/000?text=${selectedPlant.name}`; };
+
+                switchTab('certificate');
+            }
+        </script>
+    </div>
 </body>
 </html>
