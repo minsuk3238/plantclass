@@ -418,11 +418,18 @@
 
     <div style="font-family: 'Grandma', cursive; position: absolute; visibility: hidden; width: 0; height: 0;">미리불러오기</div>
 
-    <div style="position: fixed; top: 15px; right: 15px; z-index: 9999;">
-        <button onclick="resetProgress()" style="background-color: #ff4d4d; color: white; padding: 8px 12px; border-radius: 8px; font-size: 12px; font-weight: bold; border: 2px solid #1A1A1A; box-shadow: 2px 2px 0 #1A1A1A; cursor: pointer; transition: all 0.1s;">
-            <i class="fa-solid fa-rotate-right mr-1"></i>데이터 초기화
-        </button>
-    </div>
+   <div id="tab-collection" class="tab-content hidden p-4">
+            
+            <div class="flex justify-between items-center mb-4">
+                <span class="text-sm font-bold text-gray-650"><i class="fa-solid fa-leaf mr-1 text-[#2E9441]"></i>내가 모은 나무 도감</span>
+                <button onclick="resetProgress()" class="bg-[#ff4d4d] text-white px-3 py-1.5 rounded-lg text-xs font-bold border-2 border-black shadow-[2px_2px_0_#000] hover:translate-y-0.5 hover:shadow-[1px_1px_0_#000] transition-all cursor-pointer">
+                    <i class="fa-solid fa-rotate-right mr-1"></i>데이터 초기화
+                </button>
+            </div>
+
+            <div id="collection-list" class="grid grid-cols-2 gap-3 pb-24">
+                </div>
+        </div>
 
     <div class="app-container">
         <header id="main-header" class="bg-[#2E9441] border-b-3 border-black p-4 pt-6 relative z-10 flex items-center justify-center shadow-sm">
