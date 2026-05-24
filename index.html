@@ -1346,13 +1346,15 @@
                 const nameEl = document.getElementById('final-cert-name');
                 
                 // 이름 길이에 따른 폰트 크기 동적 할당
-                nameEl.innerText = nameInput;
+               nameEl.innerText = nameInput;
+                nameEl.style.fontFamily = "'Grandma', cursive"; // 나눔손글씨 외할머니체 적용
+                
                 if (nameInput.length >= 5) {
-                    nameEl.style.fontSize = "6.5cqi";
+                    nameEl.style.fontSize = "5.5cqi";
                 } else if (nameInput.length >= 3) {
-                    nameEl.style.fontSize = "7.5cqi";
+                    nameEl.style.fontSize = "6.5cqi";
                 } else {
-                    nameEl.style.fontSize = "8.5cqi";
+                    nameEl.style.fontSize = "7.5cqi";
                 }
                 
                 const certImgEl = document.getElementById('final-cert-img');
