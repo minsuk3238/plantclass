@@ -436,10 +436,12 @@
                         <img src="./lucy_doctor.png" alt="가드너 루시" class="w-full h-full object-contain pt-2 scale-110">
                     </div>
                 </div>
-                <p class="font-bold text-center text-gray-800 leading-relaxed mb-4">
-                "안녕! 스누피 가든에 온 걸 환영해!<br>
-                하단에 있는 <span class="text-[#2E9441] font-black">지도 버튼</span>을 눌러 코스를 시작해봐. 재미있는 나무 이름의 비밀을 알려줄게!"
-            </p>
+                <!-- 텍스트 단어 끊김 현상 방지(break-keep) 및 <br> 명시적 추가로 줄바꿈 정렬 -->
+                <p class="font-bold text-center text-gray-800 leading-relaxed mb-4 break-keep">
+                    "안녕! 스누피 가든에 온 걸 환영해!<br>
+                    하단에 있는 <span class="text-[#2E9441] font-black">지도 버튼</span>을 눌러 코스를 시작해봐.<br>
+                    재미있는 나무 이름의 비밀을 알려줄게!"
+                </p>
         </div>
         <div class="bg-green-50 border-2 border-green-500 rounded-lg p-3 flex items-start">
             <i class="fa-solid fa-bell text-green-500 mt-1 mr-3"></i>
@@ -475,7 +477,7 @@
             </div>
 
             <div class="comic-border bg-white p-4" id="quiz-container">
-                <h4 class="font-black text-lg mb-3 text-center title-font text-red-500"><i class="fa-solid fa-circle-question"></i> 루시의 퀴즈</h4>
+                <h4 class="font-black text-lg mb-3 text-center title-font text-red-500"><i class="fa-solid fa-circle-question"></i> QUIZ</h4>
                 <p class="font-bold text-sm mb-4" id="quiz-question">질문 내용</p>
                 <div class="flex flex-col gap-2" id="quiz-options">
                     <!-- 옵션 버튼 주입 -->
@@ -1071,7 +1073,7 @@
                     void container.offsetWidth; 
                     container.classList.add('shake');
                     
-                    const messages = ["패찰을 다시봐볼까?", "이게 아니었던거 같아!", "설명을 다시 꼼꼼히 읽어볼까?"];
+                    const messages = ["다시 생각해볼까?", "패찰을 다시봐보자!", "설명 다시 읽어보자!"];
                     showToast(messages[Math.floor(Math.random() * messages.length)]);
                 }
             }
@@ -1252,7 +1254,8 @@
                 
                 document.getElementById('test-step-badge').innerText = `문제 ${step + 1} / 2`;
                 
-                const hint = Math.random() > 0.5 ? plant.lucyMessage : plant.quiz.question;
+                // 기존 설명을 그대로 제시하도록 수정
+                const hint = plant.lucyMessage;
                 document.getElementById('final-quiz-desc').innerText = `"${hint}"`;
 
                 const optionsContainer = document.getElementById('final-quiz-options');
@@ -1326,7 +1329,7 @@
                     return;
                 }
                 if (!state.certCustom.plantId) {
-                    showToast("마음에 드는 나무를 하나 골라볼까?");
+                    showToast("마음에 드는 나무의 코믹스트립을 선택해봐!");
                     return;
                 }
 
