@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>루시의 식물 상담소</title>
+    <title>재미있는 나무이름 찾기</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;700;900&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
@@ -17,6 +17,14 @@
             font-family: 'NeutraText-Bold';
             src: local('NeutraText-Bold'), url('./NeutraText-Bold.otf') format('opentype');
             font-weight: bold;
+        }
+
+        /* 나눔손글씨 외할머니가 쓰신 메밀꽃 필 무렵 (외할머니체) */
+        @font-face {
+            font-family: 'Nanum_Grandma_Memil';
+            src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2205@1.0/Nanum_Grandma_Memil.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
         }
 
         :root {
@@ -47,6 +55,7 @@
 
         .title-font { font-family: 'NeutraText-Bold', 'Noto Sans KR', sans-serif; }
         .handwriting { font-family: 'Nanum Pen Script', cursive; }
+        .grandma-font { font-family: 'Nanum_Grandma_Memil', 'Nanum Pen Script', cursive; }
 
         .app-container {
             width: 100%;
@@ -170,7 +179,7 @@
             flex-grow: 1; 
             position: relative;
             overflow: hidden;
-            background-color: #e5e7eb;
+            background-color: var(--paper-white); /* 지도 뒤 여백을 종이색상으로 채움 */
             cursor: grab;
         }
         .map-container:active { cursor: grabbing; }
@@ -192,22 +201,14 @@
             position: absolute;
             width: 32px;
             height: 32px;
-            background-color: var(--snoopy-red);
-            border: 3px solid var(--comic-black); 
+            background-color: #9CA3AF; /* 기본은 비활성화(회색) */
+            border: 3px solid #4B5563; 
             border-radius: 50% 50% 50% 0;
             transform: translate(-50%, -100%) rotate(-45deg);
             cursor: pointer;
             box-shadow: 2px 2px 0 rgba(0,0,0,0.3);
             z-index: 10;
             transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-        }
-
-        .map-pin.active-pin {
-            background-color: var(--lucy-yellow);
-            transform: translate(-50%, -100%) rotate(-45deg) scale(1.3);
-            z-index: 20;
-            border-color: var(--comic-black);
-            box-shadow: 4px 4px 0 rgba(0,0,0,0.4); 
         }
 
         .map-pin::after {
@@ -222,6 +223,36 @@
             transform: translate(-50%, -50%);
             border: 2px solid var(--comic-black);
         }
+
+        /* 타겟(목표) 핀 애니메이션 */
+        @keyframes targetBounce {
+            0%, 100% { transform: translate(-50%, -100%) rotate(-45deg) scale(1.3); }
+            50% { transform: translate(-50%, -130%) rotate(-45deg) scale(1.3); }
+        }
+
+        .map-pin.target-pin {
+            background-color: var(--lucy-yellow);
+            border-color: var(--snoopy-red);
+            animation: targetBounce 1s infinite ease-in-out;
+            z-index: 25;
+            box-shadow: 4px 4px 0 rgba(0,0,0,0.4); 
+        }
+
+        .map-pin.target-pin::after { border-color: var(--snoopy-red); }
+
+        .map-pin.active-pin {
+            background-color: var(--lucy-yellow);
+            transform: translate(-50%, -100%) rotate(-45deg) scale(1.3);
+            z-index: 20;
+            border-color: var(--comic-black);
+        }
+
+        .map-pin.collected-pin {
+            background-color: #4B5563; 
+            border-color: #1F2937;
+            transform: translate(-50%, -100%) rotate(-45deg) scale(0.9);
+        }
+        .map-pin.collected-pin::after { background-color: #9CA3AF; }
 
         .pin-popup {
             position: absolute;
@@ -249,13 +280,6 @@
             transform: translate(-50%, -25px);
             pointer-events: auto; 
         }
-
-        .map-pin.collected-pin {
-            background-color: #9CA3AF; 
-            border-color: #4B5563;
-            transform: translate(-50%, -100%) rotate(-45deg) scale(0.9);
-        }
-        .map-pin.collected-pin::after { background-color: #D1D5DB; }
 
         @keyframes fadeSlideUp {
             from { opacity: 0; transform: translateY(20px); }
@@ -344,83 +368,43 @@
             background-position: center;
             container-type: inline-size; 
             box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            background-color: white; /* html2canvas 투명 방지 */
-        }
-
-        /* 텍스트 줄임 및 크기 조정 */
-        .cert-header-title {
-            position: absolute;
-            top: 7%; /* 약간 위로 조정 */
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80%;
-            text-align: center;
-            font-family: 'NeutraText-Bold', 'Jua', sans-serif;
-            font-size: 6.5cqi; /* 폰트 축소 */
-            color: var(--main-green);
-            white-space: nowrap;
-            letter-spacing: -0.5px;
-        }
-
-        /* 두루마리 내부 레이아웃 재정비 */
-        .cert-content-box {
-            position: absolute;
-            left: 27.21%;
-            top: 60.74%;
-            width: 46.15%;
-            height: 18%; /* 도장에 닿지 않게 높이 축소 */
-            display: flex;
-            flex-direction: column;
-            justify-content: center; /* 수직 중앙 정렬 */
-            align-items: center;     /* 가로 중앙 정렬 */
-            gap: 1.5cqi;             /* 행 간격 */
-        }
-
-        .cert-user-row {
-            display: flex;
-            align-items: center; /* 이름과 이미지가 나란히 중앙 정렬되도록 */
-            justify-content: center;
-            gap: 2cqi;
-            width: 100%;
-        }
-
-        .cert-name-text {
-            /* 폰트 크기는 JS에서 글자 수에 따라 12cqi ~ 8cqi 로 동적 변경됨 */
-            line-height: 1;
-            color: #000;
-            text-align: right;
-            white-space: nowrap;
-        }
-
-        /* 액자 느낌의 프레임 추가 */
-        .cert-plant-img-wrapper {
-            width: 14cqi;
-            height: 14cqi;
             background-color: white;
-            padding: 0.8cqi;
-            border: 2px solid #5a3d2b;
-            border-radius: 4px;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
-            transform: rotate(3deg); /* 살짝 삐뚤게 연출 */
+        }
+
+        /* 이름 영역: 1000~1300px(x), 745~810px(y)을 비율로 계산 (기준 1536x2754) */
+        .cert-name-box {
+            position: absolute;
+            left: 65.1%; /* 1000 / 1536 */
+            width: 19.53%; /* 300 / 1536 */
+            top: 27.05%; /* 745 / 2754 */
+            height: 2.36%; /* 65 / 2754 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            white-space: nowrap;
+            /* 폰트: 나눔스퀘어 외할머니체 (Grandma font) */
+            font-size: 8cqi;
+        }
+
+        /* 이미지 영역: x 중앙, y=2350px (비율 85.33%) */
+        .cert-img-box {
+            position: absolute;
+            left: 50%;
+            top: 85.33%; /* 2350 / 2754 */
+            transform: translate(-50%, -50%);
+            width: 28cqi;
+            height: 28cqi;
+            background-color: transparent;
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-shrink: 0;
         }
 
-        .cert-plant-img {
+        .cert-img-box img {
             width: 100%;
             height: 100%;
             object-fit: contain;
-        }
-
-        .cert-desc-text {
-            font-size: 6cqi; /* 텍스트 크기 축소 */
-            line-height: 1.4;
-            color: #333;
-            text-align: center; /* 가운데 정렬로 예쁘게 */
-            word-break: keep-all;
-            margin-top: 2cqi;
         }
 
     </style>
@@ -428,31 +412,30 @@
 <body>
 
     <div class="app-container">
-        <!-- HEADER -->
         <header id="main-header" class="bg-[#2E9441] border-b-3 border-black p-4 pt-6 relative z-10 flex items-center justify-center shadow-sm">
-            <h1 class="text-2xl font-black title-font tracking-wide text-white">루시의 식물 상담소</h1>
+            <h1 class="text-2xl font-black title-font tracking-wide text-white">재미있는 나무이름 찾기</h1>
         </header>
 
         <div id="view-home" class="view-content active">
             <div class="comic-border bg-white p-4 mb-6 relative mt-4">
                 <div class="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-black text-white px-4 py-1 rounded-full font-bold text-sm whitespace-nowrap">
-                    THE DOCTOR IS IN
+                    탐험 준비 완료!
                 </div>
                 <div class="flex justify-center mb-4 mt-2">
                     <div class="w-24 h-24 bg-yellow-100 rounded-full border-[3px] border-black flex items-center justify-center overflow-hidden">
-                        <img src="./lucy_doctor.png" alt="의사 루시" class="w-full h-full object-contain pt-2 scale-110">
+                        <img src="./lucy_doctor.png" alt="탐험대장 루시" class="w-full h-full object-contain pt-2 scale-110">
                     </div>
                 </div>
                 <p class="font-bold text-center text-gray-800 leading-relaxed mb-4">
-                "이봐! 식물들이 왜 시무룩한지 모르겠다고?<br>
-                하단에 있는 <span class="text-[#2E9441] font-black">지도 버튼</span>을 눌러 핀을 찾아봐. 내가 완벽한 처방을 내려줄게!"
+                "이봐! 스누피 가든에 숨겨진 나무 친구들을 찾아볼까?<br>
+                하단에 있는 <span class="text-[#2E9441] font-black">지도 버튼</span>을 눌러 코스별로 핀을 찾아봐. 특별한 탐험이 시작될 거야!"
             </p>
         </div>
         <div class="bg-blue-50 border-2 border-blue-500 rounded-lg p-3 flex items-start">
             <i class="fa-solid fa-bell text-blue-500 mt-1 mr-3"></i>
             <div>
                 <h4 class="font-bold text-blue-800 text-sm">진행 팁</h4>
-                <p class="text-xs text-gray-600 mt-1 font-medium">야외가든 지도를 열고 빨간 핀을 눌러 식물들을 관찰하세요! 총 11개의 식물이 기다리고 있습니다.</p>
+                <p class="text-xs text-gray-600 mt-1 font-medium">야외가든 지도를 열고 <strong class="text-yellow-600">통통 튀는 노란 핀</strong>을 눌러 순서대로 식물들을 관찰하세요! 11개의 나무가 기다립니다.</p>
             </div>
         </div>
     </div>
@@ -492,25 +475,25 @@
 
         <div id="view-map" class="view-content">
             <div class="w-full bg-[#2E9441] border-b-3 border-black p-3 z-50 flex justify-between items-center shadow-sm text-white shrink-0">
-                <h2 class="text-xl font-black title-font">루시의 야외가든 지도</h2>
+                <h2 class="text-xl font-black title-font">야외가든 탐험 지도</h2>
             </div>
             
             <div class="map-container" id="map-container">
                 <div class="map-content" id="map-content">
-                    <!-- 핀포인트 주입 -->
+                    <!-- 핀포인트 및 SVG 점선 주입 -->
                 </div>
             </div>
         </div>
 
         <div id="view-collection" class="view-content">
             <h2 class="text-2xl font-black title-font mb-2">내 식물 도감</h2>
-            <p class="text-sm font-bold text-gray-600 mb-6">수집한 식물 처방전: <span id="collection-count" class="text-red-500 text-lg">0</span>/11</p>
+            <p class="text-sm font-bold text-gray-600 mb-6">수집한 나무 도감: <span id="collection-count" class="text-red-500 text-lg">0</span>/11</p>
 
             <div class="grid grid-cols-3 gap-3" id="stamp-grid">
                 <!-- 스탬프 슬롯 주입 -->
             </div>
             
-            <button id="final-test-btn" onclick="startFinalTest()" class="comic-btn w-full bg-orange-500 text-white py-4 text-lg mt-8 hidden animate-bounce">
+            <button id="final-test-btn" onclick="handleFinalAction()" class="comic-btn w-full bg-orange-500 text-white py-4 text-lg mt-8 hidden animate-bounce">
                 <i class="fa-solid fa-graduation-cap mr-2"></i> 최종 자격 검사 보기!
             </button>
         </div>
@@ -528,7 +511,7 @@
                     <img src="./lucy_doctor.png" alt="루시" class="w-full h-full object-contain pt-1 scale-125 transform origin-bottom">
                 </div>
                 <div class="comic-bubble text-sm font-bold leading-relaxed flex-1">
-                    지금까지 배운 걸 테스트해볼까?<br>아래 설명을 읽고 <strong>어떤 나무</strong>인지 이름을 맞춰봐!
+                    지금까지 찾은 걸 테스트해볼까?<br>아래 설명을 읽고 <strong>어떤 나무</strong>인지 이름을 맞춰봐!
                 </div>
             </div>
 
@@ -545,7 +528,7 @@
 
         <div id="view-cert-form" class="view-content">
             <h2 class="text-3xl font-black title-font text-center text-[#2E9441] mb-2 mt-4">자격 시험 통과!</h2>
-            <p class="text-sm font-bold text-center text-gray-600 mb-6">마지막으로 가드너 인증서를 발급해줄게.</p>
+            <p class="text-sm font-bold text-center text-gray-600 mb-6">마지막으로 탐험가 인증서를 발급해줄게.</p>
 
             <div class="comic-border bg-white p-5 mb-6">
                 <label class="block font-black text-lg mb-2">1. 네 이름을 알려줘!</label>
@@ -567,20 +550,11 @@
         <div id="view-certificate" class="view-content">
             <!-- 캡처 대상 영역 -->
             <div class="cert-wrapper" id="cert-capture-area">
-                <div class="cert-header-title">Gardener Certification</div>
-                
-                <div class="cert-content-box handwriting">
-                    <div class="cert-user-row">
-                        <span class="cert-name-text" id="final-cert-name">찰리 브라운</span>
-                        <div class="cert-plant-img-wrapper">
-                            <img class="cert-plant-img" id="final-cert-img" src="" alt="선택한 식물">
-                        </div>
-                    </div>
-                    <p class="cert-desc-text">
-                        이 프로그램을<br>참여해서<br>
-                        너에게 루시 가든에<br>
-                        가드너로 임명한다.
-                    </p>
+                <!-- 이름 텍스트: 절대 위치 백분율 -->
+                <div class="cert-name-box grandma-font" id="final-cert-name">찰리 브라운</div>
+                <!-- 식물 이미지: 세로 중앙 2350px 위치 -->
+                <div class="cert-img-box">
+                    <img id="final-cert-img" src="" alt="선택한 식물">
                 </div>
             </div>
             
@@ -600,6 +574,7 @@
             <span id="toast-msg">다시 한번 생각해봐!</span>
         </div>
 
+        <!-- 정답 성공 모달 -->
         <div id="success-modal" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
                 <div class="bg-white p-6 rounded-2xl comic-border w-10/12 max-w-sm text-center transform scale-90 transition-transform duration-300" id="success-card">
                     <h2 class="text-4xl font-black title-font text-[#2E9441] mb-2">정답!</h2>
@@ -611,7 +586,28 @@
                     
                     <h3 class="font-black text-xl mb-2" id="success-plant-name">식물명</h3>
                     <p class="font-bold text-sm text-gray-600 mb-6" id="success-desc">도감에 등록되었습니다!</p>
-                    <button onclick="closeSuccessAndGoToCollection()" class="comic-btn w-full bg-blue-500 text-white py-3 text-lg">도감 확인하기</button>
+                    <button onclick="closeSuccessAndGoToMap()" class="comic-btn w-full bg-[#2E9441] text-white py-3 text-lg">다음 코스로 이동 (지도)</button>
+            </div>
+        </div>
+
+        <!-- 도감 상세 설명 모달 -->
+        <div id="detail-modal" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+            <div class="bg-white p-5 rounded-2xl comic-border w-10/12 max-w-sm transform scale-90 transition-transform duration-300" id="detail-card">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="font-black text-2xl title-font text-[#2E9441]" id="detail-plant-name">식물명</h3>
+                    <button onclick="closeDetailModal()" class="text-gray-400 hover:text-black transition-colors"><i class="fa-solid fa-xmark text-2xl"></i></button>
+                </div>
+                <div class="w-full bg-yellow-50 border-2 border-black rounded-lg overflow-hidden flex justify-center items-center p-2 mb-4">
+                    <img id="detail-comic-img" src="" class="w-full h-auto max-h-[200px] object-contain">
+                </div>
+                <div class="flex items-end mb-2">
+                    <div class="w-10 h-10 bg-yellow-100 rounded-full border-2 border-black flex items-center justify-center shrink-0 z-10 mr-[-10px] overflow-hidden">
+                        <img src="./lucy_doctor.png" alt="루시" class="w-full h-full object-contain pt-1 scale-125 transform origin-bottom">
+                    </div>
+                    <div class="comic-bubble text-sm font-bold leading-relaxed flex-1" id="detail-lucy-msg" style="padding: 1rem;">
+                        설명
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -637,7 +633,8 @@
                 currentPlantId: null,
                 map: { scale: 1, x: 0, y: 0, isDragging: false, startX: 0, startY: 0, minScale: 0.3, maxScale: 3 },
                 finalTest: { questions: [], currentStep: 0 },
-                certCustom: { plantId: null }
+                certCustom: { plantId: null },
+                hasCertificate: false // 수료증 발급 여부 기록
             };
 
             const DB_PLANTS = {
@@ -720,10 +717,11 @@
                 }
             };
 
+            // 요청된 순서: 카나리아 - 돈나무 - 낙우송 - 팔손이 - 까마귀 - 꽝꽝 - 말오줌 - 육박 - 치자 - 아왜 - 후박
             const ALL_PLANTS_LIST = [
-                DB_PLANTS.p_canaria, DB_PLANTS.p_naku, DB_PLANTS.p_pal, DB_PLANTS.p_kkamagi, 
+                DB_PLANTS.p_canaria, DB_PLANTS.p_donnamu, DB_PLANTS.p_naku, DB_PLANTS.p_pal, DB_PLANTS.p_kkamagi, 
                 DB_PLANTS.p_kkwang, DB_PLANTS.p_mal, DB_PLANTS.p_yukbak, DB_PLANTS.p_chija, 
-                DB_PLANTS.p_awe, DB_PLANTS.p_hubak, DB_PLANTS.p_donnamu
+                DB_PLANTS.p_awe, DB_PLANTS.p_hubak
             ];
 
             function switchTab(tabName) {
@@ -756,7 +754,7 @@
                         initMap(); 
                         setupMapDragging(document.getElementById('map-container'), document.getElementById('map-content'));
                     } else {
-                        renderMapPins();
+                        renderMapPins(); // 상태 업데이트 (선 연결 등)
                     }
                 } else if(tabName === 'collection') {
                     renderCollection();
@@ -771,42 +769,83 @@
                 }
             }
 
-            /* 지도 관련 기능 */
             function initMap() {
                 renderMapPins();
                 resetMapZoom();
             }
 
             function renderMapPins() {
-            const mapContent = document.getElementById('map-content');
-            mapContent.innerHTML = ''; 
-            
-            Object.values(DB_PLANTS).forEach(plant => {
+                const mapContent = document.getElementById('map-content');
+                mapContent.innerHTML = ''; 
+                
+                const targetIndex = state.collectedIds.length; // 현재 찾아야 할 목표 인덱스
+
+                // 1. 점선 SVG 그리기 (출발지부터 현재 목표 핀까지만 선을 그림)
+                const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                svg.setAttribute('class', 'absolute top-0 left-0 w-full h-full pointer-events-none z-0');
+                
+                for (let i = 0; i <= targetIndex && i < ALL_PLANTS_LIST.length; i++) {
+                    if (i > 0) {
+                        const prev = ALL_PLANTS_LIST[i-1];
+                        const curr = ALL_PLANTS_LIST[i];
+                        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                        line.setAttribute('x1', prev.mapCoords.x);
+                        line.setAttribute('y1', prev.mapCoords.y);
+                        line.setAttribute('x2', curr.mapCoords.x);
+                        line.setAttribute('y2', curr.mapCoords.y);
+                        line.setAttribute('stroke', '#E52E2D'); // 빨간색 점선
+                        line.setAttribute('stroke-width', '4');
+                        line.setAttribute('stroke-dasharray', '8 8');
+                        svg.appendChild(line);
+                    }
+                }
+                mapContent.appendChild(svg);
+                
+                // 2. 핀포인트 주입
+                ALL_PLANTS_LIST.forEach((plant, index) => {
                     const pin = document.createElement('div');
                     pin.className = 'map-pin';
-                    const isCollected = state.collectedIds.includes(plant.id);
-                    
-                    if(isCollected) pin.classList.add('collected-pin');
-                    pin.style.left = `${plant.mapCoords.x}px`;
-                    pin.style.top = `${plant.mapCoords.y}px`;
                     
                     const popup = document.createElement('div');
                     popup.className = 'pin-popup';
                     
                     let popupHtml = `<span>${plant.name}</span>`;
-                    if(isCollected) {
+
+                    if (index < targetIndex) {
+                        // 이미 찾은 나무 (완료, 회색)
+                        pin.classList.add('collected-pin');
                         popupHtml += `<button class="mt-1 bg-gray-400 text-white text-xs px-3 py-1 rounded-full font-bold cursor-default">CLEAR</button>`;
+                        
+                        pin.onclick = (e) => {
+                            e.stopPropagation();
+                            focusOnPin(plant.mapCoords.x, plant.mapCoords.y, pin, popup);
+                        };
+                    } else if (index === targetIndex) {
+                        // 현재 찾아야 할 목표 (노란색 튀는 애니메이션)
+                        pin.classList.add('target-pin');
+                        popupHtml += `<button onclick="loadMission('${plant.id}')" class="mt-1 bg-[#2E9441] text-white text-xs px-3 py-1 rounded-full font-bold shadow-md active:scale-95 transition-transform">탐험 시작</button>`;
+                        
+                        pin.onclick = (e) => {
+                            e.stopPropagation();
+                            focusOnPin(plant.mapCoords.x, plant.mapCoords.y, pin, popup);
+                        };
                     } else {
-                        popupHtml += `<button onclick="loadMission('${plant.id}')" class="mt-1 bg-[#2E9441] text-white text-xs px-3 py-1 rounded-full font-bold shadow-md active:scale-95 transition-transform">상담 시작</button>`;
+                        // 아직 차례가 오지 않은 미래의 핀 (비활성화 상태)
+                        popupHtml = `<span><i class="fa-solid fa-lock text-gray-500 mr-1"></i>${plant.name}</span>`;
+                        popupHtml += `<button class="mt-1 bg-gray-300 text-gray-500 text-xs px-3 py-1 rounded-full font-bold cursor-default">잠김</button>`;
+                        // 클릭해도 팝업은 뜨지만 진입은 못함
+                        pin.onclick = (e) => {
+                            e.stopPropagation();
+                            focusOnPin(plant.mapCoords.x, plant.mapCoords.y, pin, popup);
+                        };
                     }
+                    
+                    pin.style.left = `${plant.mapCoords.x}px`;
+                    pin.style.top = `${plant.mapCoords.y}px`;
+                    
                     popup.innerHTML = popupHtml;
                     popup.style.left = `${plant.mapCoords.x}px`;
                     popup.style.top = `${plant.mapCoords.y - 45}px`; 
-                    
-                    pin.onclick = (e) => {
-                        e.stopPropagation();
-                        focusOnPin(plant.mapCoords.x, plant.mapCoords.y, pin, popup);
-                    };
 
                     mapContent.appendChild(pin);
                     mapContent.appendChild(popup);
@@ -841,11 +880,17 @@
 
             function resetMapZoom() {
                 const container = document.getElementById('map-container');
-                const scale = container.clientWidth / 851;
+                // 지도가 화면 영역에 꽉 차게 가로/세로 비율 중 더 작은 값을 적용
+                const scaleX = container.clientWidth / 851;
+                const scaleY = container.clientHeight / 737;
+                const scale = Math.min(scaleX, scaleY);
+                
                 state.map.minScale = Math.max(scale, 0.3); 
                 state.map.scale = state.map.minScale;
+                
+                // 가로, 세로 모두 완벽한 정중앙에 오도록 위치 계산
                 state.map.x = (container.clientWidth - (851 * state.map.scale)) / 2;
-                state.map.y = 20; 
+                state.map.y = (container.clientHeight - (737 * state.map.scale)) / 2; 
                 
                 document.querySelectorAll('.pin-popup').forEach(p => p.classList.remove('show'));
                 document.querySelectorAll('.map-pin').forEach(p => p.classList.remove('active-pin'));
@@ -864,7 +909,7 @@
                 document.querySelectorAll('.map-pin').forEach(p => p.classList.remove('active-pin'));
                 popupElement.classList.add('show');
                 
-                if (!activePinElement.classList.contains('collected-pin')) {
+                if (!activePinElement.classList.contains('collected-pin') && !activePinElement.classList.contains('target-pin')) {
                     activePinElement.classList.add('active-pin');
                 }
             }
@@ -948,7 +993,6 @@
                 window.addEventListener('mousemove', onDrag);
             }
 
-            /* 상담 미션 로직 */
             function loadMission(qrId) {
                 const data = DB_PLANTS[qrId];
                 if(!data) return;
@@ -994,7 +1038,7 @@
                     void container.offsetWidth; 
                     container.classList.add('shake');
                     
-                    const messages = ["땡! 다시 생각해, 바보 찰리 브라운!", "식물 공부 안 했어?", "패찰을 다시 꼼꼼히 읽어봐!"];
+                    const messages = ["땡! 다시 생각해, 바보 찰리 브라운!", "나무 이름 공부 더 해야겠어!", "패찰을 다시 꼼꼼히 읽어봐!"];
                     showToast(messages[Math.floor(Math.random() * messages.length)]);
                 }
             }
@@ -1031,14 +1075,21 @@
                 }, 50);
             }
 
-            function closeSuccessAndGoToCollection() {
+            // 정답 후 원래 화면(지도)으로 복귀하고 줌 아웃하는 로직
+            function closeSuccessAndGoToMap() {
                 const modal = document.getElementById('success-modal');
                 const card = document.getElementById('success-card');
                 
                 card.classList.remove('scale-100'); card.classList.add('scale-90');
                 modal.classList.add('opacity-0', 'pointer-events-none');
                 
-                setTimeout(() => { switchTab('collection'); }, 300);
+                setTimeout(() => { 
+                    switchTab('map'); 
+                    // 선 및 핀 상태 업데이트
+                    renderMapPins();
+                    // 화면을 지도 탭으로 전환한 후 지도를 화면 정중앙, 가장 축소된 상태로 초기화
+                    resetMapZoom(); 
+                }, 300);
             }
 
             function renderCollection() {
@@ -1054,6 +1105,8 @@
                         slot.className = "stamp-slot collected";
                         slot.style.backgroundImage = `url('${plant.comicImg}'), url('https://placehold.co/400x400/FFCC00/000?text=${plant.name}+Comic')`;
                         slot.innerHTML = `<div class="stamp-mark" style="font-size: 1rem;">CLEAR</div>`;
+                        // 수집된 항목 클릭 시 설명 상세 보기
+                        slot.onclick = () => showPlantDetail(plant);
                     } else {
                         slot.className = "stamp-slot";
                         slot.innerHTML = `
@@ -1067,13 +1120,49 @@
                 const btn = document.getElementById('final-test-btn');
                 if(state.collectedIds.length === ALL_PLANTS_LIST.length) { 
                     btn.classList.remove('hidden');
+                    // 수료증 발급 여부에 따라 버튼 텍스트와 동작 변경
+                    if(state.hasCertificate) {
+                        btn.innerHTML = `<i class="fa-solid fa-certificate mr-2"></i> 내 인증서 다시 보기`;
+                        btn.classList.replace('bg-orange-500', 'bg-[#2E9441]');
+                    } else {
+                        btn.innerHTML = `<i class="fa-solid fa-graduation-cap mr-2"></i> 최종 자격 검사 보기!`;
+                        btn.classList.replace('bg-[#2E9441]', 'bg-orange-500');
+                    }
                 } else {
                     btn.classList.add('hidden');
                 }
             }
 
+            // 도감의 수집 식물 상세 보기 (루시 설명 포함)
+            function showPlantDetail(plant) {
+                document.getElementById('detail-plant-name').innerText = plant.name;
+                const imgEl = document.getElementById('detail-comic-img');
+                imgEl.src = plant.comicImg;
+                imgEl.onerror = () => { imgEl.src = `https://placehold.co/400x400/FFCC00/000?text=${plant.name}`; };
+                document.getElementById('detail-lucy-msg').innerText = plant.lucyMessage;
+                
+                const modal = document.getElementById('detail-modal');
+                const card = document.getElementById('detail-card');
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                setTimeout(() => { card.classList.remove('scale-90'); card.classList.add('scale-100'); }, 50);
+            }
+
+            function closeDetailModal() {
+                const modal = document.getElementById('detail-modal');
+                const card = document.getElementById('detail-card');
+                card.classList.remove('scale-100'); card.classList.add('scale-90');
+                modal.classList.add('opacity-0', 'pointer-events-none');
+            }
+
+            function handleFinalAction() {
+                if(state.hasCertificate) {
+                    switchTab('certificate'); // 이미 발급 받았으면 바로 인증서 탭으로
+                } else {
+                    startFinalTest(); // 처음이면 자격 검사 실행
+                }
+            }
+
             function startFinalTest() {
-                // 11개 중 랜덤으로 2개 식물 선택
                 const shuffled = [...ALL_PLANTS_LIST].sort(() => 0.5 - Math.random());
                 state.finalTest.questions = shuffled.slice(0, 2);
                 state.finalTest.currentStep = 0;
@@ -1169,24 +1258,17 @@
                 const selectedPlant = DB_PLANTS[state.certCustom.plantId];
                 const nameEl = document.getElementById('final-cert-name');
                 
-                // 이름 길이에 따른 폰트 크기 동적 할당
                 nameEl.innerText = nameInput;
-                if (nameInput.length >= 5) {
-                    nameEl.style.fontSize = "8cqi";
-                } else if (nameInput.length >= 3) {
-                    nameEl.style.fontSize = "10cqi";
-                } else {
-                    nameEl.style.fontSize = "14cqi";
-                }
                 
                 const certImgEl = document.getElementById('final-cert-img');
                 certImgEl.src = selectedPlant.comicImg;
                 certImgEl.onerror = () => { certImgEl.src = `https://placehold.co/400x400/FFCC00/000?text=${selectedPlant.name}`; };
 
+                state.hasCertificate = true; // 수료증 발급 상태 저장
+
                 switchTab('certificate');
             }
 
-            /* 인증서 자동 캡처 후 기기에 다운로드 하는 함수 */
             function downloadCertificate() {
                 const certArea = document.getElementById('cert-capture-area');
                 
