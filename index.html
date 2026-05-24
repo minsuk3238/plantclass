@@ -6,7 +6,7 @@
     <title>재미있는 나무이름 찾기</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;700;900&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- 이미지 저장을 위한 라이브러리 추가 -->
@@ -19,10 +19,10 @@
             font-weight: bold;
         }
 
-        /* 나눔손글씨 외할머니가 쓰신 메밀꽃 필 무렵 (외할머니체) */
+        /* 나눔손글씨 외할머니체 (웹 폰트로 로드하여 수료증에 적용) */
         @font-face {
-            font-family: 'Nanum_Grandma_Memil';
-            src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2205@1.0/Nanum_Grandma_Memil.woff2') format('woff2');
+            font-family: 'Grandma';
+            src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/naverfont_05@1.0/Grandma-cute.woff') format('woff');
             font-weight: normal;
             font-style: normal;
         }
@@ -54,8 +54,7 @@
         }
 
         .title-font { font-family: 'NeutraText-Bold', 'Noto Sans KR', sans-serif; }
-        .handwriting { font-family: 'Nanum Pen Script', cursive; }
-        .grandma-font { font-family: 'Nanum_Grandma_Memil', 'Nanum Pen Script', cursive; }
+        .handwriting { font-family: 'Grandma', cursive; } /* 수정된 손글씨 폰트 적용 */
 
         .app-container {
             width: 100%;
@@ -95,6 +94,13 @@
         .comic-btn:active {
             transform: translate(3px, 3px);
             box-shadow: 0px 0px 0px var(--comic-black);
+        }
+
+        .comic-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: 3px 3px 0px var(--comic-black);
         }
 
         .comic-bubble {
@@ -143,6 +149,8 @@
             flex-direction: column;
             padding: 0;
             padding-bottom: 7rem; 
+            /* 지도 여백색을 앱 전체 배경색과 동일하게 적용 */
+            background-color: var(--paper-white); 
         }
 
         .bottom-nav {
@@ -179,7 +187,7 @@
             flex-grow: 1; 
             position: relative;
             overflow: hidden;
-            background-color: var(--paper-white); /* 지도 뒤 여백을 종이색상으로 채움 */
+            background-color: transparent;
             cursor: grab;
         }
         .map-container:active { cursor: grabbing; }
@@ -201,8 +209,8 @@
             position: absolute;
             width: 32px;
             height: 32px;
-            background-color: #9CA3AF; /* 기본은 비활성화(회색) */
-            border: 3px solid #4B5563; 
+            background-color: var(--snoopy-red);
+            border: 3px solid var(--comic-black); 
             border-radius: 50% 50% 50% 0;
             transform: translate(-50%, -100%) rotate(-45deg);
             cursor: pointer;
@@ -211,6 +219,20 @@
             transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
         }
 
+        /* 현재 찾아야할 목표 핀 (강조 애니메이션) */
+        .map-pin.target-pin {
+            background-color: var(--lucy-yellow);
+            transform: translate(-50%, -100%) rotate(-45deg) scale(1.2);
+            z-index: 20;
+            animation: bouncePin 1s infinite alternate ease-in-out;
+        }
+        
+        @keyframes bouncePin {
+            0% { transform: translate(-50%, -100%) rotate(-45deg) scale(1.2); }
+            100% { transform: translate(-50%, -120%) rotate(-45deg) scale(1.2); }
+        }
+
+        /* 핀 내부 흰 점 */
         .map-pin::after {
             content: '';
             width: 12px;
@@ -224,35 +246,24 @@
             border: 2px solid var(--comic-black);
         }
 
-        /* 타겟(목표) 핀 애니메이션 */
-        @keyframes targetBounce {
-            0%, 100% { transform: translate(-50%, -100%) rotate(-45deg) scale(1.3); }
-            50% { transform: translate(-50%, -130%) rotate(-45deg) scale(1.3); }
-        }
-
-        .map-pin.target-pin {
-            background-color: var(--lucy-yellow);
-            border-color: var(--snoopy-red);
-            animation: targetBounce 1s infinite ease-in-out;
-            z-index: 25;
-            box-shadow: 4px 4px 0 rgba(0,0,0,0.4); 
-        }
-
-        .map-pin.target-pin::after { border-color: var(--snoopy-red); }
-
-        .map-pin.active-pin {
-            background-color: var(--lucy-yellow);
-            transform: translate(-50%, -100%) rotate(-45deg) scale(1.3);
-            z-index: 20;
-            border-color: var(--comic-black);
-        }
-
+        /* 완료된 핀 (회색) */
         .map-pin.collected-pin {
-            background-color: #4B5563; 
-            border-color: #1F2937;
+            background-color: #9CA3AF; 
+            border-color: #4B5563;
             transform: translate(-50%, -100%) rotate(-45deg) scale(0.9);
+            z-index: 5;
         }
-        .map-pin.collected-pin::after { background-color: #9CA3AF; }
+        .map-pin.collected-pin::after { background-color: #D1D5DB; }
+
+        /* 미래의 잠긴 핀 (흐린 회색) */
+        .map-pin.locked-pin {
+            background-color: #D1D5DB;
+            border-color: #9CA3AF;
+            transform: translate(-50%, -100%) rotate(-45deg) scale(0.8);
+            opacity: 0.8;
+            pointer-events: none; /* 클릭 불가 */
+        }
+        .map-pin.locked-pin::after { background-color: #F3F4F6; }
 
         .pin-popup {
             position: absolute;
@@ -368,7 +379,7 @@
             background-position: center;
             container-type: inline-size; 
             box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            background-color: white;
+            background-color: white; /* html2canvas 투명 방지 */
         }
 
         /* 이름 영역: 1000~1300px(x), 745~810px(y)을 비율로 계산 (기준 1536x2754) */
@@ -387,11 +398,11 @@
             font-size: 8cqi;
         }
 
-        /* 이미지 영역: x 중앙, y=2350px (비율 85.33%) */
+        /* 이미지 영역: x 중앙, y=2400px (비율 87.14%) */
         .cert-img-box {
             position: absolute;
             left: 50%;
-            top: 85.33%; /* 2350 / 2754 */
+            top: 87.14%; /* 2400 / 2754 (기존 85.33%에서 약 50px 아래로 이동) */
             transform: translate(-50%, -50%);
             width: 28cqi;
             height: 28cqi;
@@ -406,7 +417,6 @@
             height: 100%;
             object-fit: contain;
         }
-
     </style>
 </head>
 <body>
@@ -419,23 +429,23 @@
         <div id="view-home" class="view-content active">
             <div class="comic-border bg-white p-4 mb-6 relative mt-4">
                 <div class="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-black text-white px-4 py-1 rounded-full font-bold text-sm whitespace-nowrap">
-                    탐험 준비 완료!
+                    WELCOME TO SNOOPY GARDEN
                 </div>
                 <div class="flex justify-center mb-4 mt-2">
                     <div class="w-24 h-24 bg-yellow-100 rounded-full border-[3px] border-black flex items-center justify-center overflow-hidden">
-                        <img src="./lucy_doctor.png" alt="탐험대장 루시" class="w-full h-full object-contain pt-2 scale-110">
+                        <img src="./lucy_doctor.png" alt="가드너 루시" class="w-full h-full object-contain pt-2 scale-110">
                     </div>
                 </div>
                 <p class="font-bold text-center text-gray-800 leading-relaxed mb-4">
-                "이봐! 스누피 가든에 숨겨진 나무 친구들을 찾아볼까?<br>
-                하단에 있는 <span class="text-[#2E9441] font-black">지도 버튼</span>을 눌러 코스별로 핀을 찾아봐. 특별한 탐험이 시작될 거야!"
+                "안녕! 스누피 가든에 온 걸 환영해!<br>
+                하단에 있는 <span class="text-[#2E9441] font-black">지도 버튼</span>을 눌러 코스를 시작해봐. 재미있는 나무 이름의 비밀을 알려줄게!"
             </p>
         </div>
-        <div class="bg-blue-50 border-2 border-blue-500 rounded-lg p-3 flex items-start">
-            <i class="fa-solid fa-bell text-blue-500 mt-1 mr-3"></i>
+        <div class="bg-green-50 border-2 border-green-500 rounded-lg p-3 flex items-start">
+            <i class="fa-solid fa-bell text-green-500 mt-1 mr-3"></i>
             <div>
-                <h4 class="font-bold text-blue-800 text-sm">진행 팁</h4>
-                <p class="text-xs text-gray-600 mt-1 font-medium">야외가든 지도를 열고 <strong class="text-yellow-600">통통 튀는 노란 핀</strong>을 눌러 순서대로 식물들을 관찰하세요! 11개의 나무가 기다립니다.</p>
+                <h4 class="font-bold text-green-800 text-sm">진행 팁</h4>
+                <p class="text-xs text-gray-600 mt-1 font-medium">야외가든 지도를 열고 노란색으로 반짝이는 핀을 찾아가세요! 정해진 순서대로 11개의 나무를 발견해야 합니다.</p>
             </div>
         </div>
     </div>
@@ -480,21 +490,24 @@
             
             <div class="map-container" id="map-container">
                 <div class="map-content" id="map-content">
-                    <!-- 핀포인트 및 SVG 점선 주입 -->
+                    <!-- 점선 렌더링용 SVG 컨테이너 -->
+                    <svg id="map-lines-svg" class="absolute top-0 left-0 w-full h-full pointer-events-none z-0"></svg>
+                    <!-- 핀포인트 주입 (JS) -->
                 </div>
             </div>
         </div>
 
         <div id="view-collection" class="view-content">
-            <h2 class="text-2xl font-black title-font mb-2">내 식물 도감</h2>
-            <p class="text-sm font-bold text-gray-600 mb-6">수집한 나무 도감: <span id="collection-count" class="text-red-500 text-lg">0</span>/11</p>
+            <h2 class="text-2xl font-black title-font mb-2">내 나무 도감</h2>
+            <p class="text-sm font-bold text-gray-600 mb-6">발견한 나무: <span id="collection-count" class="text-red-500 text-lg">0</span>/11</p>
 
             <div class="grid grid-cols-3 gap-3" id="stamp-grid">
                 <!-- 스탬프 슬롯 주입 -->
             </div>
             
+            <!-- 최종 자격 검사 버튼 혹은 인증서 다시 보기 버튼 -->
             <button id="final-test-btn" onclick="handleFinalAction()" class="comic-btn w-full bg-orange-500 text-white py-4 text-lg mt-8 hidden animate-bounce">
-                <i class="fa-solid fa-graduation-cap mr-2"></i> 최종 자격 검사 보기!
+                <i class="fa-solid fa-graduation-cap mr-2"></i> <span id="final-btn-text">최종 자격 검사 보기!</span>
             </button>
         </div>
 
@@ -511,12 +524,12 @@
                     <img src="./lucy_doctor.png" alt="루시" class="w-full h-full object-contain pt-1 scale-125 transform origin-bottom">
                 </div>
                 <div class="comic-bubble text-sm font-bold leading-relaxed flex-1">
-                    지금까지 찾은 걸 테스트해볼까?<br>아래 설명을 읽고 <strong>어떤 나무</strong>인지 이름을 맞춰봐!
+                    지금까지 배운 걸 테스트해볼까?<br>아래 설명을 읽고 <strong>어떤 나무</strong>인지 이름을 맞춰봐!
                 </div>
             </div>
 
             <div class="comic-border bg-white p-5" id="final-quiz-container">
-                <h4 class="font-black text-lg mb-3 text-center title-font text-[#2E9441]"><i class="fa-solid fa-leaf"></i> 식물 맞추기</h4>
+                <h4 class="font-black text-lg mb-3 text-center title-font text-[#2E9441]"><i class="fa-solid fa-leaf"></i> 나무 맞추기</h4>
                 <p class="font-bold text-sm mb-6 text-gray-800 p-3 bg-gray-100 rounded-lg border-2 border-dashed border-gray-300" id="final-quiz-desc">
                     설명 내용
                 </p>
@@ -528,7 +541,7 @@
 
         <div id="view-cert-form" class="view-content">
             <h2 class="text-3xl font-black title-font text-center text-[#2E9441] mb-2 mt-4">자격 시험 통과!</h2>
-            <p class="text-sm font-bold text-center text-gray-600 mb-6">마지막으로 탐험가 인증서를 발급해줄게.</p>
+            <p class="text-sm font-bold text-center text-gray-600 mb-6">마지막으로 가드너 인증서를 발급해줄게.</p>
 
             <div class="comic-border bg-white p-5 mb-6">
                 <label class="block font-black text-lg mb-2">1. 네 이름을 알려줘!</label>
@@ -536,7 +549,7 @@
             </div>
 
             <div class="comic-border bg-white p-5 mb-6">
-                <label class="block font-black text-lg mb-3">2. 가장 마음에 드는 식물을 선택해!</label>
+                <label class="block font-black text-lg mb-3">2. 가장 마음에 드는 나무를 선택해!</label>
                 <div class="grid grid-cols-4 gap-2" id="cert-plant-grid">
                     <!-- 수집한 에셋 주입 -->
                 </div>
@@ -550,11 +563,11 @@
         <div id="view-certificate" class="view-content">
             <!-- 캡처 대상 영역 -->
             <div class="cert-wrapper" id="cert-capture-area">
-                <!-- 이름 텍스트: 절대 위치 백분율 -->
-                <div class="cert-name-box grandma-font" id="final-cert-name">찰리 브라운</div>
-                <!-- 식물 이미지: 세로 중앙 2350px 위치 -->
+                <!-- 이름 영역 (절대 위치 적용) -->
+                <div class="cert-name-box handwriting" id="final-cert-name">찰리 브라운</div>
+                <!-- 이미지 영역 (절대 위치 적용) -->
                 <div class="cert-img-box">
-                    <img id="final-cert-img" src="" alt="선택한 식물">
+                    <img id="final-cert-img" src="" alt="선택한 나무">
                 </div>
             </div>
             
@@ -590,23 +603,39 @@
             </div>
         </div>
 
+        <!-- 모든 코스 완료 (올클리어) 모달 -->
+        <div id="all-clear-modal" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+            <div class="bg-white p-6 rounded-2xl comic-border w-10/12 max-w-sm text-center transform scale-90 transition-transform duration-300" id="all-clear-card">
+                <h2 class="text-3xl font-black title-font text-orange-500 mb-2">모든 나무 발견!</h2>
+                <div class="w-24 h-24 mx-auto mb-4 bg-yellow-100 rounded-full border-[3px] border-black flex items-center justify-center overflow-hidden">
+                    <img src="./lucy_doctor.png" alt="루시" class="w-full h-full object-contain pt-2 scale-110">
+                </div>
+                <p class="font-bold text-sm text-gray-700 mb-6 leading-relaxed">
+                    대단해!<br>스누피 가든의 11개 나무를 모두 찾았어.<br>이제 가드너 자격 검사에 도전해볼까?
+                </p>
+                <button onclick="closeAllClearAndStartTest()" class="comic-btn w-full bg-orange-500 text-white py-4 text-lg animate-bounce">
+                    <i class="fa-solid fa-graduation-cap mr-2"></i> 최종 자격 검사 시작!
+                </button>
+                <button onclick="closeAllClearAndGoToCollection()" class="mt-3 text-sm font-bold text-gray-500 underline">
+                    나중에 하기 (도감으로 이동)
+                </button>
+            </div>
+        </div>
+
         <!-- 도감 상세 설명 모달 -->
         <div id="detail-modal" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
-            <div class="bg-white p-5 rounded-2xl comic-border w-10/12 max-w-sm transform scale-90 transition-transform duration-300" id="detail-card">
-                <div class="flex justify-between items-center mb-3">
-                    <h3 class="font-black text-2xl title-font text-[#2E9441]" id="detail-plant-name">식물명</h3>
-                    <button onclick="closeDetailModal()" class="text-gray-400 hover:text-black transition-colors"><i class="fa-solid fa-xmark text-2xl"></i></button>
+            <div class="bg-[#FFCC00] p-6 rounded-2xl comic-border w-10/12 max-w-sm transform scale-90 transition-transform duration-300" id="detail-card">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-2xl font-black title-font" id="detail-plant-name">식물명</h3>
+                    <button onclick="closeDetailModal()" class="text-black text-2xl font-black"><i class="fa-solid fa-xmark"></i></button>
                 </div>
-                <div class="w-full bg-yellow-50 border-2 border-black rounded-lg overflow-hidden flex justify-center items-center p-2 mb-4">
-                    <img id="detail-comic-img" src="" class="w-full h-auto max-h-[200px] object-contain">
+                
+                <div class="w-full bg-white border-2 border-black rounded overflow-hidden flex justify-center items-center p-2 mb-4">
+                    <img id="detail-comic-img" src="" alt="코믹스트립" class="w-full h-auto max-h-[250px] object-contain">
                 </div>
-                <div class="flex items-end mb-2">
-                    <div class="w-10 h-10 bg-yellow-100 rounded-full border-2 border-black flex items-center justify-center shrink-0 z-10 mr-[-10px] overflow-hidden">
-                        <img src="./lucy_doctor.png" alt="루시" class="w-full h-full object-contain pt-1 scale-125 transform origin-bottom">
-                    </div>
-                    <div class="comic-bubble text-sm font-bold leading-relaxed flex-1" id="detail-lucy-msg" style="padding: 1rem;">
-                        설명
-                    </div>
+                
+                <div class="comic-bubble text-sm font-bold leading-relaxed mb-2 bg-white" id="detail-desc">
+                    설명 내용
                 </div>
             </div>
         </div>
@@ -631,10 +660,10 @@
             const state = {
                 collectedIds: [],
                 currentPlantId: null,
+                hasCertificate: false, // 수료증 발급 여부 체크
                 map: { scale: 1, x: 0, y: 0, isDragging: false, startX: 0, startY: 0, minScale: 0.3, maxScale: 3 },
                 finalTest: { questions: [], currentStep: 0 },
-                certCustom: { plantId: null },
-                hasCertificate: false // 수료증 발급 여부 기록
+                certCustom: { plantId: null }
             };
 
             const DB_PLANTS = {
@@ -642,7 +671,7 @@
                     id: "p_canaria", name: "카나리아야자", type: "상록수", month: "5월",
                     mapCoords: { x: 350, y: 343 },
                     comicImg: "./카나리아야자.png",
-                    lucyMessage: "이봐, 찰리 브라운! 이국적인 느낌이 물씬 나지? 원산지는 이름에 힌트가 숨어있어! 추위에도 아주 강하다고.",
+                    lucyMessage: "이국적인 느낌이 물씬 나지? 원산지는 이름에 힌트가 숨어있어! 추위에도 아주 강하다고.",
                     quiz: { question: "연 노란색 꽃이 피는 '카나리아야자'의 원산지는 어디일까요?", options: ["카나리아 제도", "제주도", "하와이"], correctIndex: 0 }
                 },
                 "p_naku": {
@@ -717,11 +746,19 @@
                 }
             };
 
-            // 요청된 순서: 카나리아 - 돈나무 - 낙우송 - 팔손이 - 까마귀 - 꽝꽝 - 말오줌 - 육박 - 치자 - 아왜 - 후박
+            // 요청하신 순서대로 도감 및 코스 배열 재정렬
             const ALL_PLANTS_LIST = [
-                DB_PLANTS.p_canaria, DB_PLANTS.p_donnamu, DB_PLANTS.p_naku, DB_PLANTS.p_pal, DB_PLANTS.p_kkamagi, 
-                DB_PLANTS.p_kkwang, DB_PLANTS.p_mal, DB_PLANTS.p_yukbak, DB_PLANTS.p_chija, 
-                DB_PLANTS.p_awe, DB_PLANTS.p_hubak
+                DB_PLANTS.p_canaria,  // 1
+                DB_PLANTS.p_donnamu,  // 2
+                DB_PLANTS.p_naku,     // 3
+                DB_PLANTS.p_pal,      // 4
+                DB_PLANTS.p_kkamagi,  // 5
+                DB_PLANTS.p_kkwang,   // 6
+                DB_PLANTS.p_mal,      // 7
+                DB_PLANTS.p_yukbak,   // 8
+                DB_PLANTS.p_chija,    // 9
+                DB_PLANTS.p_awe,      // 10
+                DB_PLANTS.p_hubak     // 11
             ];
 
             function switchTab(tabName) {
@@ -750,11 +787,11 @@
                     document.getElementById('view-map').classList.add('active');
                     document.querySelectorAll('.nav-item')[1].classList.add('active');
                     
-                    if(document.getElementById('map-content').children.length === 0) {
+                    if(document.getElementById('map-content').children.length <= 1) { // 1 is the SVG
                         initMap(); 
                         setupMapDragging(document.getElementById('map-container'), document.getElementById('map-content'));
                     } else {
-                        renderMapPins(); // 상태 업데이트 (선 연결 등)
+                        renderMapPins();
                     }
                 } else if(tabName === 'collection') {
                     renderCollection();
@@ -776,80 +813,82 @@
 
             function renderMapPins() {
                 const mapContent = document.getElementById('map-content');
-                mapContent.innerHTML = ''; 
-                
-                const targetIndex = state.collectedIds.length; // 현재 찾아야 할 목표 인덱스
-
-                // 1. 점선 SVG 그리기 (출발지부터 현재 목표 핀까지만 선을 그림)
-                const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-                svg.setAttribute('class', 'absolute top-0 left-0 w-full h-full pointer-events-none z-0');
-                
-                for (let i = 0; i <= targetIndex && i < ALL_PLANTS_LIST.length; i++) {
-                    if (i > 0) {
-                        const prev = ALL_PLANTS_LIST[i-1];
-                        const curr = ALL_PLANTS_LIST[i];
-                        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                        line.setAttribute('x1', prev.mapCoords.x);
-                        line.setAttribute('y1', prev.mapCoords.y);
-                        line.setAttribute('x2', curr.mapCoords.x);
-                        line.setAttribute('y2', curr.mapCoords.y);
-                        line.setAttribute('stroke', '#E52E2D'); // 빨간색 점선
-                        line.setAttribute('stroke-width', '4');
-                        line.setAttribute('stroke-dasharray', '8 8');
-                        svg.appendChild(line);
+                // 기존 핀 및 팝업 제거 (SVG 라인은 남겨둠)
+                Array.from(mapContent.children).forEach(child => {
+                    if (child.tagName.toLowerCase() !== 'svg') {
+                        mapContent.removeChild(child);
                     }
-                }
-                mapContent.appendChild(svg);
+                });
                 
-                // 2. 핀포인트 주입
+                // 현재 찾아야 할 목표 인덱스 (수집한 개수)
+                const currentTargetIndex = state.collectedIds.length;
+
+                drawMapLines(currentTargetIndex); // 점선 이어주기
+
                 ALL_PLANTS_LIST.forEach((plant, index) => {
                     const pin = document.createElement('div');
                     pin.className = 'map-pin';
+                    const isCollected = state.collectedIds.includes(plant.id);
+                    const isTarget = index === currentTargetIndex;
+                    
+                    if(isCollected) {
+                        pin.classList.add('collected-pin');
+                    } else if (isTarget) {
+                        pin.classList.add('target-pin'); // 통통 튀는 노란 핀
+                    } else {
+                        pin.classList.add('locked-pin'); // 아직 차례가 아닌 핀 (회색)
+                    }
+
+                    pin.style.left = `${plant.mapCoords.x}px`;
+                    pin.style.top = `${plant.mapCoords.y}px`;
                     
                     const popup = document.createElement('div');
                     popup.className = 'pin-popup';
                     
                     let popupHtml = `<span>${plant.name}</span>`;
-
-                    if (index < targetIndex) {
-                        // 이미 찾은 나무 (완료, 회색)
-                        pin.classList.add('collected-pin');
+                    if(isCollected) {
                         popupHtml += `<button class="mt-1 bg-gray-400 text-white text-xs px-3 py-1 rounded-full font-bold cursor-default">CLEAR</button>`;
-                        
-                        pin.onclick = (e) => {
-                            e.stopPropagation();
-                            focusOnPin(plant.mapCoords.x, plant.mapCoords.y, pin, popup);
-                        };
-                    } else if (index === targetIndex) {
-                        // 현재 찾아야 할 목표 (노란색 튀는 애니메이션)
-                        pin.classList.add('target-pin');
-                        popupHtml += `<button onclick="loadMission('${plant.id}')" class="mt-1 bg-[#2E9441] text-white text-xs px-3 py-1 rounded-full font-bold shadow-md active:scale-95 transition-transform">탐험 시작</button>`;
-                        
-                        pin.onclick = (e) => {
-                            e.stopPropagation();
-                            focusOnPin(plant.mapCoords.x, plant.mapCoords.y, pin, popup);
-                        };
                     } else {
-                        // 아직 차례가 오지 않은 미래의 핀 (비활성화 상태)
-                        popupHtml = `<span><i class="fa-solid fa-lock text-gray-500 mr-1"></i>${plant.name}</span>`;
-                        popupHtml += `<button class="mt-1 bg-gray-300 text-gray-500 text-xs px-3 py-1 rounded-full font-bold cursor-default">잠김</button>`;
-                        // 클릭해도 팝업은 뜨지만 진입은 못함
-                        pin.onclick = (e) => {
-                            e.stopPropagation();
-                            focusOnPin(plant.mapCoords.x, plant.mapCoords.y, pin, popup);
-                        };
+                        popupHtml += `<button onclick="loadMission('${plant.id}')" class="mt-1 bg-[#2E9441] text-white text-xs px-3 py-1 rounded-full font-bold shadow-md active:scale-95 transition-transform">도전하기</button>`;
                     }
-                    
-                    pin.style.left = `${plant.mapCoords.x}px`;
-                    pin.style.top = `${plant.mapCoords.y}px`;
-                    
                     popup.innerHTML = popupHtml;
                     popup.style.left = `${plant.mapCoords.x}px`;
                     popup.style.top = `${plant.mapCoords.y - 45}px`; 
+                    
+                    pin.onclick = (e) => {
+                        e.stopPropagation();
+                        // 클릭은 현재 타겟이거나 완료된 핀만 가능
+                        if(isTarget || isCollected) {
+                            focusOnPin(plant.mapCoords.x, plant.mapCoords.y, pin, popup);
+                        }
+                    };
 
                     mapContent.appendChild(pin);
                     mapContent.appendChild(popup);
                 });
+            }
+
+            function drawMapLines(targetIdx) {
+                const svg = document.getElementById('map-lines-svg');
+                svg.innerHTML = ''; // 초기화
+
+                for (let i = 0; i < ALL_PLANTS_LIST.length - 1; i++) {
+                    if (i >= targetIdx) break; // 현재 목표까지만 점선을 그림
+
+                    const p1 = ALL_PLANTS_LIST[i].mapCoords;
+                    const p2 = ALL_PLANTS_LIST[i+1].mapCoords;
+
+                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                    line.setAttribute('x1', p1.x);
+                    line.setAttribute('y1', p1.y);
+                    line.setAttribute('x2', p2.x);
+                    line.setAttribute('y2', p2.y);
+                    line.setAttribute('stroke', '#E52E2D'); // 빨간색 점선
+                    line.setAttribute('stroke-width', '4');
+                    line.setAttribute('stroke-dasharray', '8, 8');
+                    
+                    svg.appendChild(line);
+                }
             }
 
             function updateMapTransform() {
@@ -880,17 +919,15 @@
 
             function resetMapZoom() {
                 const container = document.getElementById('map-container');
-                // 지도가 화면 영역에 꽉 차게 가로/세로 비율 중 더 작은 값을 적용
-                const scaleX = container.clientWidth / 851;
-                const scaleY = container.clientHeight / 737;
-                const scale = Math.min(scaleX, scaleY);
+                if(!container || container.clientWidth === 0) return; // 화면이 그려지기 전이면 무시
                 
+                const scale = container.clientWidth / 851;
                 state.map.minScale = Math.max(scale, 0.3); 
-                state.map.scale = state.map.minScale;
+                state.map.scale = state.map.minScale; // 가장 축소된 상태
                 
-                // 가로, 세로 모두 완벽한 정중앙에 오도록 위치 계산
+                // 가로, 세로 정중앙 배치
                 state.map.x = (container.clientWidth - (851 * state.map.scale)) / 2;
-                state.map.y = (container.clientHeight - (737 * state.map.scale)) / 2; 
+                state.map.y = (container.clientHeight - (737 * state.map.scale)) / 2;
                 
                 document.querySelectorAll('.pin-popup').forEach(p => p.classList.remove('show'));
                 document.querySelectorAll('.map-pin').forEach(p => p.classList.remove('active-pin'));
@@ -908,10 +945,6 @@
                 document.querySelectorAll('.pin-popup').forEach(p => p.classList.remove('show'));
                 document.querySelectorAll('.map-pin').forEach(p => p.classList.remove('active-pin'));
                 popupElement.classList.add('show');
-                
-                if (!activePinElement.classList.contains('collected-pin') && !activePinElement.classList.contains('target-pin')) {
-                    activePinElement.classList.add('active-pin');
-                }
             }
 
             function zoomMap(newScale, pointerX, pointerY) {
@@ -1038,7 +1071,7 @@
                     void container.offsetWidth; 
                     container.classList.add('shake');
                     
-                    const messages = ["땡! 다시 생각해, 바보 찰리 브라운!", "나무 이름 공부 더 해야겠어!", "패찰을 다시 꼼꼼히 읽어봐!"];
+                    const messages = ["패찰을 다시봐볼까?", "이게 아니었던거 같아!", "설명을 다시 꼼꼼히 읽어볼까?"];
                     showToast(messages[Math.floor(Math.random() * messages.length)]);
                 }
             }
@@ -1084,12 +1117,73 @@
                 modal.classList.add('opacity-0', 'pointer-events-none');
                 
                 setTimeout(() => { 
-                    switchTab('map'); 
-                    // 선 및 핀 상태 업데이트
-                    renderMapPins();
-                    // 화면을 지도 탭으로 전환한 후 지도를 화면 정중앙, 가장 축소된 상태로 초기화
-                    resetMapZoom(); 
+                    if (state.collectedIds.length === ALL_PLANTS_LIST.length && !state.hasCertificate) {
+                        // 모든 나무를 찾았으면 올클리어 축하 팝업 표시
+                        showAllClearModal();
+                    } else {
+                        switchTab('map'); 
+                        // 선 및 핀 상태 업데이트
+                        renderMapPins();
+                        // 화면을 지도 탭으로 전환한 후 지도를 화면 정중앙, 가장 축소된 상태로 초기화
+                        resetMapZoom(); 
+                    }
                 }, 300);
+            }
+
+            function showAllClearModal() {
+                const modal = document.getElementById('all-clear-modal');
+                const card = document.getElementById('all-clear-card');
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                setTimeout(() => {
+                    card.classList.remove('scale-90');
+                    card.classList.add('scale-100');
+                }, 50);
+            }
+
+            function closeAllClearAndStartTest() {
+                const modal = document.getElementById('all-clear-modal');
+                const card = document.getElementById('all-clear-card');
+                card.classList.remove('scale-100'); card.classList.add('scale-90');
+                modal.classList.add('opacity-0', 'pointer-events-none');
+                setTimeout(() => {
+                    handleFinalAction();
+                }, 300);
+            }
+
+            function closeAllClearAndGoToCollection() {
+                const modal = document.getElementById('all-clear-modal');
+                const card = document.getElementById('all-clear-card');
+                card.classList.remove('scale-100'); card.classList.add('scale-90');
+                modal.classList.add('opacity-0', 'pointer-events-none');
+                setTimeout(() => {
+                    switchTab('collection');
+                }, 300);
+            }
+
+            // 도감의 나무 클릭 시 상세 정보 모달 표시
+            function showDetailModal(plantId) {
+                const data = DB_PLANTS[plantId];
+                document.getElementById('detail-plant-name').innerText = data.name;
+                document.getElementById('detail-desc').innerText = data.lucyMessage;
+                
+                const imgEl = document.getElementById('detail-comic-img');
+                imgEl.src = data.comicImg;
+                imgEl.onerror = () => { imgEl.src = `https://placehold.co/400x400/FFCC00/000?text=${data.name}`; };
+
+                const modal = document.getElementById('detail-modal');
+                const card = document.getElementById('detail-card');
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                setTimeout(() => {
+                    card.classList.remove('scale-90');
+                    card.classList.add('scale-100');
+                }, 50);
+            }
+
+            function closeDetailModal() {
+                const modal = document.getElementById('detail-modal');
+                const card = document.getElementById('detail-card');
+                card.classList.remove('scale-100'); card.classList.add('scale-90');
+                modal.classList.add('opacity-0', 'pointer-events-none');
             }
 
             function renderCollection() {
@@ -1105,10 +1199,9 @@
                         slot.className = "stamp-slot collected";
                         slot.style.backgroundImage = `url('${plant.comicImg}'), url('https://placehold.co/400x400/FFCC00/000?text=${plant.name}+Comic')`;
                         slot.innerHTML = `<div class="stamp-mark" style="font-size: 1rem;">CLEAR</div>`;
-                        // 수집된 항목 클릭 시 설명 상세 보기
-                        slot.onclick = () => showPlantDetail(plant);
+                        slot.onclick = () => showDetailModal(plant.id);
                     } else {
-                        slot.className = "stamp-slot";
+                        slot.className = "stamp-slot cursor-default";
                         slot.innerHTML = `
                             <i class="fa-solid fa-lock text-gray-400 text-xl mb-1"></i>
                             <span class="text-[10px] font-bold text-gray-400">No.${index + 1}</span>
@@ -1118,51 +1211,33 @@
                 });
 
                 const btn = document.getElementById('final-test-btn');
+                const btnText = document.getElementById('final-btn-text');
+                
                 if(state.collectedIds.length === ALL_PLANTS_LIST.length) { 
                     btn.classList.remove('hidden');
-                    // 수료증 발급 여부에 따라 버튼 텍스트와 동작 변경
                     if(state.hasCertificate) {
-                        btn.innerHTML = `<i class="fa-solid fa-certificate mr-2"></i> 내 인증서 다시 보기`;
+                        // 이미 수료증을 받았다면 버튼 텍스트와 동작 변경
+                        btnText.innerText = "내 인증서 다시 보기";
                         btn.classList.replace('bg-orange-500', 'bg-[#2E9441]');
+                        btn.querySelector('i').classList.replace('fa-graduation-cap', 'fa-award');
                     } else {
-                        btn.innerHTML = `<i class="fa-solid fa-graduation-cap mr-2"></i> 최종 자격 검사 보기!`;
-                        btn.classList.replace('bg-[#2E9441]', 'bg-orange-500');
+                        btnText.innerText = "최종 자격 검사 보기!";
                     }
                 } else {
                     btn.classList.add('hidden');
                 }
             }
 
-            // 도감의 수집 식물 상세 보기 (루시 설명 포함)
-            function showPlantDetail(plant) {
-                document.getElementById('detail-plant-name').innerText = plant.name;
-                const imgEl = document.getElementById('detail-comic-img');
-                imgEl.src = plant.comicImg;
-                imgEl.onerror = () => { imgEl.src = `https://placehold.co/400x400/FFCC00/000?text=${plant.name}`; };
-                document.getElementById('detail-lucy-msg').innerText = plant.lucyMessage;
-                
-                const modal = document.getElementById('detail-modal');
-                const card = document.getElementById('detail-card');
-                modal.classList.remove('opacity-0', 'pointer-events-none');
-                setTimeout(() => { card.classList.remove('scale-90'); card.classList.add('scale-100'); }, 50);
-            }
-
-            function closeDetailModal() {
-                const modal = document.getElementById('detail-modal');
-                const card = document.getElementById('detail-card');
-                card.classList.remove('scale-100'); card.classList.add('scale-90');
-                modal.classList.add('opacity-0', 'pointer-events-none');
-            }
-
             function handleFinalAction() {
                 if(state.hasCertificate) {
-                    switchTab('certificate'); // 이미 발급 받았으면 바로 인증서 탭으로
+                    switchTab('certificate');
                 } else {
-                    startFinalTest(); // 처음이면 자격 검사 실행
+                    startFinalTest();
                 }
             }
 
             function startFinalTest() {
+                // 11개 중 랜덤으로 2개 식물 선택
                 const shuffled = [...ALL_PLANTS_LIST].sort(() => 0.5 - Math.random());
                 state.finalTest.questions = shuffled.slice(0, 2);
                 state.finalTest.currentStep = 0;
@@ -1251,24 +1326,32 @@
                     return;
                 }
                 if (!state.certCustom.plantId) {
-                    showToast("마음에 드는 식물을 하나 골라줘!");
+                    showToast("마음에 드는 나무를 하나 골라볼까?");
                     return;
                 }
 
                 const selectedPlant = DB_PLANTS[state.certCustom.plantId];
                 const nameEl = document.getElementById('final-cert-name');
                 
+                // 이름 길이에 따른 폰트 크기 동적 할당
                 nameEl.innerText = nameInput;
+                if (nameInput.length >= 5) {
+                    nameEl.style.fontSize = "6.5cqi";
+                } else if (nameInput.length >= 3) {
+                    nameEl.style.fontSize = "7.5cqi";
+                } else {
+                    nameEl.style.fontSize = "8.5cqi";
+                }
                 
                 const certImgEl = document.getElementById('final-cert-img');
                 certImgEl.src = selectedPlant.comicImg;
                 certImgEl.onerror = () => { certImgEl.src = `https://placehold.co/400x400/FFCC00/000?text=${selectedPlant.name}`; };
 
                 state.hasCertificate = true; // 수료증 발급 상태 저장
-
                 switchTab('certificate');
             }
 
+            /* 인증서 자동 캡처 후 기기에 다운로드 하는 함수 */
             function downloadCertificate() {
                 const certArea = document.getElementById('cert-capture-area');
                 
