@@ -394,22 +394,21 @@
             justify-content: center;
             color: #000;
             white-space: nowrap;
-            /* 폰트: 나눔스퀘어 외할머니체 (Grandma font) */
             font-size: 8cqi;
         }
 
-        /* 이미지 영역: x 중앙, y=2400px (비율 87.14%) */
+        /* 이미지 영역: x 중앙, y=2200px 에서 아래로 시작되도록 수정 (비율 79.88%) */
         .cert-img-box {
             position: absolute;
             left: 50%;
-            top: 87.14%; /* 2400 / 2754 (기존 85.33%에서 약 50px 아래로 이동) */
-            transform: translate(-50%, -50%);
-            width: 28cqi;
-            height: 28cqi;
+            top: 79.88%; /* 2200 / 2754 */
+            transform: translateX(-50%); /* y축 이동을 제거하여 정확히 이 선부터 표출되도록 수정 */
+            width: 35cqi;
+            height: 18cqi;
             background-color: transparent;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
         }
 
         .cert-img-box img {
@@ -436,11 +435,11 @@
                         <img src="./lucy_doctor.png" alt="가드너 루시" class="w-full h-full object-contain pt-2 scale-110">
                     </div>
                 </div>
-                <!-- 텍스트 단어 끊김 현상 방지(break-keep) 및 <br> 명시적 추가로 줄바꿈 정렬 -->
-                <p class="font-bold text-center text-gray-800 leading-relaxed mb-4 break-keep">
+                <!-- 텍스트 단어 끊김 현상 방지 및 전달해주신 사진과 동일하게 줄바꿈 적용 -->
+                <p class="font-bold text-center text-gray-800 leading-relaxed mb-4 text-[15px]" style="word-break: break-all;">
                     "안녕! 스누피 가든에 온 걸 환영해!<br>
-                    하단에 있는 <span class="text-[#2E9441] font-black">지도 버튼</span>을 눌러 코스를 시작해봐.<br>
-                    재미있는 나무 이름의 비밀을 알려줄게!"
+                    하단에 있는 <span class="text-[#2E9441] font-black">지도 버튼</span>을 눌러 코스를 시작해봐. 재<br>
+                    미있는 나무 이름의 비밀을 알려줄게!"
                 </p>
         </div>
         <div class="bg-green-50 border-2 border-green-500 rounded-lg p-3 flex items-start">
@@ -477,6 +476,7 @@
             </div>
 
             <div class="comic-border bg-white p-4" id="quiz-container">
+                <!-- 루시의 퀴즈 대신 QUIZ로 변경 -->
                 <h4 class="font-black text-lg mb-3 text-center title-font text-red-500"><i class="fa-solid fa-circle-question"></i> QUIZ</h4>
                 <p class="font-bold text-sm mb-4" id="quiz-question">질문 내용</p>
                 <div class="flex flex-col gap-2" id="quiz-options">
@@ -532,6 +532,7 @@
 
             <div class="comic-border bg-white p-5" id="final-quiz-container">
                 <h4 class="font-black text-lg mb-3 text-center title-font text-[#2E9441]"><i class="fa-solid fa-leaf"></i> 나무 맞추기</h4>
+                <!-- 기존 식물 설명이 노출될 위치 -->
                 <p class="font-bold text-sm mb-6 text-gray-800 p-3 bg-gray-100 rounded-lg border-2 border-dashed border-gray-300" id="final-quiz-desc">
                     설명 내용
                 </p>
@@ -668,12 +669,14 @@
                 certCustom: { plantId: null }
             };
 
+            // 식물 데이터베이스 (최종 퀴즈용 원본 설명(fullDesc) 필드 추가됨)
             const DB_PLANTS = {
                 "p_canaria": {
                     id: "p_canaria", name: "카나리아야자", type: "상록수", month: "5월",
                     mapCoords: { x: 350, y: 343 },
                     comicImg: "./카나리아야자.png",
                     lucyMessage: "이국적인 느낌이 물씬 나지? 원산지는 이름에 힌트가 숨어있어! 추위에도 아주 강하다고.",
+                    fullDesc: "원산지는 카나리아제도이며 내한성이 강하여 우리나라에서 관상용으로 재배합니다. 연 노란색의 꽃이 핍니다.",
                     quiz: { question: "연 노란색 꽃이 피는 '카나리아야자'의 원산지는 어디일까요?", options: ["카나리아 제도", "제주도", "하와이"], correctIndex: 0 }
                 },
                 "p_naku": {
@@ -681,6 +684,7 @@
                     mapCoords: { x: 493, y: 227 },
                     comicImg: "./낙우송.png",
                     lucyMessage: "이 나무는 잎이 떨어지는 모습이 아주 예뻐서 이름이 지어졌어! 한자 뜻을 잘 풀이해 보라구.",
+                    fullDesc: "이 나무는 잎이 떨어지는 모습이 아주 예뻐서 이름이 지어졌어! 한자 뜻을 잘 풀이해 보라구.",
                     quiz: { question: "'낙우송'이라는 이름은 어떤 모습에서 유래했을까요?", options: ["낙타의 털을 닮아서", "새의 깃털이 떨어지는 모습 같아서", "소의 뿔처럼 뾰족해서"], correctIndex: 1 }
                 },
                 "p_pal": {
@@ -688,6 +692,7 @@
                     mapCoords: { x: 537, y: 398 },
                     comicImg: "./팔손이.png",
                     lucyMessage: "내 손가락은 다섯 개지만 이 친구는 달라! 이름부터 몇 개인지 대놓고 알려주고 있잖아. 공기 정화에도 최고라고!",
+                    fullDesc: "잎이 8개로 갈라졌다고 해서 붙여진 이름입니다. 실내 습도 유지와 공기 정화 효과가 탁월합니다.",
                     quiz: { question: "실내 공기 정화에 좋은 '팔손이'의 잎은 보통 몇 개로 갈라져 있을까요?", options: ["4개", "8개", "12개"], correctIndex: 1 }
                 },
                 "p_kkamagi": {
@@ -695,6 +700,7 @@
                     mapCoords: { x: 574, y: 278 },
                     comicImg: "./까마귀쪽나무.png",
                     lucyMessage: "까마귀가 이 나무의 열매를 따먹을 때 재미있는 소리가 나서 이름이 이렇게 붙었어! 내가 힌트를 줄까?",
+                    fullDesc: "제주와 남해안 일부에서만 자생하며 열매가 포도알처럼 검게 익으면 까마귀가 열매를 따먹는데 쪽 하는 소리가 난다고 해서 붙여진 이름입니다.",
                     quiz: { question: "열매를 먹을 때 무슨 소리가 난다고 해서 까마귀'쪽'나무가 되었을까요?", options: ["깍깍", "쪽", "후루룩"], correctIndex: 1 }
                 },
                 "p_kkwang": {
@@ -702,6 +708,7 @@
                     mapCoords: { x: 651, y: 154 },
                     comicImg: "./꽝꽝나무.png",
                     lucyMessage: "모양을 내서 자르기 좋아서 토피어리로 많이 쓰지! 잎을 불에 태우면 아주 깜짝 놀랄 소리가 나!",
+                    fullDesc: "잎이 불에 탈 때 '꽝꽝' 소리가 난다 하여 '꽝꽝나무'라 부릅니다. 겨울에도 녹색을 유지하며 덤불처럼 자라지요. 새로운 싹이 잘 맺혀 전정을 해주면서 토피어리나 울타리로 많이 이용됩니다.",
                     quiz: { question: "이 나무의 잎이 불에 탈 때 어떤 소리가 나서 '꽝꽝나무'일까요?", options: ["지글지글", "꽝꽝", "펑펑"], correctIndex: 1 }
                 },
                 "p_mal": {
@@ -709,6 +716,7 @@
                     mapCoords: { x: 757, y: 107 },
                     comicImg: "./말오줌때나무.png",
                     lucyMessage: "으웩! 가지를 꺾어서 냄새를 맡아보면 이름이 왜 이런지 바로 알 수 있어. 옛날엔 줄기로 말채찍을 만들었대.",
+                    fullDesc: "줄기로 말채찍을 만들었으며, 잎이나 가지를 문지르거나 꺾어 냄새를 맡아보면 말 오줌 냄새가 난 데서 유래한 이름입니다.",
                     quiz: { question: "잎이나 가지를 꺾으면 무슨 냄새가 날까요?", options: ["말 오줌 냄새", "향긋한 꽃 냄새", "시원한 박하 냄새"], correctIndex: 0 }
                 },
                 "p_yukbak": {
@@ -716,6 +724,7 @@
                     mapCoords: { x: 703, y: 286 },
                     comicImg: "./육박나무.png",
                     lucyMessage: "나무껍질이 육각형으로 벗겨져서 무늬가 아주 독특해. 무늬를 가만히 보고 있으면 군인들이 입는 옷이 생각나지 않아?",
+                    fullDesc: "나무껍질이 육각으로 벗겨지는 특징이 있어 붙여진 이름입니다. 수피 무늬가 군복을 닮아 '해병대나무', '국방나무'라고도 불립니다.",
                     quiz: { question: "수피 무늬 때문에 불리는 육박나무의 또 다른 별명은 무엇일까요?", options: ["경찰나무", "해병대나무 (국방나무)", "소방관나무"], correctIndex: 1 }
                 },
                 "p_chija": {
@@ -723,6 +732,7 @@
                     mapCoords: { x: 673, y: 530 },
                     comicImg: "./치자나무.png",
                     lucyMessage: "내 향수보다 더 좋은 재스민 향기가 나! 가을에 익는 열매는 천연 염색약으로도 쓴단다.",
+                    fullDesc: "가을에 주황색으로 익는 열매는 염료나 약용으로 쓰입니다. 재스민 향과 비슷한 강한 향기가 특징이며, 열매는 새들의 먹이가 됩니다.",
                     quiz: { question: "염료로도 쓰이는 치자나무의 열매가 가을에 익으면 무슨 색이 될까요?", options: ["검은색", "보라색", "주황색"], correctIndex: 2 }
                 },
                 "p_awe": {
@@ -730,6 +740,7 @@
                     mapCoords: { x: 559, y: 585 },
                     comicImg: "./아왜나무.png",
                     lucyMessage: "이 나무는 불이 나면 스스로를 보호하려고 아주 특별한 행동을 해! 그래서 방화수로 아주 좋지.",
+                    fullDesc: "두툼하고 큰 잎이 수분을 많이 가지고 있는데, 불과 만나면 거품을 내는 특성이 있어 '거품 나무'라고도 부릅니다. 이 거품이 불길이 번지는 것을 막아주기 때문에 방화수로 쓰입니다.",
                     quiz: { question: "불과 만나면 거품을 내는 특성 때문에 불리는 아왜나무의 별명은?", options: ["물기둥 나무", "거품 나무", "얼음 나무"], correctIndex: 1 }
                 },
                 "p_hubak": {
@@ -737,6 +748,7 @@
                     mapCoords: { x: 480, y: 535 },
                     comicImg: "./후박나무.png", 
                     lucyMessage: "나무껍질이 두껍고 커서 지어진 이름이야. 배가 아플 때 이 껍질을 달여 먹으면 내 처방만큼이나 완벽하게 낫는다고!",
+                    fullDesc: "나무껍질이 두껍고 크다는 뜻의 이름입니다. 나무껍질은 헛배가 부르거나 소화불량일 때 또는 설사와 구역질이 날 때 달여 먹으면 효험이 있습니다. 추위에 약해 남쪽 지방에서 잘 자랍니다.",
                     quiz: { question: "후박나무 껍질은 어떤 증상에 달여 먹으면 효험이 있을까요?", options: ["소화불량이나 헛배가 부를 때", "눈이 침침할 때", "잠이 안 올 때"], correctIndex: 0 }
                 },
                 "p_donnamu": {
@@ -744,6 +756,7 @@
                     mapCoords: { x: 417, y: 304 },
                     comicImg: "./돈나무.png",
                     lucyMessage: "찰리 브라운 셔츠의 지그재그 패턴 모양 수벽이야! 이름도 아주 맘에 들어. 왜 이런 이름이 붙었는지 맞춰봐!",
+                    fullDesc: "피너츠 시그니쳐 패턴인 지그재그 형태로 조성한 돈나무 수벽입니다. 잎이 많고 수형이 좋아 수벽을 만드는데 적합합니다. 열매 안에 붉은 종자 여러 개가 있는데 이처럼 돈이 많아 부자가 되었으면 하는 바람에서 유래되었습니다.",
                     quiz: { question: "'돈나무'라는 이름의 유래는 무엇일까요?", options: ["잎이 동전처럼 생겨서", "열매 속 붉은 종자들처럼 돈이 많아 부자가 되길 바라서", "나무를 팔면 비싸서"], correctIndex: 1 }
                 }
             };
@@ -1255,7 +1268,7 @@
                 document.getElementById('test-step-badge').innerText = `문제 ${step + 1} / 2`;
                 
                 // 기존 설명을 그대로 제시하도록 수정
-                const hint = plant.lucyMessage;
+                const hint = plant.fullDesc;
                 document.getElementById('final-quiz-desc').innerText = `"${hint}"`;
 
                 const optionsContainer = document.getElementById('final-quiz-options');
@@ -1329,7 +1342,7 @@
                     return;
                 }
                 if (!state.certCustom.plantId) {
-                    showToast("마음에 드는 나무의 코믹스트립을 선택해봐!");
+                    showToast("마음에 드는 나무를 하나 골라줘!");
                     return;
                 }
 
