@@ -1330,7 +1330,7 @@
                 switchTab('cert-form');
             }
 
-            function generateCertificate() {
+          function generateCertificate() {
                 const nameInput = document.getElementById('user-name-input').value.trim();
                 
                 if (!nameInput) {
@@ -1338,30 +1338,31 @@
                     return;
                 }
                 if (!state.certCustom.plantId) {
-                    showToast("마음에 드는 나무의 코믹스트립을 선택해봐!");
+                    showToast("마음에 드는 나무를 선택해봐!");
                     return;
                 }
 
                 const selectedPlant = DB_PLANTS[state.certCustom.plantId];
                 const nameEl = document.getElementById('final-cert-name');
                 
-                // 이름 길이에 따른 폰트 크기 동적 할당
-               nameEl.innerText = nameInput;
-                nameEl.style.fontFamily = "'Grandma', cursive"; // 나눔손글씨 외할머니체 적용
+                // 폰트와 이름 적용
+                nameEl.innerText = nameInput;
+                nameEl.style.fontFamily = "'Grandma', cursive"; 
                 
+                // 폰트 크기 조정 (직접 숫자를 수정해보세요!)
                 if (nameInput.length >= 5) {
-                    nameEl.style.fontSize = "5.5cqi";
+                    nameEl.style.fontSize = "4.5cqi";
                 } else if (nameInput.length >= 3) {
-                    nameEl.style.fontSize = "6.5cqi";
+                    nameEl.style.fontSize = "5.5cqi";
                 } else {
-                    nameEl.style.fontSize = "7.5cqi";
+                    nameEl.style.fontSize = "6.5cqi";
                 }
                 
                 const certImgEl = document.getElementById('final-cert-img');
                 certImgEl.src = selectedPlant.comicImg;
                 certImgEl.onerror = () => { certImgEl.src = `https://placehold.co/400x400/FFCC00/000?text=${selectedPlant.name}`; };
 
-                state.hasCertificate = true; // 수료증 발급 상태 저장
+                state.hasCertificate = true;
                 switchTab('certificate');
             }
 
