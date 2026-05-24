@@ -54,7 +54,7 @@
         }
 
         .title-font { font-family: 'NeutraText-Bold', 'Noto Sans KR', sans-serif; }
-        .handwriting { font-family: 'Grandma', cursive; }
+        .handwriting { font-family: 'Grandma', cursive !important; }
 
         .app-container {
             width: 100%;
@@ -416,6 +416,14 @@
 </head>
 <body>
 
+    <div style="font-family: 'Grandma', cursive; position: absolute; visibility: hidden; width: 0; height: 0;">미리불러오기</div>
+
+    <div style="position: fixed; top: 15px; right: 15px; z-index: 9999;">
+        <button onclick="resetProgress()" style="background-color: #ff4d4d; color: white; padding: 8px 12px; border-radius: 8px; font-size: 12px; font-weight: bold; border: 2px solid #1A1A1A; box-shadow: 2px 2px 0 #1A1A1A; cursor: pointer; transition: all 0.1s;">
+            <i class="fa-solid fa-rotate-right mr-1"></i>데이터 초기화
+        </button>
+    </div>
+
     <div class="app-container">
         <header id="main-header" class="bg-[#2E9441] border-b-3 border-black p-4 pt-6 relative z-10 flex items-center justify-center shadow-sm">
             <h1 class="text-2xl font-black title-font tracking-wide text-white">가드너 클래스: 나무 찾기 미션</h1>
@@ -656,6 +664,28 @@
         </nav>
 
         <script>
+            // --- 1. 자동 저장 및 초기화 함수 선언 ---
+            function saveGame() {
+                localStorage.setItem('gardener_state', JSON.stringify(state));
+            }
+
+            function loadGame() {
+                const saved = localStorage.getItem('gardener_state');
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    Object.assign(state, parsed);
+                    console.log("저장된 데이터를 불러왔습니다.");
+                }
+            }
+
+            function resetProgress() {
+                if (confirm("정말 모든 기록을 삭제하고 처음부터 시작하시겠습니까?")) {
+                    localStorage.removeItem('gardener_state');
+                    location.reload();
+                }
+            }
+            // ----------------------------------------
+
             const state = {
                 collectedIds: [],
                 currentPlantId: null,
@@ -771,6 +801,12 @@
                 DB_PLANTS.p_awe,      // 10
                 DB_PLANTS.p_hubak     // 11
             ];
+
+            // --- 2. 페이지 로드 시 데이터를 불러오도록 설정 ---
+            window.addEventListener('DOMContentLoaded', () => {
+                loadGame(); // 저장된 정보 불러오기
+            });
+            // ---------------------------------------------------
 
             function switchTab(tabName) {
                 document.querySelectorAll('.view-content').forEach(el => el.classList.remove('active'));
@@ -1074,6 +1110,10 @@
                 if(selectedIndex === correctIndex) {
                     if(!state.collectedIds.includes(plantData.id)) {
                         state.collectedIds.push(plantData.id);
+                        
+                        // --- 3. 정답을 맞혀 식물 수집 시 데이터 자동 저장 ---
+                        saveGame(); 
+                        // --------------------------------------------------
                     }
                     showSuccessModal(plantData);
                 } else {
@@ -1363,6 +1403,11 @@
                 certImgEl.onerror = () => { certImgEl.src = `https://placehold.co/400x400/FFCC00/000?text=${selectedPlant.name}`; };
 
                 state.hasCertificate = true;
+
+                // --- 4. 인증서 발급 완료 시 데이터 자동 저장 ---
+                saveGame();
+                // ----------------------------------------------
+
                 switchTab('certificate');
             }
 
