@@ -393,27 +393,6 @@
             white-space: nowrap;
             font-size: 8cqi;
         }
-
-        /* 이미지 영역 (y=2200px에서 시작, flex-start 적용) */
-        .cert-img-box {
-            position: absolute;
-            left: 50%;
-            top: 79.88%; /* 2200 / 2754 */
-            transform: translateX(-50%); 
-            width: 35cqi;
-            height: 18cqi;
-            background-color: transparent;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-        }
-
-        .cert-img-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            object-position: top center;
-        }
     </style>
 </head>
 <body>
@@ -502,7 +481,7 @@
             </div>
         </div>
 
-        <!-- ★ 내 도감 화면 (데이터 초기화 버튼이 여기에 추가됨!) ★ -->
+        <!-- ★ 내 도감 화면 ★ -->
         <div id="view-collection" class="view-content">
             
             <div class="flex justify-between items-center mb-4 mt-2">
@@ -556,21 +535,14 @@
             </div>
         </div>
 
-        <!-- 인증서 입력 폼 화면 -->
+        <!-- 인증서 입력 폼 화면 (간소화 완료: 좋아하는 나무 선택 그리드 삭제) -->
         <div id="view-cert-form" class="view-content">
             <h2 class="text-3xl font-black title-font text-center text-[#2E9441] mb-2 mt-4">자격 시험 통과!</h2>
             <p class="text-sm font-bold text-center text-gray-600 mb-6">마지막으로 가드너 인증서를 발급해줄게.</p>
 
-            <div class="comic-border bg-white p-5 mb-6">
-                <label class="block font-black text-lg mb-2">1. 네 이름을 알려줘!</label>
+            <div class="comic-border bg-white p-5 mb-8">
+                <label class="block font-black text-lg mb-2">네 이름을 알려줘!</label>
                 <input type="text" id="user-name-input" placeholder="이름 입력 (예: 찰리)" class="w-full border-3 border-black rounded-lg p-3 font-bold text-lg focus:outline-none focus:border-[#2E9441]" maxlength="10">
-            </div>
-
-            <div class="comic-border bg-white p-5 mb-6">
-                <label class="block font-black text-lg mb-3">2. 가장 마음에 드는 나무를 선택해!</label>
-                <div class="grid grid-cols-4 gap-2" id="cert-plant-grid">
-                    <!-- 수집한 에셋 주입 -->
-                </div>
             </div>
 
             <button onclick="generateCertificate()" class="comic-btn w-full bg-[#2E9441] text-white py-4 text-xl">
@@ -578,16 +550,12 @@
             </button>
         </div>
 
-        <!-- 완성된 인증서 화면 -->
+        <!-- 완성된 인증서 화면 (수료증 이미지 아래 표기 삭제) -->
         <div id="view-certificate" class="view-content">
             <!-- 캡처 대상 영역 -->
             <div class="cert-wrapper" id="cert-capture-area">
                 <!-- 이름 영역 (절대 위치 적용) -->
                 <div class="cert-name-box handwriting" id="final-cert-name">찰리 브라운</div>
-                <!-- 이미지 영역 (절대 위치 적용) -->
-                <div class="cert-img-box">
-                    <img id="final-cert-img" src="" alt="선택한 나무">
-                </div>
             </div>
             
             <!-- 인증서 하단 액션 버튼들 (캡처 시 제외됨) -->
@@ -602,7 +570,7 @@
         </div>
 
         <!-- 알림 토스트 (정답/오답 표시) -->
-        <div id="toast" class="fixed top-20 left-1/2 transform -translate-x-1/2 bg-black text-white font-bold px-6 py-3 rounded-full z-50 transition-all duration-300 opacity-0 pointer-events-none shadow-lg flex items-center">
+        <div id="toast" class="fixed top-20 left-1/2 transform -translate-x-1/2 bg-black text-white font-bold px-6 py-3 rounded-full z-[100] transition-all duration-300 opacity-0 pointer-events-none shadow-lg flex items-center">
             <i class="fa-solid fa-xmark text-red-400 mr-2 text-lg"></i>
             <span id="toast-msg">다시 한번 생각해봐!</span>
         </div>
@@ -660,6 +628,39 @@
             </div>
         </div>
 
+        <!-- 만족도 설문조사 모달 (설문 참여 시 리워드 증정 안내 포함) -->
+        <div id="survey-modal" class="fixed inset-0 bg-black/80 z-[60] flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+            <div class="bg-white p-6 rounded-2xl comic-border w-10/12 max-w-sm text-center transform scale-90 transition-transform duration-300" id="survey-card">
+                <h2 class="text-2xl font-black title-font text-[#2E9441] mb-2"><i class="fa-solid fa-gift text-red-500 mr-1 animate-bounce"></i> 가드너 특별 선물!</h2>
+                
+                <div class="w-24 h-24 mx-auto mb-4 bg-yellow-100 rounded-full border-[3px] border-black flex items-center justify-center overflow-hidden">
+                    <img src="./lucy_doctor.png" alt="루시" class="w-full h-full object-contain pt-2 scale-110">
+                </div>
+                
+                <p class="font-bold text-[14px] text-gray-700 mb-5 leading-relaxed">
+                    가드너 클래스 탐험이 완료되었습니다!<br>
+                    더 멋진 스누피 가든을 만들기 위해<br>
+                    <span class="text-[#E52E2D] font-black">만족도 설문조사</span>에 참여해 주세요.
+                </p>
+
+                <!-- 안내 박스 -->
+                <div class="bg-yellow-50 border-2 border-dashed border-[#FFCC00] rounded-lg p-3 mb-6">
+                    <p class="text-xs font-black text-gray-800 leading-normal">
+                        🎁 만족도 참여 시 소정의 리워드를 증정해 드리고 있습니다!
+                    </p>
+                </div>
+                
+                <div class="flex flex-col gap-2">
+                    <a href="https://forms.gle/jCNte6HFDe8kcyhu9" target="_blank" onclick="closeSurveyModal()" class="comic-btn w-full bg-[#FFCC00] text-black py-3.5 text-base flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-square-poll-horizontal text-lg"></i> 설문하고 선물 받기!
+                    </a>
+                    <button onclick="closeSurveyModal()" class="mt-2 text-xs font-bold text-gray-400 hover:text-gray-600 underline">
+                        수료증 먼저 보러가기
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <!-- 하단 네비게이션 탭 -->
         <nav class="bottom-nav" id="bottom-nav">
             <div class="nav-item active" onclick="switchTab('home')">
@@ -703,8 +704,7 @@
                 currentPlantId: null,
                 hasCertificate: false,
                 map: { scale: 1, x: 0, y: 0, isDragging: false, startX: 0, startY: 0, minScale: 0.3, maxScale: 3 },
-                finalTest: { questions: [], currentStep: 0 },
-                certCustom: { plantId: null }
+                finalTest: { questions: [], currentStep: 0 }
             };
 
             const DB_PLANTS = {
@@ -1140,6 +1140,7 @@
                 }, 2000);
             }
 
+            // 정답 확인 및 도감 완료 모달 트리거
             function showSuccessModal(plantData) {
                 document.getElementById('success-plant-name').innerText = plantData.name;
                 const imgEl = document.getElementById('success-comic-img');
@@ -1197,6 +1198,24 @@
                 setTimeout(() => {
                     handleFinalAction();
                 }, 300);
+            }
+
+            // 만족도 조사 모달 제어 함수
+            function showSurveyModal() {
+                const modal = document.getElementById('survey-modal');
+                const card = document.getElementById('survey-card');
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                setTimeout(() => {
+                    card.classList.remove('scale-90');
+                    card.classList.add('scale-100');
+                }, 50);
+            }
+
+            function closeSurveyModal() {
+                const modal = document.getElementById('survey-modal');
+                const card = document.getElementById('survey-card');
+                card.classList.remove('scale-100'); card.classList.add('scale-90');
+                modal.classList.add('opacity-0', 'pointer-events-none');
             }
 
             function closeAllClearAndGoToCollection() {
@@ -1339,47 +1358,19 @@
             }
 
             function showCertForm() {
-                const grid = document.getElementById('cert-plant-grid');
-                grid.innerHTML = '';
-                
-                state.certCustom.plantId = null;
-
-                ALL_PLANTS_LIST.forEach(plant => {
-                    const slot = document.createElement('div');
-                    slot.className = "stamp-slot";
-                    slot.style.backgroundImage = `url('${plant.comicImg}'), url('https://placehold.co/400x400/FFCC00/000?text=${plant.name}')`;
-                    slot.style.backgroundSize = "contain";
-                    slot.style.backgroundRepeat = "no-repeat";
-                    slot.style.backgroundPosition = "center";
-                    slot.style.backgroundColor = "white";
-                    
-                    slot.onclick = () => {
-                        document.querySelectorAll('#cert-plant-grid .stamp-slot').forEach(el => el.classList.remove('selected-fav'));
-                        slot.classList.add('selected-fav');
-                        state.certCustom.plantId = plant.id;
-                    };
-                    grid.appendChild(slot);
-                });
-
+                // 간소화: 좋아하는 나무 선택 그리드 렌더링 로직 삭제
                 switchTab('cert-form');
             }
 
-          function generateCertificate() {
+            function generateCertificate() {
                 const nameInput = document.getElementById('user-name-input').value.trim();
                 
                 if (!nameInput) {
                     showToast("이름을 적어줘!");
                     return;
                 }
-                if (!state.certCustom.plantId) {
-                    showToast("마음에 드는 나무를 선택해봐!");
-                    return;
-                }
 
-                const selectedPlant = DB_PLANTS[state.certCustom.plantId];
                 const nameEl = document.getElementById('final-cert-name');
-                
-                // 폰트 속성 적용 부분 (따옴표 제거하여 깔끔하게 수정됨)
                 nameEl.innerText = nameInput;
                 nameEl.style.fontFamily = "Grandma, cursive"; 
                 
@@ -1390,17 +1381,18 @@
                 } else {
                     nameEl.style.fontSize = "6.5cqi";
                 }
-                
-                const certImgEl = document.getElementById('final-cert-img');
-                certImgEl.src = selectedPlant.comicImg;
-                certImgEl.onerror = () => { certImgEl.src = `https://placehold.co/400x400/FFCC00/000?text=${selectedPlant.name}`; };
 
                 state.hasCertificate = true;
                 
                 // 인증서까지 만들었을 때 최종 저장
                 saveGame();
 
+                // 수료증 탭으로 변경 후 만족도 설문조사 팝업창을 보여줍니다.
                 switchTab('certificate');
+                
+                setTimeout(() => {
+                    showSurveyModal();
+                }, 600);
             }
 
             function downloadCertificate() {
