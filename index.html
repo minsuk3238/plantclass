@@ -10,7 +10,6 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-
       gtag('config', 'G-TJ4J3MXJHQ');
     </script>
     
@@ -209,7 +208,7 @@
             transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             width: 851px; 
             height: 737px;
-            background-image: url('./snoopy_garden_map.jpg'); 
+            background-image: url('./snoopy_garden_map.jpg');
             background-size: 100% 100%;
             background-repeat: no-repeat;
         }
@@ -225,7 +224,7 @@
             cursor: pointer;
             box-shadow: 2px 2px 0 rgba(0,0,0,0.3);
             z-index: 10;
-            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .map-pin.target-pin {
@@ -254,7 +253,7 @@
         }
 
         .map-pin.collected-pin {
-            background-color: #9CA3AF; 
+            background-color: #9CA3AF;
             border-color: #4B5563;
             transform: translate(-50%, -100%) rotate(-45deg) scale(0.9);
             z-index: 5;
@@ -320,7 +319,7 @@
             align-items: center;
             background-color: rgba(255,255,255,0.5);
             position: relative;
-            overflow: hidden; 
+            overflow: hidden;
             cursor: pointer;
         }
         .stamp-slot.collected {
@@ -345,7 +344,7 @@
             font-weight: 900;
             font-size: 1.4rem;
             white-space: nowrap;
-            text-shadow: 2px 2px 0px white, -2px -2px 0px white, 2px -2px 0px white, -2px 2px 0px white; 
+            text-shadow: 2px 2px 0px white, -2px -2px 0px white, 2px -2px 0px white, -2px 2px 0px white;
             border: 3px solid var(--snoopy-red);
             padding: 4px 10px;
             border-radius: 6px;
@@ -382,12 +381,11 @@
             background-image: url('./certification background.png'); 
             background-size: cover;
             background-position: center;
-            container-type: inline-size; 
+            container-type: inline-size;
             box-shadow: 0 10px 25px rgba(0,0,0,0.5);
             background-color: white; 
         }
 
-        /* 이름 영역 (절대위치) */
         .cert-name-box {
             position: absolute;
             left: 65.1%; 
@@ -418,13 +416,13 @@
                     WELCOME TO SNOOPY GARDEN
                 </div>
                 <div class="flex justify-center mb-4 mt-2">
-                    <div class="w-24 h-24 bg-yellow-100 rounded-full border-[3px] border-black flex items-center justify-center overflow-hidden">
+                  <div class="w-24 h-24 bg-yellow-100 rounded-full border-[3px] border-black flex items-center justify-center overflow-hidden">
                         <img src="./lucy_doctor.png" alt="가드너" class="w-full h-full object-contain pt-2 scale-110">
                     </div>
                 </div>
                 <p class="font-bold text-center text-gray-800 leading-relaxed mb-4 text-[15px]" style="word-break: break-all;">
                     "안녕! 스누피 가든에 온 걸 환영해!<br>
-                    하단에 있는 <span class="text-[#2E9441] font-black">지도 버튼</span>을 눌러 코스를 시작해봐. <br>
+                    하단에 있는 <span class="text-[#2E9441] font-black">지도 버튼</span>을 눌러 코스를 시작해봐.<br>
                     나무의 비밀을 알려줄게!"
                 </p>
             </div>
@@ -440,7 +438,7 @@
         <div id="view-mission" class="view-content">
             <div class="flex justify-between items-center border-b-2 border-black pb-2 mb-5">
                 <div class="font-black text-sm"><i class="fa-solid fa-leaf text-green-600 mr-1"></i> 관찰 보고서</div>
-                <div class="bg-black text-white text-xs font-bold px-2 py-1 rounded-full" id="mission-type-badge">상록수</div>
+                <div class="bg-black text-white text-xs font-bold px-2 py-1 rounded-full" id="mission-type-badge">가든 식물</div>
             </div>
 
             <div class="comic-border bg-[#FFCC00] p-4 mb-6 relative">
@@ -465,7 +463,7 @@
                 <h4 class="font-black text-lg mb-3 text-center title-font text-red-500"><i class="fa-solid fa-circle-question"></i> QUIZ</h4>
                 <p class="font-bold text-sm mb-4" id="quiz-question">질문 내용</p>
                 <div class="flex flex-col gap-2" id="quiz-options">
-                    </div>
+                </div>
             </div>
         </div>
 
@@ -477,7 +475,7 @@
             <div class="map-container" id="map-container">
                 <div class="map-content" id="map-content">
                     <svg id="map-lines-svg" class="absolute top-0 left-0 w-full h-full pointer-events-none z-0"></svg>
-                    </div>
+                </div>
             </div>
         </div>
 
@@ -486,15 +484,14 @@
             <div class="flex justify-between items-center mb-4 mt-2">
                 <div>
                     <h2 class="text-2xl font-black title-font">내 나무 도감</h2>
-                    <p class="text-xs font-bold text-gray-500 mt-0.5">발견한 나무: <span id="collection-count" class="text-red-500 text-base">0</span>/11</p>
+                    <p class="text-xs font-bold text-gray-500 mt-0.5">발견한 식물: <span id="collection-count" class="text-red-500 text-base">0</span>/17</p>
                 </div>
                 <button onclick="resetProgress()" class="bg-[#ff4d4d] text-white px-3 py-2 rounded-xl text-xs font-black border-2 border-black shadow-[2px_2px_0_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer flex items-center">
                     <i class="fa-solid fa-rotate-right mr-1"></i>초기화
                 </button>
             </div>
 
-            <div class="grid grid-cols-3 gap-3" id="stamp-grid">
-                </div>
+            <div class="grid grid-cols-3 gap-3" id="stamp-grid"></div>
             
             <button id="final-test-btn" onclick="handleFinalAction()" class="comic-btn w-full bg-orange-500 text-white py-4 text-lg mt-8 hidden animate-bounce">
                 <i class="fa-solid fa-graduation-cap mr-2"></i> <span id="final-btn-text">최종 자격 검사 보기!</span>
@@ -528,7 +525,7 @@
                     설명 내용
                 </p>
                 <div class="flex flex-col gap-3" id="final-quiz-options">
-                    </div>
+                </div>
             </div>
         </div>
 
@@ -647,7 +644,7 @@
                         수료증 먼저 보러가기
                     </button>
                 </div>
-            </div>
+             </div>
         </div>
 
         <nav class="bottom-nav" id="bottom-nav">
@@ -662,7 +659,7 @@
             <div class="nav-item" onclick="switchTab('collection')">
                 <i class="fa-solid fa-book"></i>
                 <span>내 도감</span>
-            </div>
+             </div>
         </nav>
 
         <script>
@@ -696,109 +693,150 @@
                 finalTest: { questions: [], currentStep: 0 }
             };
 
-            const DB_PLANTS = {
-                "p_canaria": {
-                    id: "p_canaria", name: "카나리아야자", type: "상록수", month: "5월",
-                    mapCoords: { x: 350, y: 343 },
-                    comicImg: "./카나리아야자.png",
-                    lucyMessage: "이국적인 느낌이 물씬 나지? 원산지는 이름에 힌트가 숨어있어! 추위에도 아주 강하다고.",
-                    fullDesc: "원산지는 카나리아제도이며 내한성이 강하여 우리나라에서 관상용으로 재배합니다. 연 노란색의 꽃이 핍니다.",
-                    quiz: { question: "연 노란색 꽃이 피는 '카나리아야자'의 원산지는 어디일까요?", options: ["카나리아 제도", "제주도", "하와이"], correctIndex: 0 }
+const DB_PLANTS = {
+                "p_1": {
+                    id: "p_1", name: "팽나무", type: "관찰 식물", month: "상시",
+                    mapCoords: { x: 357, y: 396 },
+                    comicImg: "./팽나무.png",
+                    lucyMessage: "송당 마을의 신목인 이 나무에 종이를 묶어 빌면 이루어질지도 몰라! 무엇을 담아 빌었을까?",
+                    fullDesc: "소원 비는 마을 송당의 신목으로, 예부터 이곳에 소원을 담은 종이를 묶어 소원을 빌기도 했습니다.",
+                    quiz: { question: "소원 비는 마을 송당의 신목으로, 예부터 이곳에 ( )을/를 담은 종이를 묶어 소원을 빌기도 했습니다.", options: ["금은보화", "소원", "편지"], correctIndex: 1 }
                 },
-                "p_naku": {
-                    id: "p_naku", name: "낙우송", type: "낙엽수", month: "봄~여름",
-                    mapCoords: { x: 493, y: 227 },
+                "p_2": {
+                    id: "p_2", name: "돈나무 지그재그 수벽", type: "관찰 식물", month: "상시",
+                    mapCoords: { x: 415, y: 306 },
+                    comicImg: "./돈나무 지그재그 수벽.png",
+                    lucyMessage: "찰리 브라운의 옷 패턴처럼 생겼지? 이 나무의 이름엔 부자가 되길 바라는 아주 기분 좋은 의미가 담겨 있어!",
+                    fullDesc: "피너츠 시그니쳐 패턴인 지그재그 형태로 조성한 돈나무 수벽입니다. 잎이 많고 수형이 좋아 수벽을 만드는데 적합합니다. 열매 안에 붉은 종자 여러 개가 있는데 이처럼 돈이 많아 부자가 되었으면 하는 바람에서 유래되었습니다.",
+                    quiz: { question: "열매 안에 붉은 종자 여러 개가 있는데 이처럼 ( )이/가 많아 부자가 되었으면 하는 바람에서 유래되었습니다.", options: ["복", "돈", "친구"], correctIndex: 1 }
+                },
+                "p_3": {
+                    id: "p_3", name: "낙우송", type: "관찰 식물", month: "상시",
+                    mapCoords: { x: 478, y: 236 },
                     comicImg: "./낙우송.png",
-                    lucyMessage: "이 나무는 잎이 떨어지는 모습이 아주 예뻐서 이름이 지어졌어! 한자 뜻을 잘 풀이해 보라구.",
+                    lucyMessage: "가을에 노랗게 물들면 정말 예뻐! 잎이 떨어지는 모습이 마치 새의 이것과 닮았다고 해서 이름이 지어졌대.",
                     fullDesc: "물을 좋아하는 나무로 강변에서 잘 자라며, 침엽수이면서도 가을에는 노란빛 단풍이 듭니다. 소나무 같은 잎이 떨어질 때 깃털과 닮아 지어진 이름입니다.",
-                    quiz: { question: "'낙우송'이라는 이름은 어떤 모습에서 유래했을까요?", options: ["낙타의 털을 닮아서", "새의 깃털이 떨어지는 모습 같아서", "소의 뿔처럼 뾰족해서"], correctIndex: 1 }
+                    quiz: { question: "소나무 같은 잎이 떨어질 때 ( )과/와 닮아 지어진 이름입니다.", options: ["눈송이", "깃털", "빗방울"], correctIndex: 1 }
                 },
-                "p_pal": {
-                    id: "p_pal", name: "팔손이", type: "상록수", month: "9~11월",
-                    mapCoords: { x: 537, y: 398 },
-                    comicImg: "./팔손이.png",
-                    lucyMessage: "내 손가락은 다섯 개지만 이 친구는 달라! 이름부터 몇 개인지 대놓고 알려주고 있잖아. 공기 정화에도 최고라고!",
-                    fullDesc: "잎이 8개로 갈라졌다고 해서 붙여진 이름입니다. 실내 습도 유지와 공기 정화 효과가 탁월합니다.",
-                    quiz: { question: "실내 공기 정화에 좋은 '팔손이'의 잎은 보통 몇 개로 갈라져 있을까요?", options: ["4개", "8개", "12개"], correctIndex: 1 }
+                "p_4": {
+                    id: "p_4", name: "금목서", type: "관찰 식물", month: "상시",
+                    mapCoords: { x: 437, y: 464 },
+                    comicImg: "./금목서(만리향).png", // 이 부분을 수정했습니다!
+                    lucyMessage: "킁킁, 어디서 달콤한 향기 나지 않아? 향기가 아주 멀리까지 퍼져서 멋진 별명을 가지고 있어!",
+                    fullDesc: "달콤한 향이 무척 강하고 만리까지 간다고 하여 '만리향'이라 부릅니다. 꽃은 향수의 재료로 다양하게 쓰입니다.",
+                    quiz: { question: "달콤한 향이 무척 강하고 만리까지 간다고 하여 '( )'(이)라 부릅니다.", options: ["천리향", "백리향", "만리향"], correctIndex: 2 }
                 },
-                "p_kkamagi": {
-                    id: "p_kkamagi", name: "까마귀쪽나무", type: "상록수", month: "9~11월",
-                    mapCoords: { x: 574, y: 278 },
-                    comicImg: "./까마귀쪽나무.png",
-                    lucyMessage: "까마귀가 이 나무의 열매를 따먹을 때 재미있는 소리가 나서 이름이 이렇게 붙었어! 내가 힌트를 줄까?",
-                    fullDesc: "제주와 남해안 일부에서만 자생하며 열매가 포도알처럼 검게 익으면 까마귀가 열매를 따먹는데 쪽 하는 소리가 난다고 해서 붙여진 이름입니다.",
-                    quiz: { question: "열매를 먹을 때 무슨 소리가 난다고 해서 까마귀'쪽'나무가 되었을까요?", options: ["깍깍", "쪽", "후루룩"], correctIndex: 1 }
+                "p_5": {
+                    id: "p_5", name: "구실잣밤나무", type: "관찰 식물", month: "상시",
+                    mapCoords: { x: 548, y: 379 },
+                    comicImg: "./구실잣밤나무.png",
+                    lucyMessage: "이 나무의 열매는 다람쥐들이 좋아하는 이것이랑 아주 비슷하게 생겼어! 구워 먹을 수도 있단다.",
+                    fullDesc: "도토리처럼 생긴 열매를 날로 먹거나 구워서 먹을 수 있으며 꽃향기가 강하고 아름다워 정원수로 쓰입니다.",
+                    quiz: { question: "( )처럼 생긴 열매를 날로 먹거나 구워서 먹을 수 있으며 꽃향기가 강하고 아름다워 정원수로 쓰입니다.", options: ["도토리", "호두", "잣"], correctIndex: 0 }
                 },
-                "p_kkwang": {
-                    id: "p_kkwang", name: "꽝꽝나무", type: "상록수", month: "5월",
-                    mapCoords: { x: 651, y: 154 },
+                "p_6": {
+                    id: "p_6", name: "굴거리나무", type: "관찰 식물", month: "상시",
+                    mapCoords: { x: 578, y: 301 },
+                    comicImg: "./굴거리나무.png",
+                    lucyMessage: "이 나무의 길고 축 처진 잎사귀를 잘 봐. 꼭 내 친구 스누피의 어디를 닮은 것 같지 않아?",
+                    fullDesc: "대기오염이나 바람에 강해서 남부 지방에서 가로수로 많이 사용합니다. 길고 아래로 쳐진 잎이 스누피의 귀 모양을 닮아있습니다.",
+                    quiz: { question: "길고 아래로 쳐진 잎이 스누피의 ( ) 모양을 닮아있습니다.", options: ["코", "귀", "꼬리"], correctIndex: 1 }
+                },
+                "p_7": {
+                    id: "p_7", name: "호랑가시나무", type: "관찰 식물", month: "상시",
+                    mapCoords: { x: 600, y: 222 },
+                    comicImg: "./호랑가시나무.png",
+                    lucyMessage: "앗, 잎이 뾰족뾰족해! 이 단단한 가시가 아주 무서운 동물의 발톱을 닮았다고 해서 이런 이름이 붙었어.",
+                    fullDesc: "잎의 가장자리가 단단한 침으로 변하는데 마치 호랑이의 발톱처럼 보인다고 해서 '호랑이가시', '호랑가시나무' 등으로 부릅니다. 꽃보다 빨간 열매가 예쁘며 크리스마스를 상징하는 식물입니다.",
+                    quiz: { question: "잎의 가장자리가 단단한 침으로 변하는데 마치 ( )처럼 보인다고 해서 '호랑이가시', '호랑가시나무' 등으로 부릅니다.", options: ["사자의 이빨", "호랑이의 발톱", "고양이의 수염"], correctIndex: 1 }
+                },
+                "p_8": {
+                    id: "p_8", name: "꽝꽝나무", type: "관찰 식물", month: "상시",
+                    mapCoords: { x: 647, y: 140 },
                     comicImg: "./꽝꽝나무.png",
-                    lucyMessage: "모양을 내서 자르기 좋아서 토피어리로 많이 쓰지! 잎을 불에 태우면 아주 깜짝 놀랄 소리가 나!",
+                    lucyMessage: "이 잎을 불에 태우면 깜짝 놀랄만한 소리가 난대! 아주 재미있는 이름이지?",
                     fullDesc: "잎이 불에 탈 때 '꽝꽝' 소리가 난다 하여 '꽝꽝나무'라 부릅니다. 겨울에도 녹색을 유지하며 덤불처럼 자라지요. 새로운 싹이 잘 맺혀 전정을 해주면서 토피어리나 울타리로 많이 이용됩니다.",
-                    quiz: { question: "이 나무의 잎이 불에 탈 때 어떤 소리가 나서 '꽝꽝나무'일까요?", options: ["지글지글", "꽝꽝", "펑펑"], correctIndex: 1 }
+                    quiz: { question: "잎이 불에 탈 때 '( )' 소리가 난다 하여 '꽝꽝나무'라 부릅니다.", options: ["지글지글", "타닥타닥", "꽝꽝"], correctIndex: 2 }
                 },
-                "p_mal": {
-                    id: "p_mal", name: "말오줌때나무", type: "낙엽수", month: "5월",
-                    mapCoords: { x: 757, y: 107 },
-                    comicImg: "./말오줌때나무.png",
-                    lucyMessage: "으웩! 가지를 꺾어서 냄새를 맡아보면 이름이 왜 이런지 바로 알 수 있어. 옛날엔 줄기로 말채찍을 만들었대.",
-                    fullDesc: "줄기로 말채찍을 만들었으며, 잎이나 가지를 문지르거나 꺾어 냄새를 맡아보면 말 오줌 냄새가 난 데서 유래한 이름입니다.",
-                    quiz: { question: "잎이나 가지를 꺾으면 무슨 냄새가 날까요?", options: ["말 오줌 냄새", "향긋한 꽃 냄새", "시원한 박하 냄새"], correctIndex: 0 }
+                "p_9": {
+                    id: "p_9", name: "왕벚나무", type: "관찰 식물", month: "상시",
+                    mapCoords: { x: 762, y: 54 },
+                    comicImg: "./왕벚나무.png",
+                    lucyMessage: "봄이 되면 가장 먼저 아름다운 꽃을 피우는 이 나무! 원산지가 바로 여기란 사실 알고 있었어?",
+                    fullDesc: "제주도가 원산지인 우리나라 특산식물입니다. 봄의 전령사로 잎보다 먼저 피는 꽃이 장관을 이루며, 가을 단풍도 아름답습니다. 꽃말은 '절세미인!'입니다.",
+                    quiz: { question: "( )이/가 원산지인 우리나라 특산식물입니다. 봄의 전령사로 잎보다 먼저 피는 꽃이 장관을 이룹니다.", options: ["울릉도", "제주도", "거제도"], correctIndex: 1 }
                 },
-                "p_yukbak": {
-                    id: "p_yukbak", name: "육박나무", type: "상록수", month: "7~8월",
-                    mapCoords: { x: 703, y: 286 },
-                    comicImg: "./육박나무.png",
-                    lucyMessage: "나무껍질이 육각형으로 벗겨져서 무늬가 아주 독특해. 무늬를 가만히 보고 있으면 군인들이 입는 옷이 생각나지 않아?",
-                    fullDesc: "나무껍질이 육각으로 벗겨지는 특징이 있어 붙여진 이름입니다. 수피 무늬가 군복을 닮아 '해병대나무', '국방나무'라고도 불립니다.",
-                    quiz: { question: "수피 무늬 때문에 불리는 육박나무의 또 다른 별명은 무엇일까요?", options: ["경찰나무", "해병대나무 (국방나무)", "소방관나무"], correctIndex: 1 }
+                "p_10": {
+                    id: "p_10", name: "하귤나무", type: "관찰 식물", month: "상시",
+                    mapCoords: { x: 736, y: 247 },
+                    comicImg: "./하귤나무.png",
+                    lucyMessage: "보통 귤은 겨울에 먹지만, 이 귤은 아주 특별하게 다른 계절에 열매를 맺어! 제주의 자몽이라고도 해.",
+                    fullDesc: "겨울이 아닌 여름에 난다고 해서 '하귤'입니다. 새콤 쌉싸름한 맛과 통통한 과육 알알이 톡톡 터지는 식감에 '제주의 자몽'이라 불리기도 합니다.",
+                    quiz: { question: "겨울이 아닌 ( )에 난다고 해서 '하귤'입니다.", options: ["봄", "여름", "가을"], correctIndex: 1 }
                 },
-                "p_chija": {
-                    id: "p_chija", name: "치자나무", type: "상록수", month: "6월",
-                    mapCoords: { x: 673, y: 530 },
+                "p_11": {
+                    id: "p_11", name: "삼나무", type: "관찰 식물", month: "상시",
+                    mapCoords: { x: 780, y: 242 },
+                    comicImg: "./삼나무.png",
+                    lucyMessage: "키가 아담한 이 친구는 물기를 아주 좋아해서 숲 속 촉촉한 곳에서 잘 자란단다.",
+                    fullDesc: "우리나라 중부 이남의 산에서 자라는 낙엽 관목. 키는 약 1m 내외이고, 습기가 많은 곳에서 자란다.",
+                    quiz: { question: "우리나라 중부 이남의 산에서 자라는 낙엽 관목. 키는 약 1m 내외이고, ( )이/가 많은 곳에서 자란다.", options: ["바람", "햇빛", "습기"], correctIndex: 2 }
+                },
+                "p_12": {
+                    id: "p_12", name: "카네이션동백", type: "관찰 식물", month: "상시",
+                    mapCoords: { x: 728, y: 438 },
+                    comicImg: "./카네이션동백.png",
+                    lucyMessage: "어버이날 선물하는 꽃이랑 정말 비슷하게 생겼지? 하지만 사실은 동백나무야. 꽃말이 정말 낭만적이지!",
+                    fullDesc: "동백꽃의 생김새가 카네이션과 비슷하지만 동백인 나무입니다. 꽃말은 '그 누구보다 더 당신을 사랑합니다'입니다.",
+                    quiz: { question: "동백꽃의 생김새가 카네이션과 비슷하지만 동백인 나무입니다. 꽃말은 '( )'입니다.", options: ["그 누구보다 더 당신을 사랑합니다", "당신을 영원히 기억합니다", "나의 마음을 받아주세요"], correctIndex: 0 }
+                },
+                "p_13": {
+                    id: "p_13", name: "녹나무", type: "관찰 식물", month: "상시",
+                    mapCoords: { x: 589, y: 422 },
+                    comicImg: "./녹나무.png",
+                    lucyMessage: "제주도를 대표하는 아주아주 중요한 나무야. 잎을 살짝 비벼보면 기분 좋은 향기가 날 거야!",
+                    fullDesc: "제주의 기품을 잘 드높이라는 뜻으로 제주도목으로 보호 관리되는 중요한 나무입니다. 잎을 따서 비비면 향기가 납니다.",
+                    quiz: { question: "제주도목으로 보호 관리되는 중요한 나무입니다. ( )을/를 따서 비비면 향기가 납니다.", options: ["꽃", "열매", "잎"], correctIndex: 2 }
+                },
+                "p_14": {
+                    id: "p_14", name: "치자나무", type: "관찰 식물", month: "상시",
+                    mapCoords: { x: 671, y: 536 },
                     comicImg: "./치자나무.png",
-                    lucyMessage: "내 향수보다 더 좋은 재스민 향기가 나! 가을에 익는 열매는 천연 염색약으로도 쓴단다.",
+                    lucyMessage: "이 열매로 천을 물들이면 아주 예쁜 색이 나와! 향기도 좋고 새들도 좋아하는 매력적인 나무지.",
                     fullDesc: "가을에 주황색으로 익는 열매는 염료나 약용으로 쓰입니다. 재스민 향과 비슷한 강한 향기가 특징이며, 열매는 새들의 먹이가 됩니다.",
-                    quiz: { question: "염료로도 쓰이는 치자나무의 열매가 가을에 익으면 무슨 색이 될까요?", options: ["검은색", "보라색", "주황색"], correctIndex: 2 }
+                    quiz: { question: "가을에 ( )(으)로 익는 열매는 염료나 약용으로 쓰입니다.", options: ["보라색", "빨간색", "주황색"], correctIndex: 2 }
                 },
-                "p_awe": {
-                    id: "p_awe", name: "아왜나무", type: "상록수", month: "5월",
-                    mapCoords: { x: 559, y: 585 },
+                "p_15": {
+                    id: "p_15", name: "아왜나무", type: "관찰 식물", month: "상시",
+                    mapCoords: { x: 564, y: 588 },
                     comicImg: "./아왜나무.png",
-                    lucyMessage: "이 나무는 불이 나면 스스로를 보호하려고 아주 특별한 행동을 해! 그래서 방화수로 아주 좋지.",
+                    lucyMessage: "불이 났을 때 스스로를 보호하려고 아주 신기하게 대처하는 나무야! 소방관 같은 나무지.",
                     fullDesc: "두툼하고 큰 잎이 수분을 많이 가지고 있는데, 불과 만나면 거품을 내는 특성이 있어 '거품 나무'라고도 부릅니다. 이 거품이 불길이 번지는 것을 막아주기 때문에 방화수로 쓰입니다.",
-                    quiz: { question: "불과 만나면 거품을 내는 특성 때문에 불리는 아왜나무의 별명은?", options: ["물기둥 나무", "거품 나무", "얼음 나무"], correctIndex: 1 }
+                    quiz: { question: "두툼하고 큰 잎이 수분을 많이 가지고 있는데, 불과 만나면 ( )을/를 내는 특성이 있어 '거품 나무'라고도 부릅니다.", options: ["연기", "물", "거품"], correctIndex: 2 }
                 },
-                "p_hubak": {
-                    id: "p_hubak", name: "후박나무", type: "상록수", month: "5월",
-                    mapCoords: { x: 480, y: 535 },
-                    comicImg: "./후박나무.png", 
-                    lucyMessage: "나무껍질이 두껍고 커서 지어진 이름이야. 배가 아플 때 이 껍질을 달여 먹으면 내 처방만큼이나 완벽하게 낫는다고!",
-                    fullDesc: "나무껍질이 두껍고 크다는 뜻의 이름입니다. 나무껍질은 헛배가 부르거나 소화불량일 때 또는 설사와 구역질이 날 때 달여 먹으면 효험이 있습니다. 추위에 약해 남쪽 지방에서 잘 자랍니다.",
-                    quiz: { question: "후박나무 껍질은 어떤 증상에 달여 먹으면 효험이 있을까요?", options: ["소화불량이나 헛배가 부를 때", "눈이 침침할 때", "잠이 안 올 때"], correctIndex: 0 }
+                "p_16": {
+                    id: "p_16", name: "장미", type: "관찰 식물", month: "상시",
+                    mapCoords: { x: 504, y: 532 },
+                    comicImg: "./장미.png",
+                    lucyMessage: "사랑을 고백할 때 이 꽃만 한 게 없지! 너무 예뻐서 꽃들의 여왕님이라고도 불려.",
+                    fullDesc: "'꽃의 여왕'이라는 별명에 어울리는 아름다움으로, 사랑을 표현할 때 가장 많이 선물하는 식물입니다.",
+                    quiz: { question: "'( )'(이)라는 별명에 어울리는 아름다움으로, 사랑을 표현할 때 가장 많이 선물하는 식물입니다.", options: ["꽃의 요정", "꽃의 여왕", "꽃의 천사"], correctIndex: 1 }
                 },
-                "p_donnamu": {
-                    id: "p_donnamu", name: "돈나무", type: "상록수", month: "5월",
-                    mapCoords: { x: 417, y: 304 },
-                    comicImg: "./돈나무.png",
-                    lucyMessage: "찰리 브라운 셔츠의 지그재그 패턴 모양 수벽이야! 이름도 아주 맘에 들어. 왜 이런 이름이 붙었는지 맞춰봐!",
-                    fullDesc: "잎이 많고 수형이 좋아 수벽을 만드는데 적합합니다. 열매 안에 붉은 종자 여러 개가 있는데 이처럼 돈이 많아 부자가 되었으면 하는 바람에서 유래되었습니다.",
-                    quiz: { question: "'돈나무'라는 이름의 유래는 무엇일까요?", options: ["잎이 동전처럼 생겨서", "열매 속 붉은 종자들처럼 돈이 많아 부자가 되길 바라서", "나무를 팔면 비싸서"], correctIndex: 1 }
+                "p_17": {
+                    id: "p_17", name: "꽃댕강나무", type: "관찰 식물", month: "상시",
+                    mapCoords: { x: 431, y: 479 },
+                    comicImg: "./꽃댕강나무.png",
+                    lucyMessage: "작고 예쁜 꽃이 가을까지 계속 피어서 오랫동안 좋은 향기를 즐길 수 있어. 스누피 가든이 널 환영해!",
+                    fullDesc: "하얀 꽃과 연분홍색 꽃이 6월부터 10월까지 계속하여 피므로 은은한 향기와 아름다운 꽃을 가을까지 볼 수 있습니다. 이 나무의 꽃말은 환영, 평안함입니다.",
+                    quiz: { question: "하얀 꽃과 연분홍색 꽃이 계속하여 피므로 은은한 ( )와/과 아름다운 꽃을 가을까지 볼 수 있습니다.", options: ["색깔", "향기", "열매"], correctIndex: 1 }
                 }
             };
-
             const ALL_PLANTS_LIST = [
-                DB_PLANTS.p_canaria,  // 1
-                DB_PLANTS.p_donnamu,  // 2
-                DB_PLANTS.p_naku,     // 3
-                DB_PLANTS.p_pal,      // 4
-                DB_PLANTS.p_kkamagi,  // 5
-                DB_PLANTS.p_kkwang,   // 6
-                DB_PLANTS.p_mal,      // 7
-                DB_PLANTS.p_yukbak,   // 8
-                DB_PLANTS.p_chija,    // 9
-                DB_PLANTS.p_awe,      // 10
-                DB_PLANTS.p_hubak     // 11
+                DB_PLANTS.p_1, DB_PLANTS.p_2, DB_PLANTS.p_3, DB_PLANTS.p_4, 
+                DB_PLANTS.p_5, DB_PLANTS.p_6, DB_PLANTS.p_7, DB_PLANTS.p_8, 
+                DB_PLANTS.p_9, DB_PLANTS.p_10, DB_PLANTS.p_11, DB_PLANTS.p_12, 
+                DB_PLANTS.p_13, DB_PLANTS.p_14, DB_PLANTS.p_15, DB_PLANTS.p_16, 
+                DB_PLANTS.p_17
             ];
 
             // 페이지 로드 시 저장된 게임 불러오기
@@ -809,13 +847,12 @@
 
             function switchTab(tabName) {
                 document.querySelectorAll('.view-content').forEach(el => el.classList.remove('active'));
-                
                 const nav = document.getElementById('bottom-nav');
                 const header = document.getElementById('main-header');
                 
                 // GA 탭 이동 트래킹 추가
                 gtag('event', 'screen_view', { 'screen_name': tabName });
-                
+
                 if (['final-test', 'cert-form', 'certificate'].includes(tabName)) {
                     nav.style.display = 'none';
                     if(tabName === 'certificate') header.style.display = 'none';
@@ -836,7 +873,7 @@
                     document.querySelectorAll('.nav-item')[1].classList.add('active');
                     
                     if(document.getElementById('map-content').children.length <= 1) { 
-                        initMap(); 
+                        initMap();
                         setupMapDragging(document.getElementById('map-container'), document.getElementById('map-content'));
                     } else {
                         renderMapPins();
@@ -866,7 +903,7 @@
                         mapContent.removeChild(child);
                     }
                 });
-                
+
                 const currentTargetIndex = state.collectedIds.length;
                 drawMapLines(currentTargetIndex); 
 
@@ -917,8 +954,7 @@
                 svg.innerHTML = ''; 
 
                 for (let i = 0; i < ALL_PLANTS_LIST.length - 1; i++) {
-                    if (i >= targetIdx) break; 
-
+                    if (i >= targetIdx) break;
                     const p1 = ALL_PLANTS_LIST[i].mapCoords;
                     const p2 = ALL_PLANTS_LIST[i+1].mapCoords;
 
@@ -967,11 +1003,9 @@
                 
                 const scale = container.clientWidth / 851;
                 state.map.minScale = Math.max(scale, 0.3); 
-                state.map.scale = state.map.minScale; 
-                
+                state.map.scale = state.map.minScale;
                 state.map.x = (container.clientWidth - (851 * state.map.scale)) / 2;
                 state.map.y = (container.clientHeight - (737 * state.map.scale)) / 2;
-                
                 document.querySelectorAll('.pin-popup').forEach(p => p.classList.remove('show'));
                 document.querySelectorAll('.map-pin').forEach(p => p.classList.remove('active-pin'));
                 updateMapTransform();
@@ -1020,7 +1054,7 @@
 
                 const onDrag = (e) => {
                     if (e.touches && e.touches.length === 2) {
-                        e.preventDefault(); 
+                        e.preventDefault();
                         const currentDistance = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
                         const touchCenterX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
                         const touchCenterY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
@@ -1041,7 +1075,7 @@
                 };
 
                 const endDrag = (e) => { 
-                    state.map.isDragging = false; 
+                    state.map.isDragging = false;
                     if (e && e.touches && e.touches.length === 1) {
                         state.map.startX = e.touches[0].clientX - state.map.x;
                         state.map.startY = e.touches[0].clientY - state.map.y;
@@ -1087,14 +1121,14 @@
                 
                 const imgEl = document.getElementById('comic-strip-img');
                 imgEl.src = data.comicImg;
-                imgEl.onerror = () => { imgEl.src = `https://placehold.co/400x400/FFCC00/000?text=${data.name}+Comic`; };
+                imgEl.onerror = () => { imgEl.src = `https://placehold.co/400x400/FFCC00/000?text=${data.name}`; };
                 
                 document.getElementById('lucy-dialogue').innerText = data.lucyMessage;
                 
                 const badge = document.getElementById('mission-type-badge');
                 badge.innerText = data.type;
                 badge.className = `text-white text-xs font-bold px-2 py-1 rounded-full ${data.type === '상록수' ? 'bg-green-700' : 'bg-orange-500'}`;
-
+                
                 document.getElementById('quiz-question').innerText = data.quiz.question;
                 const optionsContainer = document.getElementById('quiz-options');
                 optionsContainer.innerHTML = '';
@@ -1106,7 +1140,7 @@
                     btn.onclick = () => checkAnswer(btn, index, data.quiz.correctIndex, data);
                     optionsContainer.appendChild(btn);
                 });
-
+                
                 switchTab('mission');
             }
 
@@ -1124,9 +1158,8 @@
                 if(isCorrect) {
                     if(!state.collectedIds.includes(plantData.id)) {
                         state.collectedIds.push(plantData.id);
-                        
                         // 데이터 자동 저장
-                        saveGame(); 
+                        saveGame();
                     }
                     showSuccessModal(plantData);
                 } else {
@@ -1135,7 +1168,7 @@
                     void container.offsetWidth; 
                     container.classList.add('shake');
                     
-                    const messages = ["다시 생각해볼까?", "패찰을 다시봐보자!", "설명 다시 읽어보자!"];
+                    const messages = ["다시 생각해볼까?", "설명을 다시 잘 읽어봐!", "정답이 숨어있을지도 몰라!"];
                     showToast(messages[Math.floor(Math.random() * messages.length)]);
                 }
             }
@@ -1156,7 +1189,7 @@
                 document.getElementById('success-plant-name').innerText = plantData.name;
                 const imgEl = document.getElementById('success-comic-img');
                 imgEl.src = plantData.comicImg;
-                imgEl.onerror = () => { imgEl.src = `https://placehold.co/400x400/FFCC00/000?text=${plantData.name}+Comic`; };
+                imgEl.onerror = () => { imgEl.src = `https://placehold.co/400x400/FFCC00/000?text=${plantData.name}`; };
                 
                 const modal = document.getElementById('success-modal');
                 const card = document.getElementById('success-card');
@@ -1194,10 +1227,11 @@
             function showAllClearModal() {
                 // GA 모든 나무 올클리어 트래킹 추가
                 gtag('event', 'all_plants_cleared', { 'event_category': 'game_flow' });
-
+                
                 const modal = document.getElementById('all-clear-modal');
                 const card = document.getElementById('all-clear-card');
                 modal.classList.remove('opacity-0', 'pointer-events-none');
+                
                 setTimeout(() => {
                     card.classList.remove('scale-90');
                     card.classList.add('scale-100');
@@ -1267,6 +1301,7 @@
                 const modal = document.getElementById('detail-modal');
                 const card = document.getElementById('detail-card');
                 modal.classList.remove('opacity-0', 'pointer-events-none');
+                
                 setTimeout(() => {
                     card.classList.remove('scale-90');
                     card.classList.add('scale-100');
@@ -1291,7 +1326,7 @@
                     
                     if(isCollected) {
                         slot.className = "stamp-slot collected";
-                        slot.style.backgroundImage = `url('${plant.comicImg}'), url('https://placehold.co/400x400/FFCC00/000?text=${plant.name}+Comic')`;
+                        slot.style.backgroundImage = `url('${plant.comicImg}'), url('https://placehold.co/400x400/FFCC00/000?text=${plant.name}')`;
                         slot.innerHTML = `<div class="stamp-mark" style="font-size: 1rem;">CLEAR</div>`;
                         slot.onclick = () => showDetailModal(plant.id);
                     } else {
@@ -1310,6 +1345,7 @@
                 
                 if(state.collectedIds.length === ALL_PLANTS_LIST.length) { 
                     btn.classList.remove('hidden');
+                    
                     if(state.hasCertificate) {
                         btnText.innerText = "내 인증서 다시 보기";
                         btn.classList.replace('bg-orange-500', 'bg-[#2E9441]');
@@ -1338,7 +1374,7 @@
             function startFinalTest() {
                 // GA 최종 테스트 시작 트래킹 추가
                 gtag('event', 'final_test_start', { 'event_category': 'final_test' });
-
+                
                 const shuffled = [...ALL_PLANTS_LIST].sort(() => 0.5 - Math.random());
                 state.finalTest.questions = shuffled.slice(0, 2);
                 state.finalTest.currentStep = 0;
@@ -1355,7 +1391,7 @@
                 
                 const hint = plant.fullDesc;
                 document.getElementById('final-quiz-desc').innerText = `"${hint}"`;
-
+                
                 const optionsContainer = document.getElementById('final-quiz-options');
                 optionsContainer.innerHTML = '';
                 
@@ -1382,7 +1418,7 @@
                     'is_correct': isCorrect ? 'yes' : 'no',
                     'target_plant_id': correctId
                 });
-
+                
                 if(isCorrect) {
                     btnElement.classList.replace('bg-white', 'bg-green-500');
                     btnElement.classList.replace('text-gray-700', 'text-white');
@@ -1418,10 +1454,10 @@
 
                 // GA 인증서 생성 완료 트래킹 추가
                 gtag('event', 'generate_certificate', { 'event_category': 'final_test' });
-
+                
                 const nameEl = document.getElementById('final-cert-name');
                 nameEl.innerText = nameInput;
-                nameEl.style.fontFamily = "Grandma, cursive"; 
+                nameEl.style.fontFamily = "Grandma, cursive";
                 
                 if (nameInput.length >= 5) {
                     nameEl.style.fontSize = "4.5cqi";
@@ -1432,13 +1468,11 @@
                 }
 
                 state.hasCertificate = true;
-                
                 // 인증서까지 만들었을 때 최종 저장
                 saveGame();
-
+                
                 // 수료증 탭으로 변경 후 만족도 설문조사 팝업창을 보여줍니다.
                 switchTab('certificate');
-                
                 setTimeout(() => {
                     showSurveyModal();
                 }, 600);
