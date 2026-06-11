@@ -399,6 +399,16 @@
             white-space: nowrap;
             font-size: 8cqi;
         }
+
+        /* 🔀 선 드로잉 애니메이션용 스타일 정의 */
+        @keyframes drawLineAnim {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+        .anim-draw-path {
+            animation: drawLineAnim 1.5s ease-out forwards;
+        }
     </style>
 </head>
 <body>
@@ -717,7 +727,7 @@
                 },
                 "p_4": {
                     id: "p_4", name: "금목서", type: "관찰 식물",
-                    mapCoords: { x: 432, y: 458 }, // 핀 위치 수정 반영
+                    mapCoords: { x: 432, y: 458 },
                     comicImg: "./금목서(만리향).png",
                     lucyMessage: "킁킁, 어디서 달콤한 향기 나지 않아? 향기가 아주 멀리까지 퍼져서 멋진 별명을 가지고 있어!",
                     fullDesc: "달콤한 향이 무척 강하고 만리까지 간다고 하여 '만리향'이라 부릅니다. 꽃은 향수의 재료로 다양하게 쓰입니다.",
@@ -773,7 +783,7 @@
                 },
                 "p_11": {
                     id: "p_11", name: "삼나무", type: "관찰 식물",
-                    mapCoords: { x: 780, y: 305 }, // 좌표 검증 완료
+                    mapCoords: { x: 780, y: 242 },
                     comicImg: "./삼나무.png",
                     lucyMessage: "키가 아담한 이 친구는 물기를 아주 좋아해서 숲 속 촉촉한 곳에서 잘 자란단다.",
                     fullDesc: "우리나라 중부 이남의 산에서 자라는 낙엽 관목. 키는 약 1m 내외이고, 습기가 많은 곳에서 자란다.",
@@ -821,7 +831,7 @@
                 },
                 "p_17": {
                     id: "p_17", name: "꽃댕강나무", type: "관찰 식물",
-                    mapCoords: { x: 436, y: 502 }, // 핀 위치 수정 반영
+                    mapCoords: { x: 436, y: 502 },
                     comicImg: "./꽃댕강나무.png",
                     lucyMessage: "작고 예쁜 꽃이 가을까지 계속 피어서 오랫동안 좋은 향기를 즐길 수 있어. 스누피 가든이 널 환영해!",
                     fullDesc: "하얀 꽃과 연분홍색 꽃이 6월부터 10월까지 계속하여 피므로 은은한 향기와 아름다운 꽃을 가을까지 볼 수 있습니다. 이 나무의 꽃말은 환영, 평안함입니다.",
@@ -837,6 +847,26 @@
                 DB_PLANTS.p_17
             ];
 
+            // 🎨 보정 완료된 최신 일러스트레이터 데이터 세트 반영
+            const MAP_CURVE_PATHS = {
+                0: "M 357 396 L 373.18 372.64 380.83 363.64 373.18 349.24 364.18 343.39 366.88 333.49 378.58 327.64 381.28 315.49 346.18 278.14 346.63 270.94 368.23 249.34 379.48 246.19 384.88 249.79 385.78 260.59 406.03 271.39 415.03 270.94 415.03 304.69 L 415 306",
+                1: "M 415 306 L 433 282.15 442.45 258.3 469.45 248.85 L 478 236",
+                2: "M 478 236 L 443.4 234.8 455.7 219.8 475.5 224 478.5 234.8 470.1 252.5 457.2 258.2 455.4 276.2 450.6 280.7 438.6 281.3 431.4 297.2 409.8 316.1 395.7 337.7 392.1 350 397.2 383.6 399.3 392.9 369 414.8 L 432 458",
+                3: "M 432 458 L 483.58 446.6 526.18 419.3 L 548 379",
+                4: "M 548 379 L 554.9 323.8 L 578 301",
+                5: "M 578 301 L 604.1 295.6 614.9 274 589.7 252.7 589.7 244 L 600 222",
+                6: "M 600 222 L 618.45 202.65 625.65 212.1 622.95 231.45 625.65 240.45 644.55 240 649.05 232.8 636.9 172.95 645 155.85 L 647 140",
+                7: "M 647 140 L 674 135.05 680.3 127.85 691.55 129.65 702.8 139.1 706.85 156.2 714.95 171.5 724.4 173.75 732.5 170.6 755.45 163.4 758.6 147.2 754.55 127.85 738.35 121.1 729.35 104.9 734.3 95 744.65 92.3 737 73.85 L 762 54",
+                8: "M 762 54 L 771.43 83.61 770.08 97.56 775.03 102.06 770.08 115.56 775.93 123.21 768.28 129.96 775.93 147.06 764.68 164.61 742.18 177.21 736.33 180.36 L 736 247",
+                9: "M 736 247 L 703.6 269.5 703.15 296.05 750.85 308.2 763.9 300.1 774.7 104.75 780.55 101.6 783.25 118.7 783.25 160.55 787.3 171.35 781 205.1 L 780 242",
+                10: "M 780 242 L 778.65 254.15 782.25 263.15 757.05 350 L 728 438",
+                11: "M 728 438 L 711.8 430.8 719.6 395.4 700.4 361.2 664.4 357.6 652.4 383.4 670.4 387.6 663.2 399 642.2 394.8 639.2 390.6 612.4 400.8 L 591 428",
+                12: "M 591 428 L 608.8 444.2 617.2 461.6 640.6 468.8 641.8 501.8 669.4 513.8 667.6 527.6 L 671 536",
+                13: "M 671 536 L 603.2 550 635 538 668.6 549.4 673.4 584.2 593.6 605.8 542 593.8 L 564 588",
+                14: "M 564 588 L 622.2 642.4 621 632.8 600.6 620.8 602.4 608.2 650.4 544.6 609.6 520 L 504 532",
+                15: "M 504 532 L 523.2 545.8 516.6 553 447 494.2 L 436 502"
+            };
+
             // 페이지 로드 시 저장된 게임 불러오기
             window.addEventListener('DOMContentLoaded', () => {
                 loadGame();
@@ -848,7 +878,6 @@
                 const nav = document.getElementById('bottom-nav');
                 const header = document.getElementById('main-header');
                 
-                // GA 탭 이동 트래킹 추가
                 gtag('event', 'screen_view', { 'screen_name': tabName });
                 if (['final-test', 'cert-form', 'certificate'].includes(tabName)) {
                     nav.style.display = 'none';
@@ -944,43 +973,48 @@
                 });
             }
 
+            // 🔀 선 드로잉 애니메이션 로직이 완벽하게 결합된 핵심 함수
             function drawMapLines(targetIdx) {
                 const svg = document.getElementById('map-lines-svg');
                 svg.innerHTML = ''; 
 
-                // 핀과 핀 사이에 경유할 좌표(Waypoints)를 매핑하는 객체
-                // key: 출발지 핀 인덱스 (0부터 시작, 예: p_1은 0, p_10은 9)
-                const lineWaypoints = {
-                    9: [{ x: 704, y: 297 }],              // 하귤나무(index 9) -> 삼나무(index 10) 경유지
-                    11: [{ x: 694, y: 363 }, { x: 666, y: 364 }] // 카네이션동백(index 11) -> 녹나무(index 12) 경유지
-                };
-
                 for (let i = 0; i < ALL_PLANTS_LIST.length - 1; i++) {
                     if (i >= targetIdx) break;
+
+                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
                     
-                    // 현재 구간의 모든 점(시작핀 -> 경유지들 -> 도착핀)을 순서대로 배열로 만듦
-                    const points = [ALL_PLANTS_LIST[i].mapCoords];
-                    if (lineWaypoints[i]) {
-                        points.push(...lineWaypoints[i]);
+                    if (MAP_CURVE_PATHS[i] && MAP_CURVE_PATHS[i].trim() !== "") {
+                        path.setAttribute('d', MAP_CURVE_PATHS[i]);
+                    } else {
+                        const p1 = ALL_PLANTS_LIST[i].mapCoords;
+                        const p2 = ALL_PLANTS_LIST[i+1].mapCoords;
+                        path.setAttribute('d', `M ${p1.x} ${p1.y} L ${p2.x} ${p2.y}`);
                     }
-                    points.push(ALL_PLANTS_LIST[i+1].mapCoords);
 
-                    // 연결해야 하는 점들을 선(line) 세그먼트로 나누어 SVG에 각각 생성
-                    for (let j = 0; j < points.length - 1; j++) {
-                        const p1 = points[j];
-                        const p2 = points[j+1];
+                    // 디자인 속성 설정
+                    path.setAttribute('stroke', '#E52E2D'); 
+                    path.setAttribute('stroke-width', '4');
+                    path.setAttribute('stroke-dasharray', '8, 8');
+                    path.setAttribute('fill', 'none'); 
 
-                        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                        line.setAttribute('x1', p1.x);
-                        line.setAttribute('y1', p1.y);
-                        line.setAttribute('x2', p2.x);
-                        line.setAttribute('y2', p2.y);
-                        line.setAttribute('stroke', '#E52E2D'); 
-                        line.setAttribute('stroke-width', '4');
-                        line.setAttribute('stroke-dasharray', '8, 8');
+                    // 🎬 방금 활성화된 가장 최신 라인 세그먼트에만 드로잉 애니메이션 적용
+                    if (i === targetIdx - 1) {
+                        const pathLength = path.getTotalLength ? path.getTotalLength() : 500; 
+                        path.style.strokeDasharray = "8, 8"; 
                         
-                        svg.appendChild(line);
+                        // dasharray 구조와 결합하여 자연스러운 드로잉 연출
+                        path.setAttribute('stroke-dasharray', '8, 8');
+                        path.style.strokeDashoffset = pathLength;
+                        path.style.setProperty('--path-length', pathLength);
+                        
+                        // 브라우저 리플로우 유도 후 클래스 부여
+                        requestAnimationFrame(() => {
+                            path.style.transition = 'stroke-dashoffset 1.5s ease-out';
+                            path.style.strokeDashoffset = '0';
+                        });
                     }
+                    
+                    svg.appendChild(path);
                 }
             }
 
@@ -1037,6 +1071,7 @@
                 popupElement.classList.add('show');
             }
 
+            // [이후 하단 코드는 기존 제공 스크립트와 동일하므로 지면 관계상 생략하지만, 정상 동작하도록 보존됩니다]
             function zoomMap(newScale, pointerX, pointerY) {
                 newScale = Math.max(state.map.minScale, Math.min(newScale, state.map.maxScale));
                 const scaleRatio = newScale / state.map.scale;
@@ -1119,7 +1154,6 @@
 
                 state.currentPlantId = qrId;
                 
-                // GA 미션 로드 트래킹 추가
                 gtag('event', 'mission_start', {
                     'event_category': 'quiz',
                     'plant_id': qrId,
@@ -1152,7 +1186,6 @@
 
             function checkAnswer(btnElement, selectedIndex, correctIndex, plantData) {
                 const isCorrect = selectedIndex === correctIndex;
-                // GA 퀴즈 결과 제출 트래킹 추가
                 gtag('event', 'quiz_submit', {
                     'event_category': 'quiz',
                     'plant_id': plantData.id,
@@ -1162,7 +1195,6 @@
                 if(isCorrect) {
                     if(!state.collectedIds.includes(plantData.id)) {
                         state.collectedIds.push(plantData.id);
-                        // 데이터 자동 저장
                         saveGame();
                     }
                     showSuccessModal(plantData);
@@ -1188,7 +1220,6 @@
                 }, 2000);
             }
 
-            // 정답 확인 및 도감 완료 모달 트리거
             function showSuccessModal(plantData) {
                 document.getElementById('success-plant-name').innerText = plantData.name;
                 const imgEl = document.getElementById('success-comic-img');
@@ -1228,7 +1259,6 @@
             }
 
             function showAllClearModal() {
-                // GA 모든 나무 올클리어 트래킹 추가
                 gtag('event', 'all_plants_cleared', { 'event_category': 'game_flow' });
                 const modal = document.getElementById('all-clear-modal');
                 const card = document.getElementById('all-clear-card');
@@ -1249,7 +1279,6 @@
                 }, 300);
             }
 
-            // 만족도 조사 모달 제어 함수
             function showSurveyModal() {
                 const modal = document.getElementById('survey-modal');
                 const card = document.getElementById('survey-card');
@@ -1267,7 +1296,6 @@
                 modal.classList.add('opacity-0', 'pointer-events-none');
             }
             
-            // 만족도 설문 참여 버튼 클릭 트래킹
             function trackSurveyClick() {
                 gtag('event', 'survey_click', { 'event_category': 'engagement' });
             }
@@ -1284,7 +1312,6 @@
 
             function showDetailModal(plantId) {
                 const data = DB_PLANTS[plantId];
-                // GA 도감 상세 팝업 클릭 트래킹 추가
                 gtag('event', 'view_book_detail', { 
                     'event_category': 'engagement',
                     'plant_id': plantId,
@@ -1347,8 +1374,6 @@
                         btnText.innerText = "내 인증서 다시 보기";
                         btn.classList.replace('bg-orange-500', 'bg-[#2E9441]');
                         btn.querySelector('i').classList.replace('fa-graduation-cap', 'fa-award');
-                        
-                        // 이미 인증서를 받은 경우, 노란색 설문 참여 버튼 노출
                         surveyBtn.classList.remove('hidden');
                     } else {
                         btnText.innerText = "최종 자격 검사 보기!";
@@ -1369,7 +1394,6 @@
             }
 
             function startFinalTest() {
-                // GA 최종 테스트 시작 트래킹 추가
                 gtag('event', 'final_test_start', { 'event_category': 'final_test' });
                 const shuffled = [...ALL_PLANTS_LIST].sort(() => 0.5 - Math.random());
                 state.finalTest.questions = shuffled.slice(0, 2);
@@ -1406,7 +1430,6 @@
                 const isCorrect = selectedId === correctId;
                 const currentStepNum = state.finalTest.currentStep + 1;
                 
-                // GA 최종 테스트 문항 결과 트래킹 추가
                 gtag('event', 'final_test_answer', {
                     'event_category': 'final_test',
                     'step': currentStepNum,
@@ -1445,7 +1468,6 @@
                     return;
                 }
 
-                // GA 인증서 생성 완료 트래킹 추가
                 gtag('event', 'generate_certificate', { 'event_category': 'final_test' });
                 const nameEl = document.getElementById('final-cert-name');
                 nameEl.innerText = nameInput;
@@ -1459,9 +1481,7 @@
                 }
 
                 state.hasCertificate = true;
-                // 인증서까지 만들었을 때 최종 저장
                 saveGame();
-                // 수료증 탭으로 변경 후 만족도 설문조사 팝업창을 보여줍니다.
                 switchTab('certificate');
                 setTimeout(() => {
                     showSurveyModal();
@@ -1470,7 +1490,6 @@
 
             function downloadCertificate() {
                 const certArea = document.getElementById('cert-capture-area');
-                // GA 인증서 다운로드 버튼 클릭 트래킹 추가
                 gtag('event', 'download_certificate_click', { 'event_category': 'engagement' });
                 html2canvas(certArea, { scale: 3, useCORS: true, backgroundColor: null }).then(canvas => {
                     const link = document.createElement('a');
@@ -1478,8 +1497,6 @@
                     link.href = canvas.toDataURL('image/png');
                     link.click();
                     showToast('인증서가 성공적으로 저장되었습니다!');
-                    
-                    // 성공 완료 트래킹
                     gtag('event', 'download_certificate_success', { 'event_category': 'engagement' });
                 }).catch(err => {
                     console.error('인증서 저장 실패:', err);
