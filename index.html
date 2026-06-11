@@ -26,14 +26,6 @@
             font-weight: bold;
         }
 
-        /* 나눔손글씨 외할머니체 (웹 폰트로 로드하여 수료증에 적용) */
-        @font-face {
-            font-family: 'Grandma';
-            src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/naverfont_05@1.0/Grandma-cute.woff') format('woff');
-            font-weight: normal;
-            font-style: normal;
-        }
-
         :root {
             --lucy-yellow: #FFCC00;
             --comic-black: #1A1A1A;
@@ -62,8 +54,8 @@
 
         .title-font { font-family: 'NeutraText-Bold', 'Noto Sans KR', sans-serif; }
         
-        /* 폰트 강제 적용을 위해 !important 추가 */
-        .handwriting { font-family: 'Grandma', cursive !important; }
+        /* 🔀 수료증 이름에 궁서체 적용 */
+        .handwriting { font-family: '궁서', 'Gungsuh', serif !important; font-weight: bold; }
 
         .app-container {
             width: 100%;
@@ -400,20 +392,9 @@
             font-size: 8cqi;
         }
 
-        /* 🔀 선 드로잉 애니메이션용 스타일 정의 */
-        @keyframes drawLineAnim {
-            to {
-                stroke-dashoffset: 0;
-            }
-        }
-        .anim-draw-path {
-            animation: drawLineAnim 1.5s ease-out forwards;
-        }
     </style>
 </head>
 <body>
-
-    <div style="font-family: 'Grandma', cursive; position: absolute; visibility: hidden; width: 0; height: 0;">미리불러오기</div>
 
     <div class="app-container">
         <header id="main-header" class="bg-[#2E9441] border-b-3 border-black p-4 pt-6 relative z-10 flex items-center justify-center shadow-sm">
@@ -598,7 +579,7 @@
                     대단해!<br>스누피 가든의 나무들을 모두 찾았어.<br>이제 가드너 자격 검사에 도전해볼까?
                 </p>
                 <button onclick="closeAllClearAndStartTest()" class="comic-btn w-full bg-orange-500 text-white py-4 text-lg animate-bounce">
-                    <i class="fa-solid fa-graduation-cap mr-2"></i> 최종 자격 검사 시작!
+                    <i class="fa-solid fa-graduation-cap mr-2"></i> 최종 자격 검 세 시작!
                 </button>
                 <button onclick="closeAllClearAndGoToCollection()" class="mt-3 text-sm font-bold text-gray-500 underline">
                     나중에 하기 (도감으로 이동)
@@ -799,7 +780,7 @@
                 },
                 "p_13": {
                     id: "p_13", name: "녹나무", type: "관찰 식물",
-                    mapCoords: { x: 591, y: 428 },
+                    mapCoords: { x: 591, y: 428 }, // 🔀 요청하신 좌표(591, 428)로 수정되었습니다.
                     comicImg: "./녹나무.png",
                     lucyMessage: "제주도를 대표하는 아주아주 중요한 나무야. 잎을 살짝 비벼보면 기분 좋은 향기가 날 거야!",
                     fullDesc: "제주의 기품을 잘 드높이라는 뜻으로 제주도목으로 보호 관리되는 중요한 나무입니다. 잎을 따서 비비면 향기가 납니다.",
@@ -847,7 +828,6 @@
                 DB_PLANTS.p_17
             ];
 
-            // 🎨 보정 완료된 최신 일러스트레이터 데이터 세트 반영
             const MAP_CURVE_PATHS = {
                 0: "M 357 396 L 373.18 372.64 380.83 363.64 373.18 349.24 364.18 343.39 366.88 333.49 378.58 327.64 381.28 315.49 346.18 278.14 346.63 270.94 368.23 249.34 379.48 246.19 384.88 249.79 385.78 260.59 406.03 271.39 415.03 270.94 415.03 304.69 L 415 306",
                 1: "M 415 306 L 433 282.15 442.45 258.3 469.45 248.85 L 478 236",
@@ -860,8 +840,8 @@
                 8: "M 762 54 L 771.43 83.61 770.08 97.56 775.03 102.06 770.08 115.56 775.93 123.21 768.28 129.96 775.93 147.06 764.68 164.61 742.18 177.21 736.33 180.36 L 736 247",
                 9: "M 736 247 L 703.6 269.5 703.15 296.05 750.85 308.2 763.9 300.1 774.7 104.75 780.55 101.6 783.25 118.7 783.25 160.55 787.3 171.35 781 205.1 L 780 242",
                 10: "M 780 242 L 778.65 254.15 782.25 263.15 757.05 350 L 728 438",
-                11: "M 728 438 L 711.8 430.8 719.6 395.4 700.4 361.2 664.4 357.6 652.4 383.4 670.4 387.6 663.2 399 642.2 394.8 639.2 390.6 612.4 400.8 L 591 428",
-                12: "M 591 428 L 608.8 444.2 617.2 461.6 640.6 468.8 641.8 501.8 669.4 513.8 667.6 527.6 L 671 536",
+                11: "M 728 438 L 711.8 430.8 719.6 395.4 700.4 361.2 664.4 357.6 652.4 383.4 670.4 387.6 663.2 399 642.2 394.8 639.2 390.6 612.4 400.8 L 589 422",
+                12: "M 589 422 L 608.8 444.2 617.2 461.6 640.6 468.8 641.8 501.8 669.4 513.8 667.6 527.6 L 671 536",
                 13: "M 671 536 L 603.2 550 635 538 668.6 549.4 673.4 584.2 593.6 605.8 542 593.8 L 564 588",
                 14: "M 564 588 L 622.2 642.4 621 632.8 600.6 620.8 602.4 608.2 650.4 544.6 609.6 520 L 504 532",
                 15: "M 504 532 L 523.2 545.8 516.6 553 447 494.2 L 436 502"
@@ -973,48 +953,68 @@
                 });
             }
 
-            // 🔀 선 드로잉 애니메이션 로직이 완벽하게 결합된 핵심 함수
+            // 🔀 선 드로잉 애니메이션 (마스크를 사용하여 점선이 천천히 그려지는 효과 구현)
             function drawMapLines(targetIdx) {
                 const svg = document.getElementById('map-lines-svg');
                 svg.innerHTML = ''; 
 
+                const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+                svg.appendChild(defs);
+
                 for (let i = 0; i < ALL_PLANTS_LIST.length - 1; i++) {
                     if (i >= targetIdx) break;
 
-                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                    
+                    let pathData = "";
                     if (MAP_CURVE_PATHS[i] && MAP_CURVE_PATHS[i].trim() !== "") {
-                        path.setAttribute('d', MAP_CURVE_PATHS[i]);
+                        pathData = MAP_CURVE_PATHS[i];
                     } else {
                         const p1 = ALL_PLANTS_LIST[i].mapCoords;
                         const p2 = ALL_PLANTS_LIST[i+1].mapCoords;
-                        path.setAttribute('d', `M ${p1.x} ${p1.y} L ${p2.x} ${p2.y}`);
+                        pathData = `M ${p1.x} ${p1.y} L ${p2.x} ${p2.y}`;
                     }
 
-                    // 디자인 속성 설정
-                    path.setAttribute('stroke', '#E52E2D'); 
-                    path.setAttribute('stroke-width', '4');
-                    path.setAttribute('stroke-dasharray', '8, 8');
-                    path.setAttribute('fill', 'none'); 
+                    // 보여질 점선 경로 생성
+                    const dashedPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    dashedPath.setAttribute('d', pathData);
+                    dashedPath.setAttribute('stroke', '#E52E2D'); 
+                    dashedPath.setAttribute('stroke-width', '4');
+                    dashedPath.setAttribute('stroke-dasharray', '8, 8');
+                    dashedPath.setAttribute('fill', 'none'); 
 
-                    // 🎬 방금 활성화된 가장 최신 라인 세그먼트에만 드로잉 애니메이션 적용
+                    // 🎬 방금 활성화된 가장 최신 라인 세그먼트에만 마스크 드로잉 애니메이션 적용
                     if (i === targetIdx - 1) {
-                        const pathLength = path.getTotalLength ? path.getTotalLength() : 500; 
-                        path.style.strokeDasharray = "8, 8"; 
-                        
-                        // dasharray 구조와 결합하여 자연스러운 드로잉 연출
-                        path.setAttribute('stroke-dasharray', '8, 8');
-                        path.style.strokeDashoffset = pathLength;
-                        path.style.setProperty('--path-length', pathLength);
-                        
-                        // 브라우저 리플로우 유도 후 클래스 부여
+                        const maskId = `draw-mask-${i}`;
+                        const mask = document.createElementNS('http://www.w3.org/2000/svg', 'mask');
+                        mask.setAttribute('id', maskId);
+
+                        const maskPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                        maskPath.setAttribute('d', pathData);
+                        maskPath.setAttribute('stroke', 'white');
+                        maskPath.setAttribute('stroke-width', '10'); // 점선보다 살짝 두껍게 가림막 생성
+                        maskPath.setAttribute('fill', 'none');
+
+                        mask.appendChild(maskPath);
+                        defs.appendChild(mask);
+
+                        dashedPath.setAttribute('mask', `url(#${maskId})`);
+                        svg.appendChild(dashedPath);
+
                         requestAnimationFrame(() => {
-                            path.style.transition = 'stroke-dashoffset 1.5s ease-out';
-                            path.style.strokeDashoffset = '0';
+                            const pathLength = maskPath.getTotalLength ? maskPath.getTotalLength() : 500; 
+                            
+                            // 실선 형태의 마스크를 천천히 그려내어 밑의 점선이 드러나게 함
+                            maskPath.style.strokeDasharray = pathLength;
+                            maskPath.style.strokeDashoffset = pathLength;
+                            
+                            maskPath.getBoundingClientRect(); // 강제 리플로우
+                            
+                            maskPath.style.transition = 'stroke-dashoffset 2.5s ease-in-out';
+                            maskPath.style.strokeDashoffset = '0';
                         });
+                    } else {
+                        // 이전 단계의 선들은 애니메이션 없이 그대로 표시
+                        svg.appendChild(dashedPath);
                     }
-                    
-                    svg.appendChild(path);
                 }
             }
 
@@ -1071,7 +1071,6 @@
                 popupElement.classList.add('show');
             }
 
-            // [이후 하단 코드는 기존 제공 스크립트와 동일하므로 지면 관계상 생략하지만, 정상 동작하도록 보존됩니다]
             function zoomMap(newScale, pointerX, pointerY) {
                 newScale = Math.max(state.map.minScale, Math.min(newScale, state.map.maxScale));
                 const scaleRatio = newScale / state.map.scale;
@@ -1471,7 +1470,10 @@
                 gtag('event', 'generate_certificate', { 'event_category': 'final_test' });
                 const nameEl = document.getElementById('final-cert-name');
                 nameEl.innerText = nameInput;
-                nameEl.style.fontFamily = "Grandma, cursive";
+                
+                // 🔀 자바스크립트에서도 생성 시 궁서체 명시 적용
+                nameEl.style.fontFamily = "'궁서', 'Gungsuh', serif";
+                
                 if (nameInput.length >= 5) {
                     nameEl.style.fontSize = "4.5cqi";
                 } else if (nameInput.length >= 3) {
