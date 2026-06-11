@@ -634,7 +634,7 @@
                 </div>
                 
                 <div class="flex flex-col gap-2">
-                    <a href="https://forms.gle/jCNte6HFDe8kcyhu9" target="_blank" onclick="closeSurveyModal(); trackSurveyClick();" class="comic-btn w-full bg-[#FFCC00] text-black py-3.5 text-base flex items-center justify-center gap-2">
+                    <a href="https://forms.gle/jCNteHFDe8kcyhu9" target="_blank" onclick="closeSurveyModal(); trackSurveyClick();" class="comic-btn w-full bg-[#FFCC00] text-black py-3.5 text-base flex items-center justify-center gap-2">
                         <i class="fa-solid fa-square-poll-horizontal text-lg"></i> 설문하고 선물 받기!
                     </a>
                     <button onclick="closeSurveyModal()" class="mt-2 text-xs font-bold text-gray-400 hover:text-gray-600 underline">
@@ -717,7 +717,7 @@
                 },
                 "p_4": {
                     id: "p_4", name: "금목서", type: "관찰 식물",
-                    mapCoords: { x: 437, y: 464 },
+                    mapCoords: { x: 432, y: 458 }, // 핀 위치 수정 반영
                     comicImg: "./금목서(만리향).png",
                     lucyMessage: "킁킁, 어디서 달콤한 향기 나지 않아? 향기가 아주 멀리까지 퍼져서 멋진 별명을 가지고 있어!",
                     fullDesc: "달콤한 향이 무척 강하고 만리까지 간다고 하여 '만리향'이라 부릅니다. 꽃은 향수의 재료로 다양하게 쓰입니다.",
@@ -773,7 +773,7 @@
                 },
                 "p_11": {
                     id: "p_11", name: "삼나무", type: "관찰 식물",
-                    mapCoords: { x: 780, y: 242 },
+                    mapCoords: { x: 780, y: 242 }, // 좌표 검증 완료
                     comicImg: "./삼나무.png",
                     lucyMessage: "키가 아담한 이 친구는 물기를 아주 좋아해서 숲 속 촉촉한 곳에서 잘 자란단다.",
                     fullDesc: "우리나라 중부 이남의 산에서 자라는 낙엽 관목. 키는 약 1m 내외이고, 습기가 많은 곳에서 자란다.",
@@ -821,7 +821,7 @@
                 },
                 "p_17": {
                     id: "p_17", name: "꽃댕강나무", type: "관찰 식물",
-                    mapCoords: { x: 431, y: 479 },
+                    mapCoords: { x: 436, y: 502 }, // 핀 위치 수정 반영
                     comicImg: "./꽃댕강나무.png",
                     lucyMessage: "작고 예쁜 꽃이 가을까지 계속 피어서 오랫동안 좋은 향기를 즐길 수 있어. 스누피 가든이 널 환영해!",
                     fullDesc: "하얀 꽃과 연분홍색 꽃이 6월부터 10월까지 계속하여 피므로 은은한 향기와 아름다운 꽃을 가을까지 볼 수 있습니다. 이 나무의 꽃말은 환영, 평안함입니다.",
@@ -948,21 +948,39 @@
                 const svg = document.getElementById('map-lines-svg');
                 svg.innerHTML = ''; 
 
+                // 핀과 핀 사이에 경유할 좌표(Waypoints)를 매핑하는 객체
+                // key: 출발지 핀 인덱스 (0부터 시작, 예: p_1은 0, p_10은 9)
+                const lineWaypoints = {
+                    9: [{ x: 704, y: 297 }],              // 하귤나무(index 9) -> 삼나무(index 10) 경유지
+                    11: [{ x: 694, y: 363 }, { x: 666, y: 364 }] // 카네이션동백(index 11) -> 녹나무(index 12) 경유지
+                };
+
                 for (let i = 0; i < ALL_PLANTS_LIST.length - 1; i++) {
                     if (i >= targetIdx) break;
-                    const p1 = ALL_PLANTS_LIST[i].mapCoords;
-                    const p2 = ALL_PLANTS_LIST[i+1].mapCoords;
-
-                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                    line.setAttribute('x1', p1.x);
-                    line.setAttribute('y1', p1.y);
-                    line.setAttribute('x2', p2.x);
-                    line.setAttribute('y2', p2.y);
-                    line.setAttribute('stroke', '#E52E2D'); 
-                    line.setAttribute('stroke-width', '4');
-                    line.setAttribute('stroke-dasharray', '8, 8');
                     
-                    svg.appendChild(line);
+                    // 현재 구간의 모든 점(시작핀 -> 경유지들 -> 도착핀)을 순서대로 배열로 만듦
+                    const points = [ALL_PLANTS_LIST[i].mapCoords];
+                    if (lineWaypoints[i]) {
+                        points.push(...lineWaypoints[i]);
+                    }
+                    points.push(ALL_PLANTS_LIST[i+1].mapCoords);
+
+                    // 연결해야 하는 점들을 선(line) 세그먼트로 나누어 SVG에 각각 생성
+                    for (let j = 0; j < points.length - 1; j++) {
+                        const p1 = points[j];
+                        const p2 = points[j+1];
+
+                        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                        line.setAttribute('x1', p1.x);
+                        line.setAttribute('y1', p1.y);
+                        line.setAttribute('x2', p2.x);
+                        line.setAttribute('y2', p2.y);
+                        line.setAttribute('stroke', '#E52E2D'); 
+                        line.setAttribute('stroke-width', '4');
+                        line.setAttribute('stroke-dasharray', '8, 8');
+                        
+                        svg.appendChild(line);
+                    }
                 }
             }
 
