@@ -1216,10 +1216,10 @@
                 const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
                 svg.appendChild(defs);
 
-                for (let i = 0; i < ALL_PLANTS.length; i++) {
-                    if (i > targetIdx) break;
-                    
-                    let pathData = MAP_CURVE_PATHS[i];
+               for (let i = 0; i < ALL_PLANTS_LIST.length; i++) {
+    if (i > targetIdx) break;
+    
+    let pathData = MAP_CURVE_PATHS[i];
                     if(!pathData) continue;
 
                     const dashedPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
@@ -1265,45 +1265,48 @@
             }
 
             function constrainMap() {
-                const container = document.getElementById('map-container');
-                if(!container) return;
-                
-                const mapWidth = 1500 * state.map.scale;
-                const mapHeight = 2400 * state.map.scale;
-                const containerWidth = container.clientWidth;
-                const containerHeight = container.clientHeight;
+    const container = document.getElementById('map-container');
+    if(!container) return;
+    
+    const mapWidth = 1500 * state.map.scale;
+    const mapHeight = 2400 * state.map.scale;
+    const containerWidth = container.clientWidth;
+    const containerHeight = container.clientHeight;
 
-                if (mapWidth <= containerWidth) state.map.x = (containerWidth - mapWidth) / 2;
-                else {
-                    if (state.map.x > 0) state.map.x = 0;
-                    if (state.map.x < containerWidth - mapWidth) state.map.x = containerWidth - mapWidth;
-                }
+    if (mapWidth <= containerWidth) {
+        state.map.x = (containerWidth - mapWidth) / 2;
+    } else {
+        if (state.map.x > 0) state.map.x = 0;
+        if (state.map.x < containerWidth - mapWidth) state.map.x = containerWidth - mapWidth;
+    }
 
-                if (mapHeight <= containerHeight) state.map.y = 0; // 👈 높이 구속 조절 시 상단(0) 정렬 유지
-                else {
-                    if (state.map.y > 0) state.map.y = 0; 
-                    if (state.map.y < containerHeight - mapHeight) state.map.y = containerHeight - mapHeight;
-                }
-            }
+    if (mapHeight <= containerHeight) {
+        state.map.y = 0; 
+    } else {
+        if (state.map.y > 0) state.map.y = 0; 
+        if (state.map.y < containerHeight - mapHeight) state.map.y = containerHeight - mapHeight;
+    }
+}
 
-            // 🗺️ 지도가 리셋될 때 정중앙이 아닌 화면의 최상단(Y좌표 = 0)을 정렬하도록 제한 연산 처리
-            function resetMapZoom() {
-                const container = document.getElementById('map-container');
-                if(!container || container.clientWidth === 0) return; 
-                
-                const scaleX = container.clientWidth / 1500;
-                const scaleY = container.clientHeight / 2400;
-                const fitScale = Math.max(scaleX, scaleY);
-                state.map.minScale = fitScale;
-                state.map.scale = fitScale;
-                
-                state.map.x = (container.clientWidth - (1500 * state.map.scale)) / 2;
-                state.map.y = 0; // 👈 0으로 설정하여 항상 세로 스크롤 상단을 보게 고정
-                
-                document.querySelectorAll('.pin-popup').forEach(p => p.classList.remove('show'));
-                document.querySelectorAll('.map-pin').forEach(p => p.classList.remove('active-pin'));
-                updateMapTransform();
-            }
+function resetMapZoom() {
+    const container = document.getElementById('map-container');
+    if(!container || container.clientWidth === 0) return; 
+    
+    const scaleX = container.clientWidth / 1500;
+    const scaleY = container.clientHeight / 2400;
+    
+    // 화면에 지도가 너무 무식하게 커지지 않도록 비율 매칭 조정
+    const fitScale = Math.min(scaleX, scaleY) * 1.5; 
+    state.map.minScale = scaleX; // 최소 축소 범위를 가로폭에 맞춤
+    state.map.scale = fitScale;
+    
+    state.map.x = (container.clientWidth - (1500 * state.map.scale)) / 2;
+    state.map.y = 0; // 요청하신 최상단 고정 완료
+    
+    document.querySelectorAll('.pin-popup').forEach(p => p.classList.remove('show'));
+    document.querySelectorAll('.map-pin').forEach(p => p.classList.remove('active-pin'));
+    updateMapTransform();
+}
 
             function focusOnPin(pinX, pinY, activePinElement, popupElement) {
                 const container = document.getElementById('map-container');
