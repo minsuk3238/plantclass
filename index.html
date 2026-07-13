@@ -5,24 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>가드너 클래스: 나무 찾기 미션</title>
     
-    <script>
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get('lang') === 'en') {
-        document.documentElement.lang = 'en';
-        var googleTranslateElementInit = function() {
-          new google.translate.TranslateElement({
-            pageLanguage: 'ko', 
-            includedLanguages: 'en', 
-            layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-          }, 'google_translate_element');
-        }
-        // 구글 번역 스크립트 동적 로드
-        const s = document.createElement('script');
-        s.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
-        document.head.appendChild(s);
-      }
-    </script>
-
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-TJ4J3MXJHQ"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -447,11 +429,9 @@
 </head>
 <body>
 
-    <div id="google_translate_element" style="display:none;"></div>
-
     <div class="app-container">
         <header id="main-header" class="bg-[#2E9441] border-b-3 border-black p-4 pt-6 relative z-10 flex items-center justify-center shadow-sm">
-            <h1 class="text-xl font-black title-font tracking-wide text-white">가드너 클래스: 나무 찾기 미션</h1>
+            <h1 class="text-xl font-black title-font tracking-wide text-white" data-i18n="headerTitle">가드너 클래스: 나무 찾기 미션</h1>
         </header>
 
         <div id="view-home" class="view-content active">
@@ -464,7 +444,7 @@
                          <img src="./lucy_doctor.png" alt="가드너" class="w-full h-full object-contain pt-2 scale-110">
                     </div>
                 </div>
-                <p class="font-bold text-center text-gray-800 leading-relaxed mb-4 text-[15px]" style="word-break: break-all;">
+                <p id="home-welcome-text" class="font-bold text-center text-gray-800 leading-relaxed mb-4 text-[15px]" style="word-break: break-all;" data-i18n="homeWelcome">
                     "안녕! 스누피 가든에 온 걸 환영해!<br>
                     하단에 있는 <span class="text-[#2E9441] font-black">지도 버튼</span>을 눌러 코스를 시작해봐.<br>
                     나무의 비밀을 알려줄게!"
@@ -473,15 +453,15 @@
             <div class="bg-green-50 border-2 border-green-500 rounded-lg p-3 flex items-start">
                 <i class="fa-solid fa-bell text-green-500 mt-1 mr-3"></i>
                 <div>
-                    <h4 class="font-bold text-green-800 text-sm">진행 팁</h4>
-                    <p class="text-xs text-gray-600 mt-1 font-medium">야외가든 지도를 열고 노란색으로 반짝이는 핀을 찾아가세요! 정해진 순서대로 나무들을 발견해야 합니다.</p>
+                    <h4 class="font-bold text-green-800 text-sm" data-i18n="tipTitle">진행 팁</h4>
+                    <p class="text-xs text-gray-600 mt-1 font-medium" data-i18n="tipDesc">야외가든 지도를 열고 노란색으로 반짝이는 핀을 찾아가세요! 정해진 순서대로 나무들을 발견해야 합니다.</p>
                 </div>
             </div>
         </div>
 
         <div id="view-mission" class="view-content">
             <div class="flex justify-between items-center border-b-2 border-black pb-2 mb-5">
-                <div class="font-black text-sm"><i class="fa-solid fa-leaf text-green-600 mr-1"></i> 관찰 보고서</div>
+                <div class="font-black text-sm"><i class="fa-solid fa-leaf text-green-600 mr-1"></i> <span data-i18n="reportTitle">관찰 보고서</span></div>
                 <div class="bg-black text-white text-xs font-bold px-2 py-1 rounded-full" id="mission-type-badge">가든 식물</div>
             </div>
 
@@ -510,7 +490,7 @@
 
         <div id="view-map" class="view-content">
             <div class="w-full bg-[#247533] border-b-3 border-black p-3 z-50 flex justify-center items-center shadow-sm text-white shrink-0">
-                <h2 class="text-xl font-black title-font">야외가든 탐험 지도</h2>
+                <h2 class="text-xl font-black title-font" data-i18n="mapHeader">야외가든 탐험 지도</h2>
             </div>
             
             <div class="map-container" id="map-container">
@@ -523,28 +503,28 @@
         <div id="view-collection" class="view-content">
             <div class="flex justify-between items-center mb-4 mt-2">
                 <div>
-                    <h2 class="text-2xl font-black title-font">내 나무 도감</h2>
-                    <p class="text-xs font-bold text-gray-500 mt-0.5">발견한 식물: <span id="collection-count" class="text-green-600 text-base">0</span>/16</p>
+                    <h2 class="text-2xl font-black title-font" data-i18n="bookTitle">내 나무 도감</h2>
+                    <p class="text-xs font-bold text-gray-500 mt-0.5"><span data-i18n="bookFoundPrefix">발견한 식물:</span> <span id="collection-count" class="text-green-600 text-base">0</span>/16</p>
                 </div>
                 <button onclick="resetProgress()" class="bg-[#ff4d4d] text-white px-3 py-2 rounded-xl text-xs font-black border-2 border-black shadow-[2px_2px_0_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer flex items-center">
-                    <i class="fa-solid fa-rotate-right mr-1"></i>초기화
+                    <i class="fa-solid fa-rotate-right mr-1"></i><span data-i18n="resetBtn">초기화</span>
                 </button>
             </div>
 
             <div class="grid grid-cols-3 gap-3" id="stamp-grid"></div>
         
             <button id="final-test-btn" onclick="handleFinalAction()" class="comic-btn w-full bg-orange-500 text-white py-4 text-lg mt-8 hidden animate-bounce">
-              <i class="fa-solid fa-graduation-cap mr-2"></i> <span id="final-btn-text">최종 자격 검사 보기!</span>
+              <i class="fa-solid fa-graduation-cap mr-2"></i> <span id="final-btn-text" data-i18n="finalTestBtn">최종 자격 검사 보기!</span>
             </button>
 
             <button id="survey-reopen-btn" onclick="showSurveyModal()" class="comic-btn w-full bg-[#FFCC00] text-black py-4 text-lg mt-3 hidden">
-                <i class="fa-solid fa-gift mr-2 animate-bounce"></i> 설문조사 참여하고 리워드 받기!
+                <i class="fa-solid fa-gift mr-2 animate-bounce"></i> <span data-i18n="surveyReopenBtn">설문조사 참여하고 리워드 받기!</span>
             </button>
         </div>
 
         <div id="view-final-test" class="view-content">
             <div class="text-center mb-6 mt-4">
-                <h2 class="text-3xl font-black title-font text-orange-500 mb-2">최종 자격 검사</h2>
+                <h2 class="text-3xl font-black title-font text-orange-500 mb-2" data-i18n="finalTestHeader">최종 자격 검사</h2>
                 <div class="inline-block bg-black text-white px-4 py-1 rounded-full font-bold text-sm" id="test-step-badge">
                     문제 1 / 2
                 </div>
@@ -554,13 +534,39 @@
                 <div class="w-16 h-16 bg-white rounded-full border-2 border-black flex items-center justify-center shrink-0 z-10 mr-[-10px] overflow-hidden">
                     <img src="./lucy_doctor.png" alt="루시" class="w-full h-full object-contain pt-1 scale-125 transform origin-bottom">
                 </div>
-                <div class="comic-bubble text-sm font-bold leading-relaxed flex-1">
+                <div class="comic-bubble text-sm font-bold leading-relaxed flex-1" data-i18n="finalTestLucy">
                     지금까지 배운 걸 테스트해볼까?<br>아래 설명을 읽고 <strong>어떤 나무</strong>인지 이름을 맞춰봐!
                 </div>
             </div>
 
             <div class="comic-border bg-white p-5" id="final-quiz-container">
-                <h4 class="font-black text-lg mb-3 text-center title-font text-[#2E9441]"><i class="fa-solid fa-leaf"></i> 나무 맞추기</h4>
+                <h4 class="font-black text-lg mb-3 text-center title-font text-[#2E9441]"><i class="fa-solid fa-leaf"></i> <span data-i18n="finalQuizTitle">나무 맞추기</span></h4>
+                <p class="font-bold text-sm mb-6 text-gray-800 p-3 bg-gray-100 rounded-lg border-2 border-dashed border-gray-300" id="final-quiz-desc">
+                    설명 내용
+                </p>
+                <div class="flex flex-col gap-3" id="final-quiz-options"></div>
+            </div>
+        </div>
+
+        <div id="view-final-test" class="view-content">
+            <div class="text-center mb-6 mt-4">
+                <h2 class="text-3xl font-black title-font text-orange-500 mb-2" data-i18n="finalTestHeader">최종 자격 검사</h2>
+                <div class="inline-block bg-black text-white px-4 py-1 rounded-full font-bold text-sm" id="test-step-badge">
+                    문제 1 / 2
+                </div>
+            </div>
+
+            <div class="flex items-end mb-6">
+                <div class="w-16 h-16 bg-white rounded-full border-2 border-black flex items-center justify-center shrink-0 z-10 mr-[-10px] overflow-hidden">
+                    <img src="./lucy_doctor.png" alt="루시" class="w-full h-full object-contain pt-1 scale-125 transform origin-bottom">
+                </div>
+                <div class="comic-bubble text-sm font-bold leading-relaxed flex-1" data-i18n="finalTestLucy">
+                    지금까지 배운 걸 테스트해볼까?<br>아래 설명을 읽고 <strong>어떤 나무</strong>인지 이름을 맞춰봐!
+                </div>
+            </div>
+
+            <div class="comic-border bg-white p-5" id="final-quiz-container">
+                <h4 class="font-black text-lg mb-3 text-center title-font text-[#2E9441]"><i class="fa-solid fa-leaf"></i> <span data-i18n="finalQuizTitle">나무 맞추기</span></h4>
                 <p class="font-bold text-sm mb-6 text-gray-800 p-3 bg-gray-100 rounded-lg border-2 border-dashed border-gray-300" id="final-quiz-desc">
                     설명 내용
                 </p>
@@ -569,23 +575,23 @@
         </div>
 
         <div id="view-cert-form" class="view-content">
-            <h2 class="text-3xl font-black title-font text-center text-[#2E9441] mb-2 mt-4">자격 시험 통과!</h2>
-            <p class="text-sm font-bold text-center text-gray-600 mb-6">마지막으로 가드너 인증서를 발급해줄게.</p>
+            <h2 class="text-3xl font-black title-font text-center text-[#2E9441] mb-2 mt-4" data-i18n="certFormHeader">자격 시험 통과!</h2>
+            <p class="text-sm font-bold text-center text-gray-600 mb-6" data-i18n="certFormDesc">마지막으로 가드너 인증서를 발급해줄게.</p>
 
             <div class="comic-border bg-white p-5 mb-8">
-                <label class="block font-black text-lg mb-2">네 이름을 알려줘!</label>
+                <label class="block font-black text-lg mb-2" data-i18n="nameInputLabel">네 이름을 알려줘!</label>
                 <input type="text" id="user-name-input" placeholder="이름 입력 (예: 찰리)" class="w-full border-3 border-black rounded-lg p-3 font-bold text-lg focus:outline-none focus:border-[#2E9441]" maxlength="10">
             </div>
 
-            <button onclick="generateCertificate()" class="comic-btn w-full bg-[#2E9441] text-white py-4 text-xl">
+            <button onclick="generateCertificate()" class="comic-btn w-full bg-[#2E9441] text-white py-4 text-xl" data-i18n="makeCertBtn">
                 인증서 만들기!
             </button>
         </div>
 
         <div id="view-certificate" class="view-content">
             <div class="cert-wrapper" id="cert-capture-area">
-                <div class="cert-title gmarket-sans-bold">수료증</div>
-                <div class="cert-body gmarket-sans-medium">
+                <div class="cert-title gmarket-sans-bold" data-i18n="certWrapperTitle">수료증</div>
+                <div class="cert-body gmarket-sans-medium" data-i18n="certWrapperBody">
                     위 사람은 스누피가든에서<br>
                     피너츠 친구들과 제주의 자연속에서<br>
                     온전한 쉼을 경험하고<br>
@@ -597,12 +603,12 @@
             
             <div class="w-full max-w-[420px] px-4 mt-6 flex flex-col gap-3" id="cert-action-buttons">
                 <button onclick="downloadCertificate()" class="comic-btn w-full bg-[#FFCC00] text-black py-4 text-lg">
-                     <i class="fa-solid fa-download mr-2"></i> 내 폰에 이미지로 저장하기
+                     <i class="fa-solid fa-download mr-2"></i> <span data-i18n="downloadCertBtn">내 폰에 이미지로 저장하기</span>
                 </button>
                 <button onclick="showSurveyModal()" class="comic-btn w-full bg-[#FFCC00] text-black py-4 text-lg">
-                    <i class="fa-solid fa-gift mr-2 animate-bounce"></i> 설문조사 참여하고 리워드 받기!
+                    <i class="fa-solid fa-gift mr-2 animate-bounce"></i> <span data-i18n="startSurveyBtn">설문조사 참여하고 리워드 받기!</span>
                 </button>
-                <button onclick="switchTab('collection')" class="comic-btn w-full bg-white text-gray-600 py-3 text-sm">
+                <button onclick="switchTab('collection')" class="comic-btn w-full bg-white text-gray-600 py-3 text-sm" data-i18n="backToBookBtn">
                     도감으로 돌아가기
                 </button>
             </div>
@@ -615,7 +621,7 @@
 
         <div id="success-modal" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
                 <div class="bg-white p-6 rounded-2xl comic-border w-10/12 max-w-sm text-center transform scale-90 transition-transform duration-300" id="success-card">
-                    <h2 class="text-4xl font-black title-font text-[#2E9441] mb-2">정답!</h2>
+                    <h2 class="text-4xl font-black title-font text-[#2E9441] mb-2" data-i18n="successHeader">정답!</h2>
                     
                     <div class="w-32 h-32 mx-auto relative mb-4 rounded-lg comic-border overflow-hidden bg-white flex items-center justify-center p-2">
                         <img id="success-comic-img" src="" class="w-full h-full object-contain">
@@ -623,24 +629,24 @@
                     </div>
                     
                     <h3 class="font-black text-xl mb-2" id="success-plant-name">식물명</h3>
-                    <p class="font-bold text-sm text-gray-600 mb-6" id="success-desc">도감에 등록되었습니다!</p>
-                    <button onclick="closeSuccessAndGoToMap()" class="comic-btn w-full bg-[#2E9441] text-white py-3 text-lg">다음 코스로 이동 (지도)</button>
+                    <p class="font-bold text-sm text-gray-600 mb-6" id="success-desc" data-i18n="successDesc">도감에 등록되었습니다!</p>
+                    <button onclick="closeSuccessAndGoToMap()" class="comic-btn w-full bg-[#2E9441] text-white py-3 text-lg" data-i18n="goNextMapBtn">다음 코스로 이동 (지도)</button>
             </div>
         </div>
 
         <div id="all-clear-modal" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
             <div class="bg-white p-6 rounded-2xl comic-border w-10/12 max-w-sm text-center transform scale-90 transition-transform duration-300" id="all-clear-card">
-                <h2 class="text-3xl font-black title-font text-orange-500 mb-2">모든 나무 발견!</h2>
+                <h2 class="text-3xl font-black title-font text-orange-500 mb-2" data-i18n="allClearHeader">모든 나무 발견!</h2>
                 <div class="w-24 h-24 mx-auto mb-4 bg-white rounded-full border-[3px] border-black flex items-center justify-center overflow-hidden">
                     <img src="./lucy_doctor.png" alt="루시" class="w-full h-full object-contain pt-2 scale-110">
                </div>
-                <p class="font-bold text-sm text-gray-700 mb-6 leading-relaxed">
+                <p class="font-bold text-sm text-gray-700 mb-6 leading-relaxed" data-i18n="allClearDesc">
                     대단해!<br>스누피 가든의 나무들을 모두 찾았어.<br>이제 가드너 자격 검사에 도전해볼까?
                 </p>
-                <button onclick="closeAllClearAndStartTest()" class="comic-btn w-full bg-orange-500 text-white py-4 text-lg animate-bounce">
+                <button onclick="closeAllClearAndStartTest()" class="comic-btn w-full bg-orange-500 text-white py-4 text-lg animate-bounce" data-i18n="startFinalTestBtn">
                     <i class="fa-solid fa-graduation-cap mr-2"></i> 최종 자격 검사 시작!
                 </button>
-                <button onclick="closeAllClearAndGoToCollection()" class="mt-3 text-sm font-bold text-gray-500 underline">
+                <button onclick="closeAllClearAndGoToCollection()" class="mt-3 text-sm font-bold text-gray-500 underline" data-i18n="doLaterBtn">
                     나중에 하기 (도감으로 이동)
                 </button>
             </div>
@@ -665,29 +671,29 @@
 
         <div id="survey-modal" class="fixed inset-0 bg-black/80 z-[60] flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
             <div class="bg-white p-6 rounded-2xl comic-border w-10/12 max-w-sm text-center transform scale-90 transition-transform duration-300" id="survey-card">
-                <h2 class="text-2xl font-black title-font text-[#2E9441] mb-2"><i class="fa-solid fa-gift text-red-500 mr-1 animate-bounce"></i> 가드너 특별 선물!</h2>
+                <h2 class="text-2xl font-black title-font text-[#2E9441] mb-2"><i class="fa-solid fa-gift text-red-500 mr-1 animate-bounce"></i> <span data-i18n="surveyGiftTitle">가드너 특별 선물!</span></h2>
                 
                 <div class="w-24 h-24 mx-auto mb-4 bg-white rounded-full border-[3px] border-black flex items-center justify-center overflow-hidden">
                     <img src="./lucy_doctor.png" alt="루시" class="w-full h-full object-contain pt-2 scale-110">
                 </div>
                 
-                <p class="font-bold text-[14px] text-gray-700 mb-5 leading-relaxed">
+                <p class="font-bold text-[14px] text-gray-700 mb-5 leading-relaxed" data-i18n="surveyModalDesc">
                     가드너 클래스 탐험이 완료되었습니다!<br>
                     더 멋진 스누피 가든을 만들기 위해<br>
                     <span class="text-[#E52E2D] font-black">만족도 설문조사</span>에 참여해 주세요.
                 </p>
 
                 <div class="bg-yellow-50 border-2 border-dashed border-[#FFCC00] rounded-lg p-3 mb-6">
-                    <p class="text-xs font-black text-gray-800 leading-normal">
+                    <p class="text-xs font-black text-gray-800 leading-normal" data-i18n="surveyGiftNotice">
                         🎁 만족도 참여 시 소정의 리워드를 증정해 드리고 있습니다!
                     </p>
                 </div>
                 
                 <div class="flex flex-col gap-2">
                     <a href="https://forms.gle/jCNteHFDe8kcyhu9" target="_blank" onclick="closeSurveyModal(); trackSurveyClick();" class="comic-btn w-full bg-[#FFCC00] text-black py-3.5 text-base flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-square-poll-horizontal text-lg"></i> 설문하고 선물 받기!
+                        <i class="fa-solid fa-square-poll-horizontal text-lg"></i> <span data-i18n="surveySubmitBtn">설문하고 선물 받기!</span>
                     </a>
-                    <button onclick="closeSurveyModal()" class="mt-2 text-xs font-bold text-gray-400 hover:text-gray-600 underline">
+                    <button onclick="closeSurveyModal()" class="mt-2 text-xs font-bold text-gray-400 hover:text-gray-600 underline" data-i18n="seeCertFirstBtn">
                         수료증 먼저 보러가기
                     </button>
                 </div>
@@ -697,19 +703,115 @@
         <nav class="bottom-nav" id="bottom-nav">
             <div class="nav-item active" onclick="switchTab('home')">
                 <i class="fa-solid fa-house"></i>
-                <span>홈</span>
+                <span data-i18n="navHome">홈</span>
             </div>
             <div class="nav-item" onclick="switchTab('map')">
                  <i class="fa-solid fa-map"></i>
-                <span>지도보기</span>
+                <span data-i18n="navMap">지도보기</span>
             </div>
             <div class="nav-item" onclick="switchTab('collection')">
                 <i class="fa-solid fa-book"></i>
-                <span>내 도감</span>
+                <span data-i18n="navBook">내 도감</span>
            </div>
         </nav>
 
         <script>
+            // 🌐 [100% 보장 다국어 사전셋] 구글 자동번역 대신 직접 완벽 매핑
+            const I18N_TEXTS = {
+                ko: {
+                    headerTitle: "가드너 클래스: 나무 찾기 미션",
+                    homeWelcome: `"안녕! 스누피 가든에 온 걸 환영해!<br>하단에 있는 <span class='text-[#2E9441] font-black'>지도 버튼</span>을 눌러 코스를 시작해봐.<br>나무의 비밀을 알려줄게!"`,
+                    tipTitle: "진행 팁",
+                    tipDesc: "야외가든 지도를 열고 노란색으로 반짝이는 핀을 찾아가세요! 정해진 순서대로 나무들을 발견해야 합니다.",
+                    reportTitle: "관찰 보고서",
+                    mapHeader: "야외가든 탐험 지도",
+                    bookTitle: "내 나무 도감",
+                    bookFoundPrefix: "발견한 식물:",
+                    resetBtn: "초기화",
+                    finalTestBtn: "최종 자격 검사 보기!",
+                    surveyReopenBtn: "설문조사 참여하고 리워드 받기!",
+                    finalTestHeader: "최종 자격 검사",
+                    finalTestLucy: "지금까지 배운 걸 테스트해볼까?<br>아래 설명을 읽고 <strong>어떤 나무</strong>인지 이름을 맞춰봐!",
+                    finalQuizTitle: "나무 맞추기",
+                    certFormHeader: "자격 시험 통과!",
+                    certFormDesc: "마지막으로 가드너 인증서를 발급해줄게.",
+                    nameInputLabel: "네 이름을 알려줘!",
+                    makeCertBtn: "인증서 만들기!",
+                    certWrapperTitle: "수료증",
+                    certWrapperBody: "위 사람은 스누피가든에서<br>피너츠 친구들과 제주의 자연속에서<br>온전한 쉼을 경험하고<br>식물들과 다정하게 교감하였기에<br>이 증서를 수여합니다.",
+                    downloadCertBtn: "내 폰에 이미지로 저장하기",
+                    startSurveyBtn: "설문조사 참여하고 리워드 받기!",
+                    backToBookBtn: "도감으로 돌아가기",
+                    successHeader: "정답!",
+                    successDesc: "도감에 등록되었습니다!",
+                    goNextMapBtn: "다음 코스로 이동 (지도)",
+                    allClearHeader: "모든 나무 발견!",
+                    allClearDesc: "대단해!<br>스누피 가든의 나무들을 모두 찾았어.<br>이제 가드너 자격 검사에 도전해볼까?",
+                    startFinalTestBtn: "최종 자격 검사 시작!",
+                    doLaterBtn: "나중에 하기 (도감으로 이동)",
+                    surveyGiftTitle: "가드너 특별 선물!",
+                    surveyModalDesc: "가드너 클래스 탐험이 완료되었습니다!<br>더 멋진 스누피 가든을 만들기 위해<br><span class='text-[#E52E2D] font-black'>만족도 설문조사</span>에 참여해 주세요.",
+                    surveyGiftNotice: "🎁 만족도 참여 시 소정의 리워드를 증정해 드리고 있습니다!",
+                    surveySubmitBtn: "설문하고 선물 받기!",
+                    seeCertFirstBtn: "수료증 먼저 보러가기",
+                    navHome: "홈", navMap: "지도보기", navBook: "내 도감",
+                    clearText: "도전완료", challengeText: "도전하기"
+                },
+                en: {
+                    headerTitle: "Gardener Class: Tree Mission",
+                    homeWelcome: `"Hello! Welcome to Snoopy Garden!<br>Press the <span class='text-[#2E9441] font-black'>Map button</span> at the bottom to start.<br>I will tell you the secrets of trees!"`,
+                    tipTitle: "Mission Tip",
+                    tipDesc: "Open the outdoor garden map and locate the glowing yellow pins! You must discover trees in order.",
+                    reportTitle: "Observation Report",
+                    mapHeader: "Outdoor Garden Exploration Map",
+                    bookTitle: "My Tree Collection",
+                    bookFoundPrefix: "Trees Found:",
+                    resetBtn: "Reset",
+                    finalTestBtn: "Take Final Test!",
+                    surveyReopenBtn: "Take survey & get a reward!",
+                    finalTestHeader: "Final Evaluation",
+                    finalTestLucy: "Shall we test what you've learned so far?<br>Read the hint below and guess <strong>which tree</strong> it is!",
+                    finalQuizTitle: "Guess the Tree",
+                    certFormHeader: "Evaluation Passed!",
+                    certFormDesc: "Lastly, I'll issue your Gardner Certificate.",
+                    nameInputLabel: "Tell me your name!",
+                    makeCertBtn: "Create Certificate!",
+                    certWrapperTitle: "Certificate",
+                    certWrapperBody: "This certificate is awarded to the person above for<br>experiencing perfect relaxation in Jeju's nature<br>with Peanuts friends and communicating<br>warmly with the plants at Snoopy Garden.",
+                    downloadCertBtn: "Save Image to Phone",
+                    startSurveyBtn: "Take survey & get a reward!",
+                    backToBookBtn: "Back to Collection",
+                    successHeader: "Correct!",
+                    successDesc: "Registered in your collection!",
+                    goNextMapBtn: "Go to Next Course (Map)",
+                    allClearHeader: "All Trees Discovered!",
+                    allClearDesc: "Amazing!<br>You found all the trees in Snoopy Garden.<br>Shall we try the Final Evaluation now?",
+                    startFinalTestBtn: "Start Final Test!",
+                    doLaterBtn: "Do it later (Go to Collection)",
+                    surveyGiftTitle: "Gardener Special Gift!",
+                    surveyModalDesc: "Gardener Class exploration is complete!<br>To make Snoopy Garden even better,<br>please participate in our <span class='text-[#E52E2D] font-black'>Satisfaction Survey</span>.",
+                    surveyGiftNotice: "🎁 A small reward will be given upon completing the survey!",
+                    surveySubmitBtn: "Take Survey & Get Reward!",
+                    seeCertFirstBtn: "See Certificate First",
+                    navHome: "Home", navMap: "Map", navBook: "Collection",
+                    clearText: "CLEAR", challengeText: "START"
+                }
+            };
+
+            // 주소창의 파라미터 체크하여 현재 언어 셋팅 처리
+            const urlParams = new URLSearchParams(window.location.search);
+            let currentLang = urlParams.get('lang') === 'en' ? 'en' : 'ko';
+
+            // 페이지 UI 정적 텍스트 전체 번역 함수
+            function applyTranslations() {
+                document.querySelectorAll('[data-i18n]').forEach(el => {
+                    const key = el.getAttribute('data-i18n');
+                    if (I18N_TEXTS[currentLang][key]) {
+                        el.innerHTML = I18N_TEXTS[currentLang][key];
+                    }
+                });
+            }
+
             // --- 자동 저장 및 초기화 로직 ---
             function saveGame() {
                 localStorage.setItem('gardener_state', JSON.stringify(state));
@@ -724,7 +826,8 @@
             }
 
             function resetProgress() {
-                if (confirm("정말 모든 기록을 삭제하고 처음부터 시작하시겠습니까?")) {
+                const msg = currentLang === 'ko' ? "정말 모든 기록을 삭제하고 처음부터 시작하시겠습니까?" : "Are you sure you want to delete all records and start over?";
+                if (confirm(msg)) {
                     gtag('event', 'reset_progress', { 'event_category': 'game_flow' });
                     localStorage.removeItem('gardener_state');
                     location.reload();
@@ -736,145 +839,245 @@
                 collectedIds: [],
                 currentPlantId: null,
                 hasCertificate: false,
-                 map: { scale: 1, x: 0, y: 0, isDragging: false, startX: 0, startY: 0, minScale: 0.3, maxScale: 3 },
+                map: { scale: 1, x: 0, y: 0, isDragging: false, startX: 0, startY: 0, minScale: 0.3, maxScale: 3 },
                 finalTest: { questions: [], currentStep: 0 }
             };
+            
+            // 다국어 완벽 대응 식물 DB 데이터 분할 구성
             const DB_PLANTS = {
                 "p_1": {
-                    id: "p_1", name: "팽나무", type: "관찰 식물",
+                    id: "p_1", 
+                    name: currentLang === 'ko' ? "팽나무" : "Hackberry", 
+                    type: currentLang === 'ko' ? "관찰 식물" : "Plants",
                     mapCoords: { x: 488, y: 852 },
                     comicImg: "./팽나무.png",
-                    lucyMessage: "송당 마을의 신목인 이 나무에 종이를 묶어 빌면 이루어질지도 몰라! 무엇을 담아 빌었을까?",
-                    fullDesc: "소원 비는 마을 송당의 신목으로, 예부터 이곳에 소원을 담은 종이를 묶어 소원을 빌기도 했습니다.",
-                    quiz: { question: "소원 비는 마을 송당의 신목으로, 예부터 이곳에 ( )을/를 담은 종이를 묶어 소원을 빌기도 했습니다.", options: ["금은보화", "소원", "편지"], correctIndex: 1 }
+                    lucyMessage: currentLang === 'ko' ? "송당 마을의 신목인 이 나무에 종이를 묶어 빌면 이루어질지도 몰라! 무엇을 담아 빌었을까?" : "If you tie paper to this sacred tree of Songdang Village, it might come true! What did they put in to wish?",
+                    fullDesc: currentLang === 'ko' ? "소원 비는 마을 송당의 신목으로, 예부터 이곳에 소원을 담은 종이를 묶어 소원을 빌기도 했습니다." : "As a sacred tree of Songdang, a wish-making village, people have tied papers with wishes on them to pray since ancient times.",
+                    quiz: { 
+                        question: currentLang === 'ko' ? "소원 비는 마을 송당의 신목으로, 예부터 이곳에 ( )을/를 담은 종이를 묶어 소원을 빌기도 했습니다." : "As a sacred tree of Songdang, people have tied papers with ( ) since ancient times.", 
+                        options: currentLang === 'ko' ? ["금은보화", "소원", "편지"] : ["Treasure", "Wishes", "Letters"], 
+                        correctIndex: 1 
+                    }
                 },
                 "p_2": {
-                    id: "p_2", name: "돈나무 지그재그 수벽", type: "관찰 식물",
+                    id: "p_2", 
+                    name: currentLang === 'ko' ? "돈나무 지그재그 수벽" : "Pittosporum Hedge", 
+                    type: currentLang === 'ko' ? "관찰 식물" : "Plants",
                     mapCoords: { x: 632, y: 632 },
-                     comicImg: "./돈나무 지그재그 수벽.png",
-                    lucyMessage: "찰리 브라운의 옷 패턴처럼 생겼지? 이 나무의 이름엔 부자가 되길 바라는 아주 기분 좋은 의미가 담겨 있어!",
-                    fullDesc: "피너츠 시그니쳐 패턴인 지그재그 형태로 조성한 돈나무 수벽입니다. 잎이 많고 수형이 좋아 수벽을 만드는데 적합합니다. 열매 안에 붉은 종자 여러 개가 있는데 이처럼 돈이 많아 부자가 되었으면 하는 바람에서 유래되었습니다.",
-                    quiz: { question: "열매 안에 붉은 종자 여러 개가 있는데 이처럼 ( )이/가 많아 부자가 되었으면 하는 바람에서 유래되었습니다.", options: ["복", "돈", "친구"], correctIndex: 1 }
+                    comicImg: "./돈나무 지그재그 수벽.png",
+                    lucyMessage: currentLang === 'ko' ? "찰리 브라운의 옷 패턴처럼 생겼지? 이 나무의 이름엔 부자가 되길 바라는 아주 기분 좋은 의미가 담겨 있어!" : "Looks like Charlie Brown's shirt pattern, right? The name of this tree carries a wonderful meaning of wishing to become rich!",
+                    fullDesc: currentLang === 'ko' ? "피너츠 시그니쳐 패턴인 지그재그 형태로 조성한 돈나무 수벽입니다. 잎이 많고 수형이 좋아 수벽을 만드는데 적합합니다. 열매 안에 붉은 종자 여러 개가 있는데 이처럼 돈이 많아 부자가 되었으면 하는 바람에서 유래되었습니다." : "This is a Pittosporum hedge designed in the signature Peanuts zigzag pattern. The name comes from the hope that the red seeds inside the fruit resemble money, wishing for wealth.",
+                    quiz: { 
+                        question: currentLang === 'ko' ? "열매 안에 붉은 종자 여러 개가 있는데 이처럼 ( )이/가 많아 부자가 되었으면 하는 바람에서 유래되었습니다." : "There are red seeds in the fruit, which led to the name wishing to have a lot of ( ) and become rich.", 
+                        options: currentLang === 'ko' ? ["복", "돈", "친구"] : ["Luck", "Money", "Friends"], 
+                        correctIndex: 1 
+                    }
                 },
                 "p_3": {
-                    id: "p_3", name: "낙우송", type: "관찰 식물",
+                    id: "p_3", 
+                    name: currentLang === 'ko' ? "낙우송" : "Bald Cypress", 
+                    type: currentLang === 'ko' ? "관찰 식물" : "Plants",
                     mapCoords: { x: 733, y: 529 },
                     comicImg: "./낙우송.png",
-                    lucyMessage: "가을에 노랗게 물들면 정말 예뻐!\n잎이 떨어지는 모습이 마치 새의 이것과 닮았다고 해서 이름이 지어졌대.",
-                     fullDesc: "물을 좋아하는 나무로 강변에서 잘 자라며, 침엽수이면서도 가을에는 노란빛 단풍이 듭니다.\n소나무 같은 잎이 떨어질 때 깃털과 닮아 지어진 이름입니다.",
-                    quiz: { question: "소나무 같은 잎이 떨어질 때 ( )과/와 닮아 지어진 이름입니다.", options: ["눈송이", "깃털", "빗방울"], correctIndex: 1 }
+                    lucyMessage: currentLang === 'ko' ? "가을에 노랗게 물들면 정말 예뻐!\n잎이 떨어지는 모습이 마치 새의 이것과 닮았다고 해서 이름이 지어졌대." : "It turns beautiful yellow in autumn!\nIt is named because the falling leaves resemble a bird's item.",
+                    fullDesc: currentLang === 'ko' ? "물을 좋아하는 나무로 강변에서 잘 자라며, 침엽수이면서도 가을에는 노란빛 단풍이 듭니다.\n소나무 같은 잎이 떨어질 때 깃털과 닮아 지어진 이름입니다." : "A water-loving tree that grows well on riverbanks. It is named because its pine-like leaves resemble feathers when they fall.",
+                    quiz: { 
+                        question: currentLang === 'ko' ? "소나무 같은 잎이 떨어질 때 ( )과/와 닮아 지어진 이름입니다." : "It is named because its pine-like leaves resemble ( ) when they fall.", 
+                        options: currentLang === 'ko' ? ["눈송이", "깃털", "빗방울"] : ["Snowflakes", "Feathers", "Raindrops"], 
+                        correctIndex: 1 
+                    }
                 },
                 "p_4": {
-                     id: "p_4", name: "금목서", type: "관찰 식물",
+                    id: "p_4", 
+                    name: currentLang === 'ko' ? "금목서" : "Sweet Osmanthus", 
+                    type: currentLang === 'ko' ? "관찰 식물" : "Plants",
                     mapCoords: { x: 635, y: 949 },
                     comicImg: "./금목서(만리향).png",
-                    lucyMessage: "킁킁, 어디서 달콤한 향기 나지 않아?\n향기가 아주 멀리까지 퍼져서 멋진 별명을 가지고 있어!",
-                    fullDesc: "달콤한 향이 무척 강하고 만리까지 간다고 하여 '만리향'이라 부릅니다.\n꽃은 향수의 재료로 다양하게 쓰입니다.",
-                    quiz: { question: "달콤한 향이 무척 강하고 만리까지 간다고 하여 '( )'(이)라 부릅니다.", options: ["천리향", "백리향", "만리향"], correctIndex: 2 }
-                 },
+                    lucyMessage: currentLang === 'ko' ? "킁킁, 어디서 달콤한 향기 나지 않아?\n향기가 아주 멀리까지 퍼져서 멋진 별명을 가지고 있어!" : "Sniff sniff, do you smell something sweet?\nIt has a wonderful nickname because its scent spreads incredibly far!",
+                    fullDesc: currentLang === 'ko' ? "달콤한 향이 무척 강하고 만리까지 간다고 하여 '만리향'이라 부릅니다.\n꽃은 향수의 재료로 다양하게 쓰입니다." : "It is called 'Manrihyang' because its sweet scent is so strong that it travels ten thousand li. Flowers are widely used for perfumes.",
+                    quiz: { 
+                        question: currentLang === 'ko' ? "달콤한 향이 무척 강하고 만리까지 간다고 하여 '( )'(이)라 부릅니다." : "It is called '( )' because its sweet scent travels ten thousand li.", 
+                        options: currentLang === 'ko' ? ["천리향", "백리향", "만리향"] : ["Cheonrihyang", "Baekrihyang", "Manrihyang"], 
+                        correctIndex: 2 
+                    }
+                },
                 "p_5": {
-                    id: "p_5", name: "구실잣밤나무", type: "관찰 식물",
+                    id: "p_5", 
+                    name: currentLang === 'ko' ? "구실잣밤나무" : "Castanopsis Sieboldii", 
+                    type: currentLang === 'ko' ? "관찰 식물" : "Plants",
                     mapCoords: { x: 876, y: 818 },
                     comicImg: "./구실잣밤나무.png",
-                     lucyMessage: "이 나무의 열매는 다람쥐들이 좋아하는 이것이랑 아주 비슷하게 생겼어!\n구워 먹을 수도 있단다.",
-                    fullDesc: "도토리처럼 생긴 열매를 날로 먹거나 구워서 먹을 수 있으며 꽃향기가 강하고 아름다워 정원수로 쓰입니다.",
-                    quiz: { question: "( )처럼 생긴 열매를 날로 먹거나 구워서 먹을 수 있으며 꽃향기가 강하고 아름다워 정원수로 쓰입니다.", options: ["도토리", "호두", "잣"], correctIndex: 0 }
-                 },
+                    lucyMessage: currentLang === 'ko' ? "이 나무의 열매는 다람쥐들이 좋아하는 이것이랑 아주 비슷하게 생겼어!\n구워 먹을 수도 있단다." : "The fruit of this tree looks a lot like what squirrels love!\nYou can even roast and eat it.",
+                    fullDesc: currentLang === 'ko' ? "도토리처럼 생긴 열매를 날로 먹거나 구워서 먹을 수 있으며 꽃향기가 강하고 아름다워 정원수로 쓰입니다." : "The fruit looks like an acorn and can be eaten raw or roasted. It is used as a garden tree for its strong and beautiful scent.",
+                    quiz: { 
+                        question: currentLang === 'ko' ? "( )처럼 생긴 열매를 날로 먹거나 구워서 먹을 수 있으며 꽃향기가 강하고 아름다워 정원수로 쓰입니다." : "The fruit looks like an ( ) and can be eaten raw or roasted.", 
+                        options: currentLang === 'ko' ? ["도토리", "호두", "잣"] : ["Acorn", "Walnut", "Pine nut"], 
+                        correctIndex: 0 
+                    }
+                },
                 "p_6": {
-                    id: "p_6", name: "굴거리나무", type: "관찰 식물",
+                    id: "p_6", 
+                    name: currentLang === 'ko' ? "굴거리나무" : "Macropodum", 
+                    type: currentLang === 'ko' ? "관찰 식물" : "Plants",
                     mapCoords: { x: 953, y: 682 },
                     comicImg: "./굴거리나무.png",
-                     lucyMessage: "이 나무의 길고 축 처진 잎사귀를 잘 봐.\n꼭 내 친구 스누피의 어디를 닮은 것 같지 않아?",
-                    fullDesc: "대기오염이나 바람에 강해서 남부 지방에서 가로수로 많이 사용합니다.\n길고 아래로 쳐진 잎이 스누피의 귀 모양을 닮아있습니다.",
-                    quiz: { question: "길고 아래로 쳐진 잎이 스누피의 ( ) 모양을 닮아있습니다.", options: ["코", "귀", "꼬리"], correctIndex: 1 }
+                    lucyMessage: currentLang === 'ko' ? "이 나무의 길고 축 처진 잎사귀를 잘 봐.\n꼭 내 친구 스누피의 어디를 닮은 것 같지 않아?" : "Look closely at the long, drooping leaves of this tree.\nDon't they look exactly like a part of my friend Snoopy?",
+                    fullDesc: currentLang === 'ko' ? "대기오염이나 바람에 강해서 남부 지방에서 가로수로 많이 사용합니다.\n길고 아래로 쳐진 잎이 스누피의 귀 모양을 닮아있습니다." : "It is widely used as a street tree in southern regions due to its resistance to pollution. The long, drooping leaves resemble Snoopy's ears.",
+                    quiz: { 
+                        question: currentLang === 'ko' ? "길고 아래로 쳐진 잎이 스누피의 ( ) 모양을 닮아있습니다." : "The long, drooping leaves resemble Snoopy's ( ).", 
+                        options: currentLang === 'ko' ? ["코", "귀", "꼬리"] : ["Nose", "Ears", "Tail"], 
+                        correctIndex: 1 
+                    }
                 },
                 "p_7": {
-                    id: "p_7", name: "호랑가시나무", type: "관찰 식물",
+                    id: "p_7", 
+                    name: currentLang === 'ko' ? "호랑가시나무" : "Horned Holly", 
+                    type: currentLang === 'ko' ? "관찰 식물" : "Plants",
                     mapCoords: { x: 984, y: 505 },
-                     comicImg: "./호랑가시나무.png",
-                    lucyMessage: "앗, 잎이 뾰족뾰족해!\n이 단단한 가시가 아주 무서운 동물의 발톱을 닮았다고 해서 이런 이름이 붙었어.",
-                    fullDesc: "잎의 가장자리가 단단한 침으로 변하는데 마치 호랑이의 발톱처럼 보인다고 해서 '호랑이가시', '호랑가시나무' 등으로 부릅니다.\n꽃보다 빨간 열매가 예쁘며 크리스마스를 상징하는 식물입니다.",
-                     quiz: { question: "잎의 가장자리가 단단한 침으로 변하는데 마치 ( )처럼 보인다고 해서 '호랑이가시', '호랑가시나무' 등으로 부릅니다.", options: ["사자의 이빨", "호랑이의 발톱", "고양이의 수염"], correctIndex: 1 }
+                    comicImg: "./호랑가시나무.png",
+                    lucyMessage: currentLang === 'ko' ? "앗, 잎이 뾰족뾰족해!\n이 단단한 가시가 아주 무서운 동물의 발톱을 닮았다고 해서 이런 이름이 붙었어." : "Oh, the leaves are so sharp!\nIt got this name because the hard thorns resemble a scary animal's claws.",
+                    fullDesc: currentLang === 'ko' ? "잎의 가장자리가 단단한 침으로 변하는데 마치 호랑이의 발톱처럼 보인다고 해서 '호랑이가시', '호랑가시나무' 등으로 부릅니다.\n꽃보다 빨간 열매가 예쁘며 크리스마스를 상징하는 식물입니다." : "The edges of the leaves turn into hard spines that look like a tiger's claws, giving it the name. Its red berries represent Christmas.",
+                    quiz: { 
+                        question: currentLang === 'ko' ? "잎의 가장자리가 단단한 침으로 변하는데 마치 ( )처럼 보인다고 해서 '호랑이가시', '호랑가시나무' 등으로 부릅니다." : "The edges of the leaves turn into hard spines that look like a ( )'s claws.", 
+                        options: currentLang === 'ko' ? ["사자의 이빨", "호랑이의 발톱", "고양이의 수염"] : ["Lion's Teeth", "Tiger's Claws", "Cat's Whiskers"], 
+                        correctIndex: 1 
+                    }
                 },
                 "p_8": {
-                    id: "p_8", name: "꽝꽝나무", type: "관찰 식물",
-                     mapCoords: { x: 1079, y: 367 },
+                    id: "p_8", 
+                    name: currentLang === 'ko' ? "꽝꽝나무" : "Box-leaved Holly", 
+                    type: currentLang === 'ko' ? "관찰 식물" : "Plants",
+                    mapCoords: { x: 1079, y: 367 },
                     comicImg: "./꽝꽝나무.png",
-                    lucyMessage: "이 잎을 불에 태우면 깜짝 놀랄만한 소리가 난대!\n아주 재미있는 이름이지?",
-                    fullDesc: "잎이 불에 탈 때 '꽝꽝' 소리가 난다 하여 '꽝꽝나무'라 부릅니다.\n겨울에도 녹색을 유지하며 덤불처럼 자라지요. 새로운 싹이 잘 맺혀 전정을 해주면서 토피어리나 울타리로 많이 이용됩니다.",
-                    quiz: { question: "잎이 불에 탈 때 '( )' 소리가 난다 하여 '꽝꽝나무'라 부릅니다.", options: ["지글지글", "타닥타닥", "꽝꽝"], correctIndex: 2 }
+                    lucyMessage: currentLang === 'ko' ? "이 잎을 불에 태우면 깜짝 놀랄만한 소리가 난대!\n아주 재미있는 이름이지?" : "They say if you burn these leaves, it makes a surprising sound!\nIsn't it a funny name?",
+                    fullDesc: currentLang === 'ko' ? "잎이 불에 탈 때 '꽝꽝' 소리가 난다 하여 '꽝꽝나무'라 부릅니다.\n겨울에도 녹색을 유지하며 덤불처럼 자라지요. 새로운 싹이 잘 맺혀 전정을 해주면서 토피어리나 울타리로 많이 이용됩니다." : "It is called 'Kwang-kwang-namu' because the leaves make a popping sound when burned. It stays green in winter and is used for topiary.",
+                    quiz: { 
+                        question: currentLang === 'ko' ? "잎이 불에 탈 때 '( )' 소리가 난다 하여 '꽝꽝나무'라 부릅니다." : "It is named because the leaves make a '( )' sound when burned.", 
+                        options: currentLang === 'ko' ? ["지글지글", "타닥타닥", "꽝꽝"] : ["Sizzle", "Crackle", "Kwang-Kwang"], 
+                        correctIndex: 2 
+                    }
                 },
                 "p_9": {
-                     id: "p_9", name: "왕벚나무", type: "관찰 식물",
+                    id: "p_9", 
+                    name: currentLang === 'ko' ? "왕벚나무" : "King Cherry", 
+                    type: currentLang === 'ko' ? "관찰 식물" : "Plants",
                     mapCoords: { x: 1292, y: 177 },
                     comicImg: "./왕벚나무.png",
-                    lucyMessage: "봄이 되면 가장 먼저 아름다운 꽃을 피우는 이 나무!\n원산지가 바로 여기란 사실 알고 있었어?",
-                     fullDesc: "제주도가 원산지인 우리나라 특산식물입니다.\n봄의 전령사로 잎보다 먼저 피는 꽃이 장관을 이루며, 가을 단풍도 아름답습니다.\n꽃말은 '절세미인!'입니다.",
-                    quiz: { question: "( )이/가 원산지인 우리나라 특산식물입니다.\n봄의 전령사로 잎보다 먼저 피는 꽃이 장관을 이룹니다.", options: ["울릉도", "제주도", "거제도"], correctIndex: 1 }
+                    lucyMessage: currentLang === 'ko' ? "봄이 되면 가장 먼저 아름다운 꽃을 피우는 이 나무!\n원산지가 바로 여기란 사실 알고 있었어?" : "This tree blooms beautiful flowers first when spring comes!\nDid you know its origin is right here?",
+                    fullDesc: currentLang === 'ko' ? "제주도가 원산지인 우리나라 특산식물입니다.\n봄의 전령사로 잎보다 먼저 피는 꽃이 장관을 이루며, 가을 단풍도 아름답습니다.\n꽃말은 '절세미인!'입니다." : "A native plant of Korea originated from Jeju Island. As a messenger of spring, flowers blooming before leaves create a magnificent view.",
+                    quiz: { 
+                        question: currentLang === 'ko' ? "( )이/가 원산지인 우리나라 특산식물입니다.\n봄의 전령사로 잎보다 먼저 피는 꽃이 장관을 이룹니다." : "It is a native Korean plant originating from ( ). Flowers bloom before leaves.", 
+                        options: currentLang === 'ko' ? ["울릉도", "제주도", "거제도"] : ["Ulleungdo", "Jejudo", "Geojedo"], 
+                        correctIndex: 1 
+                    }
                 },
                 "p_10": {
-                    id: "p_10", name: "하귤나무", type: "관찰 식물",
+                    id: "p_10", 
+                    name: currentLang === 'ko' ? "하귤나무" : "Summer Orange", 
+                    type: currentLang === 'ko' ? "관찰 식물" : "Plants",
                     mapCoords: { x: 1243, y: 565 },
                     comicImg: "./하귤나무.png",
-                    lucyMessage: "보통 귤은 겨울에 먹지만, 이 귤은 아주 특별하게 다른 계절에 열매를 맺어!\n제주의 자몽이라고도 해.",
-                    fullDesc: "겨울이 아닌 여름에 난다고 해서 '하귤'입니다.\n새콤 쌉싸름한 맛과 통통한 과육 알알이 톡톡 터지는 식감에 '제주의 자몽'이라 불리기도 합니다.",
-                    quiz: { question: "겨울이 아닌 ( )에 난다고 해서 '하귤'입니다.", options: ["봄", "여름", "가을"], correctIndex: 1 }
+                    lucyMessage: currentLang === 'ko' ? "보통 귤은 겨울에 먹지만, 이 귤은 아주 특별하게 다른 계절에 열매를 맺어!\n제주의 자몽이라고도 해." : "Normally, oranges are eaten in winter, but this special orange bears fruit in a different season! It's called Jeju's Grapefruit.",
+                    fullDesc: currentLang === 'ko' ? "겨울이 아닌 여름에 난다고 해서 '하귤'입니다.\n새콤 쌉싸름한 맛과 통통한 과육 알알이 톡톡 터지는 식감에 '제주의 자몽'이라 불리기도 합니다." : "It is called 'Hagyul' because it ripens in summer rather than winter. Known as 'Jeju's Grapefruit' for its bittersweet taste.",
+                    quiz: { 
+                        question: currentLang === 'ko' ? "겨울이 아닌 ( )에 난다고 해서 '하귤'입니다." : "It is called 'Hagyul' because it grows in ( ) instead of winter.", 
+                        options: currentLang === 'ko' ? ["봄", "여름", "가을"] : ["Spring", "Summer", "Autumn"], 
+                        correctIndex: 1 
+                    }
                 },
-                 "p_11": {
-                    id: "p_11", name: "삼나무", type: "관찰 식물",
+                "p_11": {
+                    id: "p_11", 
+                    name: currentLang === 'ko' ? "삼나무" : "Japanese Cedar", 
+                    type: currentLang === 'ko' ? "관찰 식물" : "Plants",
                     mapCoords: { x: 1345, y: 530 },
                     comicImg: "./삼나무.png",
-                     lucyMessage: "키가 아담한 이 친구는 물기를 아주 좋아해서 숲 속 촉촉한 곳에서 잘 자란단다.",
-                    fullDesc: "우리나라 중부 이남의 산에서 자라는 낙엽 관목.\n키는 약 1m 내외이고, 습기가 많은 곳에서 자란다.",
-                    quiz: { question: "우리나라 중부 이남의 산에서 자라는 낙엽 관목.\n키는 약 1m 내외이고, ( )이/가 많은 곳에서 자란다.", options: ["바람", "햇빛", "습기"], correctIndex: 2 }
-                 },
-                "p_12": {
-                    id: "p_12", name: "카네이션동백", type: "관찰 식물",
-                    mapCoords: { x: 1233, y: 929 },
-                     comicImg: "./카네이션동백.png",
-                    lucyMessage: "어버이날 선물하는 꽃이랑 정말 비슷하게 생겼지?\n하지만 사실은 동백나무야. 꽃말이 정말 낭만적이지!",
-                    fullDesc: "동백꽃의 생김새가 카네이션과 비슷하지만 동백인 나무입니다.\n꽃말은 '그 누구보다 더 당신을 사랑합니다'입니다.",
-                    quiz: { question: "동백꽃의 생김새가 카네이션과 비슷하지만 동백인 나무입니다.\n꽃말은 '( )'입니다.", options: ["그 누구보다 더 당신을 사랑합니다", "당신을 영원히 기억합니다", "나의 마음을 받아주세요"], correctIndex: 0 }
+                    lucyMessage: currentLang === 'ko' ? "키가 아담한 이 친구는 물기를 아주 좋아해서 숲 속 촉촉한 곳에서 잘 자란단다." : "This compact friend loves moisture, so it grows well in moist places deep within the forest.",
+                    fullDesc: currentLang === 'ko' ? "우리나라 중부 이남의 산에서 자라는 낙엽 관목.\n키는 약 1m 내외이고, 습기가 많은 곳에서 자란다." : "A deciduous shrub growing in mountains south of central Korea. It grows to about 1m and prefers moist environments.",
+                    quiz: { 
+                        question: currentLang === 'ko' ? "우리나라 중부 이남의 산에서 자라는 낙엽 관목.\n키는 약 1m 내외이고, ( )이/가 많은 곳에서 자란다." : "A deciduous shrub that grows up to about 1m in places with high ( ).", 
+                        options: currentLang === 'ko' ? ["바람", "햇빛", "습기"] : ["Wind", "Sunlight", "Moisture"], 
+                        correctIndex: 2 
+                    }
                 },
-                 "p_13": {
-                    id: "p_13", name: "치자나무", type: "관찰 식물",
+                "p_12": {
+                    id: "p_12", 
+                    name: currentLang === 'ko' ? "카네이션동백" : "Carnation Camellia", 
+                    type: currentLang === 'ko' ? "관찰 식물" : "Plants",
+                    mapCoords: { x: 1233, y: 929 },
+                    comicImg: "./카네이션동백.png",
+                    lucyMessage: currentLang === 'ko' ? "어버이날 선물하는 꽃이랑 정말 비슷하게 생겼지?\n하지만 사실은 동백나무야. 꽃말이 정말 낭만적이지!" : "Looks so much like the flower gifted on Parents' Day, right?\nBut it's actually a Camellia. The flower language is so romantic!",
+                    fullDesc: currentLang === 'ko' ? "동백꽃의 생김새가 카네이션과 비슷하지만 동백인 나무입니다.\n꽃말은 '그 누구보다 더 당신을 사랑합니다'입니다." : "A tree that is a Camellia but looks like a carnation. Its language means 'I love you more than anyone else.'",
+                    quiz: { 
+                        question: currentLang === 'ko' ? "동백꽃의 생김새가 카네이션과 비슷하지만 동백인 나무입니다.\n꽃말은 '( )'입니다." : "The flower language of Carnation Camellia is '( )'.", 
+                        options: currentLang === 'ko' ? ["그 누구보다 더 당신을 사랑합니다", "당신을 영원히 기억합니다", "나의 마음을 받아주세요"] : ["I love you more than anyone", "I remember you forever", "Please accept my heart"], 
+                        correctIndex: 0 
+                    }
+                },
+                "p_13": {
+                    id: "p_13", 
+                    name: currentLang === 'ko' ? "치자나무" : "Cape Jasmine", 
+                    type: currentLang === 'ko' ? "관찰 식물" : "Plants",
                     mapCoords: { x: 1147, y: 1108 },
                     comicImg: "./치자나무.png",
-                     lucyMessage: "이 열매로 천을 물들이면 아주 예쁜 색이 나와!\n향기도 좋고 새들도 좋아하는 매력적인 나무지.",
-                    fullDesc: "가을에 주황색으로 익는 열매는 염료나 약용으로 쓰입니다.\n재스민 향과 비슷한 강한 향기가 특징이며, 열매는 새들의 먹이가 됩니다.",
-                    quiz: { question: "가을에 ( )(으)로 익는 열매는 염료나 약용으로 쓰입니다.", options: ["보라색", "빨간색", "주황색"], correctIndex: 2 }
-                 },
+                    lucyMessage: currentLang === 'ko' ? "이 열매로 천을 물들이면 아주 예쁜 색이 나와!\n향기도 좋고 새들도 좋아하는 매력적인 나무지." : "Dyeing fabric with this fruit produces a very pretty color!\nIt's a charming tree with a great scent loved by birds.",
+                    fullDesc: currentLang === 'ko' ? "가을에 주황색으로 익는 열매는 염료나 약용으로 쓰입니다.\n재스민 향과 비슷한 강한 향기가 특징이며, 열매는 새들의 먹이가 됩니다." : "Fruits ripening in orange in autumn are used for dyes or medicine. Characterized by a strong scent similar to jasmine.",
+                    quiz: { 
+                        question: currentLang === 'ko' ? "가을에 ( )(으)로 익는 열매는 염료나 약용으로 쓰입니다." : "Fruits that ripen in ( ) in autumn are used as dyes or medicine.", 
+                        options: currentLang === 'ko' ? ["보라색", "빨간색", "주황색"] : ["Purple", "Red", "Orange"], 
+                        correctIndex: 2 
+                    }
+                },
                 "p_14": {
-                    id: "p_14", name: "아왜나무", type: "관찰 식물",
+                    id: "p_14", 
+                    name: currentLang === 'ko' ? "아왜나무" : "Sweet Viburnum", 
+                    type: currentLang === 'ko' ? "관찰 식물" : "Plants",
                     mapCoords: { x: 914, y: 1221 },
                     comicImg: "./아왜나무.png",
-                     lucyMessage: "불이 났을 때 스스로를 보호하려고 아주 신기하게 대처하는 나무야!\n소방관 같은 나무지.",
-                    fullDesc: "두툼하고 큰 잎이 수분을 많이 가지고 있는데, 불과 만나면 거품을 내는 특성이 있어 '거품 나무'라고도 부릅니다.\n이 거품이 불길이 번지는 것을 막아주기 때문에 방화수로 쓰입니다.",
-                    quiz: { question: "두툼하고 큰 잎이 수분을 많이 가지고 있는데, 불과 만나면 ( )을/를 내는 특성이 있어 '거품 나무'라고도 부릅니다.", options: ["연기", "물", "거품"], correctIndex: 2 }
+                    lucyMessage: currentLang === 'ko' ? "불이 났을 때 스스로를 보호하려고 아주 신기하게 대처하는 나무야!\n소방관 같은 나무지." : "This tree copes in a very fascinating way to protect itself during a fire!\nIt's like a firefighter tree.",
+                    fullDesc: currentLang === 'ko' ? "두툼하고 큰 잎이 수분을 많이 가지고 있는데, 불과 만나면 거품을 내는 특성이 있어 '거품 나무'라고도 부릅니다.\n이 거품이 불길이 번지는 것을 막아주기 때문에 방화수로 쓰입니다." : "Thick leaves hold much moisture and form bubbles when meeting fire, earning the name 'Bubble Tree'. Used as a fire barrier.",
+                    quiz: { 
+                        question: currentLang === 'ko' ? "두툼하고 큰 잎이 수분을 많이 가지고 있는데, 불과 만나면 ( )을/를 내는 특성이 있어 '거품 나무'라고도 부릅니다." : "Thick leaves hold a lot of water and produce ( ) when exposed to fire.", 
+                        options: currentLang === 'ko' ? ["연기", "물", "거품"] : ["Smoke", "Water", "Bubbles"], 
+                        correctIndex: 2 
+                    }
                 },
                 "p_15": {
-                    id: "p_15", name: "장미", type: "관찰 식물",
+                    id: "p_15", 
+                    name: currentLang === 'ko' ? "장미" : "Rose", 
+                    type: currentLang === 'ko' ? "관찰 식물" : "Plants",
                     mapCoords: { x: 773, y: 1129 },
                     comicImg: "./장미.png",
-                    lucyMessage: "사랑을 고백할 때 이 꽃만 한 게 없지!\n너무 예뻐서 꽃들의 여왕님이라고도 불려.",
-                    fullDesc: "'꽃의 여왕'이라는 별명에 어울리는 아름다움으로, 사랑을 표현할 때 가장 많이 선물하는 식물입니다.",
-                     quiz: { question: "'( )'(이)라는 별명에 어울리는 아름다움으로, 사랑을 표현할 때 가장 많이 선물하는 식물입니다.", options: ["꽃의 요정", "꽃의 여왕", "꽃의 천사"], correctIndex: 1 }
+                    lucyMessage: currentLang === 'ko' ? "사랑을 고백할 때 이 꽃만 한 게 없지!\n너무 예뻐서 꽃들의 여왕님이라고도 불려." : "Nothing beats this flower when confessing love!\nIt's so beautiful that it's also called the Queen of Flowers.",
+                    fullDesc: currentLang === 'ko' ? "'꽃의 여왕'이라는 별명에 어울리는 아름다움으로, 사랑을 표현할 때 가장 많이 선물하는 식물입니다." : "With beauty fitting the nickname 'Queen of Flowers,' it is the most gifted plant to express love.",
+                    quiz: { 
+                        question: currentLang === 'ko' ? "'( )'(이)라는 별명에 어울리는 아름다움으로, 사랑을 표현할 때 가장 많이 선물하는 식물입니다." : "It is the most popular flower to express love, fitting the nickname '( )'.", 
+                        options: currentLang === 'ko' ? ["꽃의 요정", "꽃의 여왕", "꽃의 천사"] : ["Fairy of Flowers", "Queen of Flowers", "Angel of Flowers"], 
+                        correctIndex: 1 
+                    }
                 },
                 "p_16": {
-                    id: "p_16", name: "꽃댕강나무", type: "관찰 식물",
+                    id: "p_16", 
+                    name: currentLang === 'ko' ? "꽃댕강나무" : "Glossy Abelia", 
+                    type: currentLang === 'ko' ? "관찰 식물" : "Plants",
                     mapCoords: { x: 672, y: 1044 },
                     comicImg: "./꽃댕강나무.png",
-                    lucyMessage: "작고 예쁜 꽃이 가을까지 계속 피어서 오랫동안 좋은 향기를 즐길 수 있어.\n스누피 가든이 널 환영해!",
-                    fullDesc: "하얀 꽃 and 연분홍색 꽃이 6월부터 10월까지 계속하여 피으므로 은은한 향기와 아름다운 꽃을 가을까지 볼 수 있습니다.\n이 나무의 꽃말은 환영, 평안함입니다.",
-                    quiz: { question: "하얀 꽃과 연분홍색 꽃이 계속하여 피므로 은은한 ( )와/과 아름다운 꽃을 가을까지 볼 수 있습니다.", options: ["색깔", "향기", "열매"], correctIndex: 1 }
+                    lucyMessage: currentLang === 'ko' ? "작고 예쁜 꽃이 가을까지 계속 피어서 오랫동안 좋은 향기를 즐길 수 있어.\n스누피 가든이 널 환영해!" : "Small, pretty flowers bloom continuously until autumn, so you can enjoy the great fragrance for a long time. Welcome!",
+                    fullDesc: currentLang === 'ko' ? "하얀 꽃과 연분홍색 꽃이 6월부터 10월까지 계속하여 피므로 은은한 향기와 아름다운 꽃을 가을까지 볼 수 있습니다.\n이 나무의 꽃말은 환영, 평안함입니다." : "White and pink flowers bloom continuously from June to October, providing a soft scent until autumn. Its meaning is welcome.",
+                    quiz: { 
+                        question: currentLang === 'ko' ? "하얀 꽃과 연분홍색 꽃이 계속하여 피므로 은은한 ( )와/과 아름다운 꽃을 가을까지 볼 수 있습니다." : "Since flowers bloom continuously, you can enjoy the soft ( ) and beautiful flowers until autumn.", 
+                        options: currentLang === 'ko' ? ["색깔", "향기", "열매"] : ["Color", "Fragrance", "Fruit"], 
+                        correctIndex: 1 
+                    }
                 }
             };
+
             const ALL_PLANTS_LIST = [
                 DB_PLANTS.p_1, DB_PLANTS.p_2, DB_PLANTS.p_3, DB_PLANTS.p_4, 
                 DB_PLANTS.p_5, DB_PLANTS.p_6, DB_PLANTS.p_7, DB_PLANTS.p_8, 
                 DB_PLANTS.p_9, DB_PLANTS.p_10, DB_PLANTS.p_11, DB_PLANTS.p_12, 
                 DB_PLANTS.p_13, DB_PLANTS.p_14, DB_PLANTS.p_15, DB_PLANTS.p_16
             ];
+
             const MAP_CURVE_PATHS = {
                 0: "M 435.78 991.72 L 477.18 946.72 L 474.78 899.92 L 487.98 854.32",
                 1: "M 488.46 852.41 l 17.4-46.8 21.9-11.4 5.4-13.5 -3.6-16.2 s -25.5-18.6 -26.4-19.2 s -4.2-13.5 -4.2-13.5 l 13.5-12.6 12.6-8.1 5.1-3.9 6.9-22.8 -22.2-24.6 -46.8-41.1 -3.9-19.5 42.6-46.2 25.5-6 12 6.6 0.6 17.1 17.7 19.5 48.3 5.4 15 14.1 4.8 24",
@@ -894,8 +1097,10 @@
                 15: "M 773.31 1128.71 L 707.61 1082.51 L 671.61 1044.41"
             };
 
+            // 페이지 로드 후 딕셔너리 번역 및 게임 로드 통합 실행
             window.addEventListener('DOMContentLoaded', () => {
                 loadGame();
+                applyTranslations(); // 🌐 정적 텍스트 전체 다국어 매핑 실행
                 gtag('event', 'app_start', { 'event_category': 'engagement' });
             });
 
@@ -927,10 +1132,10 @@
                     setTimeout(() => {
                         if(document.getElementById('map-content').children.length <= 1) { 
                             initMap();
-                             setupMapDragging(document.getElementById('map-container'), document.getElementById('map-content'));
+                            setupMapDragging(document.getElementById('map-container'), document.getElementById('map-content'));
                         } else {
                             renderMapPins();
-                            resetMapZoom(); // 👈 최상단 정렬 로직이 적용된 함수 호출
+                            resetMapZoom(); // 👈 최상단 정렬 스크롤 원상복구 호출
                         }
                     }, 50);
                 } else if(tabName === 'collection') {
@@ -975,7 +1180,7 @@
                         pin.classList.add('locked-pin'); 
                     }
 
-                     pin.style.left = `${plant.mapCoords.x}px`;
+                    pin.style.left = `${plant.mapCoords.x}px`;
                     pin.style.top = `${plant.mapCoords.y}px`;
                     
                     const popup = document.createElement('div');
@@ -983,9 +1188,11 @@
          
                     let popupHtml = `<span>${plant.name}</span>`;
                     if(isCollected) {
-                        popupHtml += `<button class="mt-1 bg-gray-400 text-white text-xs px-3 py-1 rounded-full font-bold cursor-default">CLEAR</button>`;
+                        const clearTxt = I18N_TEXTS[currentLang].clearText;
+                        popupHtml += `<button class="mt-1 bg-gray-400 text-white text-xs px-3 py-1 rounded-full font-bold cursor-default">${clearTxt}</button>`;
                     } else {
-                        popupHtml += `<button onclick="loadMission('${plant.id}')" class="mt-1 bg-[#2E9441] text-white text-xs px-3 py-1 rounded-full font-bold shadow-md active:scale-95 transition-transform">도전하기</button>`;
+                        const challengeTxt = I18N_TEXTS[currentLang].challengeText;
+                        popupHtml += `<button onclick="loadMission('${plant.id}')" class="mt-1 bg-[#2E9441] text-white text-xs px-3 py-1 rounded-full font-bold shadow-md active:scale-95 transition-transform">${challengeTxt}</button>`;
                     }
                     popup.innerHTML = popupHtml;
                     popup.style.left = `${plant.mapCoords.x}px`;
@@ -1009,7 +1216,7 @@
                 const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
                 svg.appendChild(defs);
 
-                for (let i = 0; i < ALL_PLANTS_LIST.length; i++) {
+                for (let i = 0; i < ALL_PLANTS.length; i++) {
                     if (i > targetIdx) break;
                     
                     let pathData = MAP_CURVE_PATHS[i];
@@ -1041,7 +1248,7 @@
                         requestAnimationFrame(() => {
                             const pathLength = maskPath.getTotalLength ? maskPath.getTotalLength() : 500; 
                             maskPath.style.strokeDasharray = pathLength;
-                             maskPath.style.strokeDashoffset = pathLength;
+                            maskPath.style.strokeDashoffset = pathLength;
                             maskPath.getBoundingClientRect(); 
                             maskPath.style.transition = 'stroke-dashoffset 2.5s ease-in-out';
                             maskPath.style.strokeDashoffset = '0';
@@ -1072,14 +1279,14 @@
                     if (state.map.x < containerWidth - mapWidth) state.map.x = containerWidth - mapWidth;
                 }
 
-                if (mapHeight <= containerHeight) state.map.y = 0; // 👈 높이 구속 시 항상 최상단(0) 고정
+                if (mapHeight <= containerHeight) state.map.y = 0; // 👈 높이 구속 조절 시 상단(0) 정렬 유지
                 else {
-                    if (state.map.y > 0) state.map.y = 0; // 위로 더 끌어올리지 못하게 가둠
+                    if (state.map.y > 0) state.map.y = 0; 
                     if (state.map.y < containerHeight - mapHeight) state.map.y = containerHeight - mapHeight;
                 }
             }
 
-            // 🗺️ [지도 상단 정렬 수정] 지도를 열 때 정중앙이 아닌 맨 위(상단)를 바라보도록 연산 수정
+            // 🗺️ 지도가 리셋될 때 정중앙이 아닌 화면의 최상단(Y좌표 = 0)을 정렬하도록 제한 연산 처리
             function resetMapZoom() {
                 const container = document.getElementById('map-container');
                 if(!container || container.clientWidth === 0) return; 
@@ -1090,9 +1297,8 @@
                 state.map.minScale = fitScale;
                 state.map.scale = fitScale;
                 
-                // 가로축은 정중앙으로 배치하되, 세로축(y)은 0으로 지정하여 가장 상단이 보이도록 제어
                 state.map.x = (container.clientWidth - (1500 * state.map.scale)) / 2;
-                state.map.y = 0; 
+                state.map.y = 0; // 👈 0으로 설정하여 항상 세로 스크롤 상단을 보게 고정
                 
                 document.querySelectorAll('.pin-popup').forEach(p => p.classList.remove('show'));
                 document.querySelectorAll('.map-pin').forEach(p => p.classList.remove('active-pin'));
@@ -1208,7 +1414,7 @@
                 
                 const badge = document.getElementById('mission-type-badge');
                 badge.innerText = data.type;
-                badge.className = `text-white text-xs font-bold px-2 py-1 rounded-full ${data.type === '상록수' ? 'bg-green-700' : 'bg-orange-500'}`;
+                badge.className = `text-white text-xs font-bold px-2 py-1 rounded-full ${data.type === '상록수' || data.type === 'Evergreen' ? 'bg-green-700' : 'bg-orange-500'}`;
                 
                 document.getElementById('quiz-question').innerText = data.quiz.question;
                 const optionsContainer = document.getElementById('quiz-options');
@@ -1217,7 +1423,7 @@
                     const btn = document.createElement('button');
                     btn.className = "comic-btn py-3 px-4 text-left w-full hover:bg-gray-50 text-sm";
                     btn.innerHTML = `<span class="font-black mr-2 text-lg text-gray-400">${index + 1}.</span> <span>${opt}</span>`;
-                     btn.onclick = () => checkAnswer(btn, index, data.quiz.correctIndex, data);
+                    btn.onclick = () => checkAnswer(btn, index, data.quiz.correctIndex, data);
                     optionsContainer.appendChild(btn);
                 });
                 switchTab('mission');
@@ -1244,7 +1450,9 @@
                     void container.offsetWidth; 
                     container.classList.add('shake');
                     
-                    const messages = ["다시 생각해볼까?", "설명을 다시 잘 읽어봐!", "정답이 숨어있을지도 몰라!"];
+                    const messages = currentLang === 'ko' 
+                        ? ["다시 생각해볼까?", "설명을 다시 잘 읽어봐!", "정답이 숨어있을지도 몰라!"]
+                        : ["Think again!", "Read the description carefully!", "The answer might be hidden!"];
                     showToast(messages[Math.floor(Math.random() * messages.length)]);
                 }
             }
@@ -1253,7 +1461,7 @@
                 const toast = document.getElementById('toast');
                 const toastIcon = toast.querySelector('i'); 
                 
-                if (msg.includes('성공') || msg.includes('저장') || msg.includes('통과')) {
+                if (msg.includes('성공') || msg.includes('저장') || msg.includes('통과') || msg.includes('Success') || msg.includes('Saved')) {
                     toastIcon.className = 'fa-solid fa-check text-green-400 mr-2 text-lg';
                 } else {
                     toastIcon.className = 'fa-solid fa-xmark text-red-400 mr-2 text-lg';
@@ -1389,6 +1597,7 @@
             }
 
             function renderCollection() {
+                const prefix = I18N_TEXTS[currentLang].bookFoundPrefix;
                 document.getElementById('collection-count').innerText = state.collectedIds.length;
                 const grid = document.getElementById('stamp-grid');
                 grid.innerHTML = '';
@@ -1417,12 +1626,12 @@
                 if(state.collectedIds.length === ALL_PLANTS_LIST.length) { 
                     btn.classList.remove('hidden');
                     if(state.hasCertificate) {
-                        btnText.innerText = "내 인증서 다시 보기";
+                        btnText.innerText = currentLang === 'ko' ? "내 인증서 다시 보기" : "View My Certificate Again";
                         btn.classList.replace('bg-orange-500', 'bg-[#2E9441]');
                         btn.querySelector('i').classList.replace('fa-graduation-cap', 'fa-award');
                         surveyBtn.classList.remove('hidden');
                     } else {
-                        btnText.innerText = "최종 자격 검사 보기!";
+                        btnText.innerText = I18N_TEXTS[currentLang].finalTestBtn;
                         surveyBtn.classList.add('hidden');
                     }
                 } else {
@@ -1453,7 +1662,8 @@
                 const step = state.finalTest.currentStep;
                 const plant = state.finalTest.questions[step];
                 
-                document.getElementById('test-step-badge').innerText = `문제 ${step + 1} / 2`;
+                const prefixQuestion = currentLang === 'ko' ? '문제' : 'Q';
+                document.getElementById('test-step-badge').innerText = `${prefixQuestion} ${step + 1} / 2`;
                 
                 const hint = plant.fullDesc;
                 document.getElementById('final-quiz-desc').innerText = `"${hint}"`;
@@ -1467,7 +1677,7 @@
                     const btn = document.createElement('button');
                     btn.className = "comic-btn py-3 px-4 text-center w-full hover:bg-gray-50 text-base text-gray-700";
                     btn.innerText = opt.name;
-                     btn.onclick = () => handleFinalTestAnswer(opt.id, plant.id, btn);
+                    btn.onclick = () => handleFinalTestAnswer(opt.id, plant.id, btn);
                     optionsContainer.appendChild(btn);
                 });
             }
@@ -1499,7 +1709,9 @@
                     container.classList.remove('shake');
                     void container.offsetWidth; 
                     container.classList.add('shake');
-                    showToast("어라? 아닌 것 같은데!");
+                    
+                    const errMsg = currentLang === 'ko' ? "어라? 아닌 것 같은데!" : "Oops! That doesn't seem right!";
+                    showToast(errMsg);
                 }
             }
 
@@ -1510,7 +1722,8 @@
             function generateCertificate() {
                 const nameInput = document.getElementById('user-name-input').value.trim();
                 if (!nameInput) {
-                    showToast("이름을 적어줘!");
+                    const alertMsg = currentLang === 'ko' ? "이름을 적어줘!" : "Please write your name!";
+                    showToast(alertMsg);
                     return;
                 }
 
@@ -1544,12 +1757,15 @@
                     const link = document.createElement('a');
                     link.download = 'Lucy_Gardener_Certificate.png';
                     link.href = canvas.toDataURL('image/png');
-                     link.click();
-                    showToast('인증서가 성공적으로 저장되었습니다!');
+                    link.click();
+                    
+                    const successMsg = currentLang === 'ko' ? '인증서가 성공적으로 저장되었습니다!' : 'Certificate saved successfully!';
+                    showToast(successMsg);
                     gtag('event', 'download_certificate_success', { 'event_category': 'engagement' });
                 }).catch(err => {
                     console.error('인증서 저장 실패:', err);
-                     showToast('인증서를 저장하는 데 문제가 생겼어요.');
+                    const failMsg = currentLang === 'ko' ? '인증서를 저장하는 데 문제가 생겼어요.' : 'Failed to save certificate.';
+                    showToast(failMsg);
                 });
             }
         </script>
