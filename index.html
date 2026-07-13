@@ -1290,21 +1290,28 @@
 
 function resetMapZoom() {
     const container = document.getElementById('map-container');
-    if(!container || container.clientWidth === 0) return; 
-    
+    if(!container || container.clientWidth === 0) return;
+
+    // 1. 컨테이너에 지도가 딱 들어맞는 비율 계산 (가장 축소된 상태)
     const scaleX = container.clientWidth / 1500;
     const scaleY = container.clientHeight / 2400;
     
-    // 화면에 지도가 너무 무식하게 커지지 않도록 비율 매칭 조정
-    const fitScale = Math.min(scaleX, scaleY) * 1.5; 
-    state.map.minScale = scaleX; // 최소 축소 범위를 가로폭에 맞춤
+    // 지도가 화면 바깥으로 빠져나가지 않고 전체가 다 보이도록 가장 작은 비율 선택
+    const fitScale = Math.min(scaleX, scaleY);
+    
+    // 2. 상태(state) 업데이트: 최소 스케일과 현재 스케일을 완벽 축소 상태로 일치시킴
+    state.map.minScale = fitScale;
     state.map.scale = fitScale;
-    
+
+    // 3. 정렬 계산: 가로(X축)는 화면 중앙 배치, 세로(Y축)는 최상단(0) 고정
     state.map.x = (container.clientWidth - (1500 * state.map.scale)) / 2;
-    state.map.y = 0; // 요청하신 최상단 고정 완료
+    state.map.y = 0;
     
+    // 4. 팝업 및 기존 핀 활성화 스타일 초기화
     document.querySelectorAll('.pin-popup').forEach(p => p.classList.remove('show'));
     document.querySelectorAll('.map-pin').forEach(p => p.classList.remove('active-pin'));
+    
+    // 5. 변경된 좌표와 변형값 지도 레이어에 즉시 적용
     updateMapTransform();
 }
 
