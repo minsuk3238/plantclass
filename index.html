@@ -404,16 +404,20 @@
         }
 
         .cert-body {
-            position: absolute;
-            top: calc(750 / 2754 * 100%); 
-            left: 50%;
-            transform: translateX(-50%);
-            color: #000;
-            font-size: 5.21cqi; 
-            text-align: center;
-            line-height: 1.6;
-            white-space: nowrap;
-        }
+    position: absolute;
+    top: calc(750 / 2754 * 100%); 
+    left: 50%;
+    transform: translateX(-50%);
+    color: #000;
+    font-size: 5.21cqi; 
+    text-align: center;
+    line-height: 1.6;
+    
+    /* 🌟 여기부터 수정/추가해 주세요 🌟 */
+    white-space: normal; /* 글자가 영역을 넘어가면 자동으로 줄바꿈 (nowrap에서 변경) */
+    width: 80%; /* 텍스트가 수료증 여백 밖으로 나가지 않도록 최대 가로 폭 지정 */
+    word-break: keep-all; /* 영문 단어 중간이 어색하게 뚝 끊기지 않도록 보호 */
+}
 
         .cert-name-box {
             position: absolute;
