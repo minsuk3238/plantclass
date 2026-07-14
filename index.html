@@ -409,9 +409,16 @@
     left: 50%;
     transform: translateX(-50%);
     color: #000;
-    font-size: 5.21cqi; 
+    
+    /* 🌟 글자 크기와 줄 간격을 줄여주세요 */
+    font-size: 4cqi;  /* 기존 5.21cqi에서 축소 */
+    line-height: 1.4; /* 기존 1.6에서 축소 */
+    
     text-align: center;
-    line-height: 1.6;
+    white-space: normal; 
+    width: 80%; 
+    word-break: keep-all; 
+}
     
     /* 🌟 여기부터 수정/추가해 주세요 🌟 */
     white-space: normal; /* 글자가 영역을 넘어가면 자동으로 줄바꿈 (nowrap에서 변경) */
