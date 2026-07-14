@@ -404,38 +404,28 @@
         }
 
         .cert-body {
-    position: absolute;
-    top: calc(750 / 2754 * 100%); 
-    left: 50%;
-    transform: translateX(-50%);
-    color: #000;
-    text-align: center;
-    
-    /* 👇 여기서부터 수정 및 추가된 내용입니다 👇 */
-    font-size: 4cqi; /* 글자 크기 축소 */
-    line-height: 1.4; /* 줄 간격 축소 */
-    white-space: normal; /* 자동 줄바꿈 허용 */
-    width: 80%; /* 가로 폭 제한 (여백 밖으로 안 나가게) */
-    word-break: keep-all; /* 단어 끊김 방지 */
-}
-    
-    /* 🌟 여기부터 수정/추가해 주세요 🌟 */
-    white-space: normal; /* 글자가 영역을 넘어가면 자동으로 줄바꿈 (nowrap에서 변경) */
-    width: 80%; /* 텍스트가 수료증 여백 밖으로 나가지 않도록 최대 가로 폭 지정 */
-    word-break: keep-all; /* 영문 단어 중간이 어색하게 뚝 끊기지 않도록 보호 */
-}
+            position: absolute;
+            top: calc(750 / 2754 * 100%); 
+            left: 50%;
+            transform: translateX(-50%);
+            color: #000;
+            font-size: 4cqi;  /* 글씨 크기 안정화 */
+            line-height: 1.4; /* 줄 간격 최적화 */
+            text-align: center;
+            white-space: normal; /* 영어 번역 시 자동 줄바꿈 허용 */
+            width: 80%; /* 텍스트가 배경 밖으로 나가지 않게 보호 */
+            word-break: keep-all; 
+        }
 
-       .cert-name-box {
-    position: absolute;
-    top: calc(520 / 2754 * 100%); /* 본문이 작아진 만큼 위치를 살짝 아래로 조정 */
-    left: 50%; /* 👇 정중앙 위치로 변경 */
-    transform: translateX(-50%);
-    color: #000;
-    white-space: nowrap;
-    max-width: 40cqi;
-    overflow: visible;
-    text-align: center; /* 👇 글자도 중앙 정렬 */
-}
+        .cert-name-box {
+            position: absolute;
+            top: calc(500 / 2754 * 100%);
+            /* 👇 기존 복잡한 left 값을 지우고 right로 변경하여 오른쪽에 단단히 고정! */
+            right: 15%; 
+            color: #000;
+            white-space: nowrap;
+            text-align: right; /* 이름이 길어지면 왼쪽으로 자연스럽게 늘어나게 설정 */
+        }
     </style>
 </head>
 <body>
