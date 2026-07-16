@@ -1,1781 +1,3553 @@
 <!DOCTYPE html>
+
 <html lang="ko">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
     <title>가드너 클래스: 나무 찾기 미션</title>
+
     
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TJ4J3MXJHQ"></script>
+
+    <!-- Google Tag Manager -->
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-TJ4J3MXJHQ');
     </script>
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5VM8WRRB');</script>
+    <!-- End Google Tag Manager -->
+
     
+
     <script src="https://cdn.tailwindcss.com"></script>
+
     <link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
+
+
     <style>
+
         @font-face {
+
             font-family: 'NeutraText-Bold';
+
             src: local('NeutraText-Bold'), url('./NeutraText-Bold.otf') format('opentype');
+
             font-weight: bold;
+
         }
 
+
+
         @font-face {
+
             font-family: 'GmarketSansMedium';
+
             src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+
             font-weight: normal;
+
             font-style: normal;
+
         }
 
+
+
         @font-face {
+
             font-family: 'GmarketSansBold';
+
             src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff') format('woff');
+
             font-weight: bold;
+
             font-style: normal;
+
         }
+
+
 
         :root {
+
             --lucy-yellow: #FFCC00;
+
             --comic-black: #1A1A1A;
+
             --paper-white: #F9F8F4;
+
             --snoopy-red: #E52E2D;
+
             --main-green: #2E9441;
+
             --grass-green: #3B82F6;
+
             --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+
         }
+
         
+
         * {
+
             -webkit-tap-highlight-color: transparent;
+
             box-sizing: border-box;
+
         }
+
+
 
         body {
+
             background-color: #d1d5db;
+
             font-family: 'NeutraText-Bold', 'Noto Sans KR', sans-serif;
+
             margin: 0;
+
             padding: 0;
+
             display: flex;
+
             justify-content: center;
+
             align-items: center;
+
             min-height: 100vh;
+
         }
+
+
 
         .title-font { font-family: 'NeutraText-Bold', 'Noto Sans KR', sans-serif; }
+
         
+
         .gmarket-sans-medium { font-family: 'GmarketSansMedium', sans-serif !important; }
+
         .gmarket-sans-bold { font-family: 'GmarketSansBold', sans-serif !important; font-weight: bold; }
 
+
+
         .app-container {
+
             width: 100%;
+
             max-width: 420px;
+
             height: 100dvh;
+
             max-height: 900px;
+
             background-color: var(--paper-white);
+
             position: relative;
+
             overflow: hidden;
+
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
             display: flex;
+
             flex-direction: column;
+
             background-image: radial-gradient(circle, #e5e5e5 2px, transparent 2px);
+
             background-size: 16px 16px;
+
         }
+
+
 
         .comic-border {
+
             border: 3px solid var(--comic-black);
+
             border-radius: 12px;
+
             box-shadow: 4px 4px 0px var(--comic-black);
+
             background-color: white;
+
         }
+
+
 
         .comic-btn {
+
             background-color: white;
+
             border: 3px solid var(--comic-black);
+
             border-radius: 12px;
+
             font-weight: 900;
+
             transition: all 0.1s ease;
+
             box-shadow: 3px 3px 0px var(--comic-black);
+
             cursor: pointer;
+
             display: flex;
+
             align-items: center;
+
             justify-content: center;
+
         }
+
+
 
         .comic-btn:active {
+
             transform: translate(3px, 3px);
+
             box-shadow: 0px 0px 0px var(--comic-black);
+
         }
+
+
 
         .comic-btn:disabled {
+
             opacity: 0.5;
+
             cursor: not-allowed;
+
             transform: none;
+
             box-shadow: 3px 3px 0px var(--comic-black);
+
         }
+
+
 
         .comic-bubble {
+
             position: relative;
+
             background: white;
+
             border: 3px solid var(--comic-black);
+
             border-radius: 16px;
+
             padding: 1.25rem;
+
             box-shadow: 4px 4px 0px rgba(0,0,0,0.1);
+
         }
+
         
+
         .comic-bubble::after, .comic-bubble::before {
+
             content: '';
+
             position: absolute;
+
             bottom: -12px;
+
             left: 24px;
+
             border-style: solid;
+
             display: block;
+
             width: 0;
+
         }
+
         .comic-bubble::after {
+
             border-width: 12px 12px 0;
+
             border-color: var(--comic-black) transparent;
+
         }
+
         .comic-bubble::before {
+
             bottom: -8px;
+
             left: 26px;
+
             border-width: 10px 10px 0;
+
             border-color: white transparent;
+
             z-index: 1;
+
         }
+
+
 
         .view-content {
+
             flex: 1;
+
             overflow-y: auto;
+
             padding: 1.5rem;
+
             padding-bottom: 7rem;
+
             display: none;
+
             animation: fadeSlideUp 0.3s ease forwards;
+
         }
+
         
+
         .view-content.active { display: block; }
+
         
+
         #view-map.active {
+
             display: flex;
+
             flex-direction: column;
+
             padding: 0;
+
             padding-bottom: 7rem; 
+
             background-color: var(--paper-white); 
+
         }
+
+
 
         .bottom-nav {
+
             position: absolute;
+
             bottom: 0;
+
             left: 0;
+
             width: 100%;
+
             height: calc(70px + var(--safe-area-bottom));
+
             background: white;
+
             border-top: 3px solid var(--comic-black);
+
             display: flex;
+
             justify-content: space-around;
+
             align-items: center;
+
             z-index: 50;
+
             padding-bottom: var(--safe-area-bottom);
+
         }
+
+
 
         .nav-item {
+
             display: flex;
+
             flex-direction: column;
+
             align-items: center;
+
             color: #666;
+
             font-size: 0.75rem;
+
             font-weight: bold;
+
             width: 33.33%;
+
             cursor: pointer;
+
             transition: color 0.2s;
+
         }
+
         .nav-item.active { color: var(--main-green); }
+
         .nav-item i { font-size: 1.5rem; margin-bottom: 4px; transition: transform 0.2s; }
 
+
+
         .map-container {
+
             width: 100%;
+
             flex-grow: 1; 
+
             position: relative;
+
             overflow: hidden;
+
             background-color: transparent;
+
             cursor: grab;
+
         }
+
         .map-container:active { cursor: grabbing; }
 
+
+
         .map-content {
+
             position: absolute;
+
             top: 0;
+
             left: 0;
+
             transform-origin: 0 0;
+
             transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+
             width: 1500px;
+
             height: 2400px;
+
             background-image: url('./Snoopy garden map.jpg');
+
             background-size: 100% 100%;
+
             background-repeat: no-repeat;
+
         }
+
+
 
         .map-pin {
+
             position: absolute;
+
             width: 32px;
+
             height: 32px;
+
             background-color: var(--snoopy-red);
+
             border: 3px solid var(--comic-black); 
+
             border-radius: 50% 50% 50% 0;
+
             transform: translate(-50%, -100%) rotate(-45deg);
+
             cursor: pointer;
+
             box-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+
             z-index: 10;
+
             transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
         }
+
+
 
         .map-pin.target-pin {
+
             background-color: var(--lucy-yellow);
+
             transform: translate(-50%, -100%) rotate(-45deg) scale(1.2);
+
             z-index: 20;
+
             animation: bouncePin 1s infinite alternate ease-in-out;
+
         }
+
         
+
         @keyframes bouncePin {
+
             0% { transform: translate(-50%, -100%) rotate(-45deg) scale(1.2); }
+
             100% { transform: translate(-50%, -120%) rotate(-45deg) scale(1.2); }
+
         }
+
+
 
         .map-pin::after {
+
             content: '';
+
             width: 12px;
+
             height: 12px;
+
             background-color: white;
+
             border-radius: 50%;
+
             position: absolute;
+
             top: 50%;
+
             left: 50%;
+
             transform: translate(-50%, -50%);
+
             border: 2px solid var(--comic-black);
+
         }
+
+
 
         .map-pin.collected-pin {
+
             background-color: #9CA3AF;
+
             border-color: #4B5563;
+
             transform: translate(-50%, -100%) rotate(-45deg) scale(0.9);
+
             z-index: 5;
+
         }
+
         .map-pin.collected-pin::after { background-color: #D1D5DB; }
 
+
+
         .map-pin.locked-pin {
+
             background-color: #D1D5DB;
+
             border-color: #9CA3AF;
+
             transform: translate(-50%, -100%) rotate(-45deg) scale(0.8);
+
             opacity: 0.8;
+
             pointer-events: none;
+
         }
+
         .map-pin.locked-pin::after { background-color: #F3F4F6; }
 
+
+
         .pin-popup {
+
             position: absolute;
+
             background: white;
+
             border: 3px solid var(--comic-black);
+
             border-radius: 8px;
+
             padding: 8px 12px;
+
             font-weight: bold;
+
             font-size: 0.85rem;
+
             white-space: nowrap;
+
             pointer-events: none;
+
             opacity: 0;
+
             transform: translate(-50%, -10px);
+
             transition: opacity 0.2s, transform 0.2s;
+
             box-shadow: 3px 3px 0 var(--comic-black);
+
             z-index: 30;
+
             display: flex;
+
             flex-direction: column;
+
             align-items: center;
+
             gap: 4px;
+
         }
+
+
 
         .pin-popup.show {
+
             opacity: 1;
+
             transform: translate(-50%, -25px);
+
             pointer-events: auto; 
+
         }
+
+
 
         @keyframes fadeSlideUp {
+
             from { opacity: 0; transform: translateY(20px); }
+
             to { opacity: 1; transform: translateY(0); }
+
         }
+
+
 
         .shake { animation: shakeAnim 0.4s cubic-bezier(.36,.07,.19,.97) both; }
+
         @keyframes shakeAnim {
+
             10%, 90% { transform: translate3d(-1px, 0, 0); }
+
             20%, 80% { transform: translate3d(2px, 0, 0); }
+
             30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+
             40%, 60% { transform: translate3d(4px, 0, 0); }
+
         }
+
+
 
         .stamp-slot {
+
             aspect-ratio: 1;
+
             border: 2px dashed #9ca3af;
+
             border-radius: 12px;
+
             display: flex;
+
             flex-direction: column;
+
             justify-content: center;
+
             align-items: center;
+
             background-color: rgba(255,255,255,0.5);
+
             position: relative;
+
             overflow: hidden;
+
             cursor: pointer;
+
         }
+
         .stamp-slot.collected {
+
             border: 3px solid var(--comic-black);
+
             background-color: white;
+
             background-size: contain; 
+
             background-repeat: no-repeat;
+
             background-position: center;
+
         }
+
         .stamp-slot.selected-fav {
+
             border: 4px solid var(--snoopy-red);
+
             box-shadow: 0 0 10px rgba(229, 46, 45, 0.5);
+
         }
+
         
+
         .stamp-mark {
+
             position: absolute;
+
             top: 50%;
+
             left: 50%;
+
             transform: translate(-50%, -50%) rotate(-15deg);
+
             color: var(--snoopy-red);
+
             font-family: 'NeutraText-Bold', 'Noto Sans KR', sans-serif;
+
             font-weight: 900;
+
             font-size: 1.4rem;
+
             white-space: nowrap;
+
             text-shadow: 2px 2px 0px white, -2px -2px 0px white, 2px -2px 0px white, -2px 2px 0px white;
+
             border: 3px solid var(--snoopy-red);
+
             padding: 4px 10px;
+
             border-radius: 6px;
+
             background-color: rgba(255, 255, 255, 0.75);
+
             box-shadow: 0 0 4px rgba(255, 255, 255, 1);
+
             z-index: 10;
+
         }
+
+
 
         @keyframes stampIn {
+
             0% { transform: translate(-50%, -50%) rotate(-15deg) scale(3); opacity: 0; }
+
             50% { transform: translate(-50%, -50%) rotate(-15deg) scale(0.9); opacity: 1; }
+
             100% { transform: translate(-50%, -50%) rotate(-15deg) scale(1); opacity: 1; }
+
         }
+
         .stamp-anim { animation: stampIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
 
+
+
        #view-certificate {
+
             padding: 2rem 0;
+
             background-color: #f3f4f6;
+
             display: none;
+
             flex-direction: column;
+
             align-items: center;
+
             justify-content: flex-start; 
+
             overflow-y: auto;
+
         }
+
         #view-certificate.active {
+
             display: flex;
+
         }
+
+
 
         .cert-wrapper {
+
             position: relative;
+
             width: 100%;
+
             max-width: 420px; 
+
             aspect-ratio: 1536 / 2754;
+
             background-image: url('./certification background.png'); 
+
             background-size: cover;
+
             background-position: center;
+
             container-type: inline-size;
+
             box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+
             background-color: white; 
+
         }
+
+
 
         .cert-title {
+
             position: absolute;
+
             top: calc(260 / 2754 * 100%);
+
             left: 50%;
+
             transform: translateX(-50%);
+
             color: #000;
+
             font-size: 7.37cqi;
+
             text-align: center;
+
             white-space: nowrap;
+
         }
+
+
 
         .cert-body {
+
             position: absolute;
+
             top: calc(750 / 2754 * 100%); 
+
             left: 50%;
+
             transform: translateX(-50%);
+
             color: #000;
+
             font-size: 4cqi;  /* 글씨 크기 안정화 */
+
             line-height: 1.4; /* 줄 간격 최적화 */
+
             text-align: center;
+
             white-space: normal; /* 영어 번역 시 자동 줄바꿈 허용 */
+
             width: 80%; /* 텍스트가 배경 밖으로 나가지 않게 보호 */
+
             word-break: keep-all; 
+
         }
+
+
 
         .cert-name-box {
+
             position: absolute;
+
             top: calc(500 / 2754 * 100%);
+
             /* 👇 기존 복잡한 left 값을 지우고 right로 변경하여 오른쪽에 단단히 고정! */
+
             right: 15%; 
+
             color: #000;
+
             white-space: nowrap;
+
             text-align: right; /* 이름이 길어지면 왼쪽으로 자연스럽게 늘어나게 설정 */
+
         }
+
     </style>
+
 </head>
+
 <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5VM8WRRB"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+
 
     <div class="app-container">
+
         <header id="main-header" class="bg-[#2E9441] border-b-3 border-black p-4 pt-6 relative z-10 flex items-center justify-center shadow-sm">
+
             <h1 class="text-xl font-black title-font tracking-wide text-white" data-i18n="headerTitle">가드너 클래스: 나무 찾기 미션</h1>
+
         </header>
 
+
+
         <div id="view-home" class="view-content active">
+
             <div class="comic-border bg-white p-4 mb-6 relative mt-4">
+
                 <div class="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-black text-white px-4 py-1 rounded-full font-bold text-sm whitespace-nowrap">
+
                     WELCOME TO SNOOPY GARDEN
+
                 </div>
+
                 <div class="flex justify-center mb-4 mt-2">
+
                     <div class="w-24 h-24 bg-white rounded-full border-[3px] border-black flex items-center justify-center overflow-hidden">
+
                          <img src="./lucy_doctor.png" alt="가드너" class="w-full h-full object-contain pt-2 scale-110">
+
                     </div>
+
                 </div>
+
                 <p id="home-welcome-text" class="font-bold text-center text-gray-800 leading-relaxed mb-4 text-[15px]" style="word-break: break-all;" data-i18n="homeWelcome">
+
                     "안녕! 스누피 가든에 온 걸 환영해!<br>
+
                     하단에 있는 <span class="text-[#2E9441] font-black">지도 버튼</span>을 눌러 코스를 시작해봐.<br>
+
                     나무의 비밀을 알려줄게!"
+
                 </p>
+
             </div>
+
             <div class="bg-green-50 border-2 border-green-500 rounded-lg p-3 flex items-start">
+
                 <i class="fa-solid fa-bell text-green-500 mt-1 mr-3"></i>
+
                 <div>
+
                     <h4 class="font-bold text-green-800 text-sm" data-i18n="tipTitle">진행 팁</h4>
+
                     <p class="text-xs text-gray-600 mt-1 font-medium" data-i18n="tipDesc">야외가든 지도를 열고 노란색으로 반짝이는 핀을 찾아가세요! 정해진 순서대로 나무들을 발견해야 합니다.</p>
+
                 </div>
+
             </div>
+
         </div>
+
+
 
         <div id="view-mission" class="view-content">
+
             <div class="flex justify-between items-center border-b-2 border-black pb-2 mb-5">
+
                 <div class="font-black text-sm"><i class="fa-solid fa-leaf text-green-600 mr-1"></i> <span data-i18n="reportTitle">관찰 보고서</span></div>
+
                 <div class="bg-black text-white text-xs font-bold px-2 py-1 rounded-full" id="mission-type-badge">가든 식물</div>
+
             </div>
+
+
 
             <div class="comic-border bg-[#FFCC00] p-4 mb-6 relative">
+
                 <h3 class="text-3xl font-black title-font mb-3" id="plant-name">식물명</h3>
+
                 <div class="w-full bg-white border-2 border-black rounded overflow-hidden flex justify-center items-center p-2">
+
                     <img id="comic-strip-img" src="" alt="코믹스트립" class="w-full h-auto max-h-[300px] object-contain">
+
                 </div>
+
             </div>
 
+
+
             <div class="flex items-end mb-6">
+
                 <div class="w-12 h-12 bg-white rounded-full border-2 border-black flex items-center justify-center shrink-0 z-10 mr-[-10px] overflow-hidden">
+
                     <img src="./lucy_doctor.png" alt="루시" class="w-full h-full object-contain pt-1 scale-125 transform origin-bottom">
+
                 </div>
+
                 <div class="comic-bubble text-sm font-bold leading-relaxed flex-1" id="lucy-dialogue">
+
                     로딩중...
+
                 </div>
+
             </div>
+
+
 
             <div class="comic-border bg-white p-4" id="quiz-container">
+
                 <h4 class="font-black text-lg mb-3 text-center title-font text-red-500"><i class="fa-solid fa-circle-question"></i> QUIZ</h4>
+
                 <p class="font-bold text-sm mb-4" id="quiz-question">질문 내용</p>
+
                 <div class="flex flex-col gap-2" id="quiz-options"></div>
+
             </div>
+
         </div>
+
+
 
         <div id="view-map" class="view-content">
+
             <div class="w-full bg-[#247533] border-b-3 border-black p-3 z-50 flex justify-center items-center shadow-sm text-white shrink-0">
+
                 <h2 class="text-xl font-black title-font" data-i18n="mapHeader">야외가든 탐험 지도</h2>
+
             </div>
+
             
+
             <div class="map-container" id="map-container">
+
                  <div class="map-content" id="map-content">
+
                     <svg id="map-lines-svg" class="absolute top-0 left-0 w-full h-full pointer-events-none z-0"></svg>
+
                 </div>
+
             </div>
+
         </div>
+
+
 
         <div id="view-collection" class="view-content">
+
             <div class="flex justify-between items-center mb-4 mt-2">
+
                 <div>
+
                     <h2 class="text-2xl font-black title-font" data-i18n="bookTitle">내 나무 도감</h2>
+
                     <p class="text-xs font-bold text-gray-500 mt-0.5"><span data-i18n="bookFoundPrefix">발견한 식물:</span> <span id="collection-count" class="text-green-600 text-base">0</span>/16</p>
+
                 </div>
+
                 <button onclick="resetProgress()" class="bg-[#ff4d4d] text-white px-3 py-2 rounded-xl text-xs font-black border-2 border-black shadow-[2px_2px_0_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer flex items-center">
+
                     <i class="fa-solid fa-rotate-right mr-1"></i><span data-i18n="resetBtn">초기화</span>
+
                 </button>
+
             </div>
+
+
 
             <div class="grid grid-cols-3 gap-3" id="stamp-grid"></div>
+
         
+
             <button id="final-test-btn" onclick="handleFinalAction()" class="comic-btn w-full bg-orange-500 text-white py-4 text-lg mt-8 hidden animate-bounce">
+
               <i class="fa-solid fa-graduation-cap mr-2"></i> <span id="final-btn-text" data-i18n="finalTestBtn">최종 자격 검사 보기!</span>
+
             </button>
+
+
 
             <button id="survey-reopen-btn" onclick="showSurveyModal()" class="comic-btn w-full bg-[#FFCC00] text-black py-4 text-lg mt-3 hidden">
+
                 <i class="fa-solid fa-gift mr-2 animate-bounce"></i> <span data-i18n="surveyReopenBtn">설문조사 참여하고 리워드 받기!</span>
+
             </button>
+
         </div>
+
+
 
         <div id="view-final-test" class="view-content">
+
             <div class="text-center mb-6 mt-4">
+
                 <h2 class="text-3xl font-black title-font text-orange-500 mb-2" data-i18n="finalTestHeader">최종 자격 검사</h2>
+
                 <div class="inline-block bg-black text-white px-4 py-1 rounded-full font-bold text-sm" id="test-step-badge">
+
                     문제 1 / 2
+
                 </div>
+
             </div>
+
+
 
             <div class="flex items-end mb-6">
+
                 <div class="w-16 h-16 bg-white rounded-full border-2 border-black flex items-center justify-center shrink-0 z-10 mr-[-10px] overflow-hidden">
+
                     <img src="./lucy_doctor.png" alt="루시" class="w-full h-full object-contain pt-1 scale-125 transform origin-bottom">
+
                 </div>
+
                 <div class="comic-bubble text-sm font-bold leading-relaxed flex-1" data-i18n="finalTestLucy">
+
                     지금까지 배운 걸 테스트해볼까?<br>아래 설명을 읽고 <strong>어떤 나무</strong>인지 이름을 맞춰봐!
+
                 </div>
+
             </div>
 
+
+
             <div class="comic-border bg-white p-5" id="final-quiz-container">
+
                 <h4 class="font-black text-lg mb-3 text-center title-font text-[#2E9441]"><i class="fa-solid fa-leaf"></i> <span data-i18n="finalQuizTitle">나무 맞추기</span></h4>
+
                 <p class="font-bold text-sm mb-6 text-gray-800 p-3 bg-gray-100 rounded-lg border-2 border-dashed border-gray-300" id="final-quiz-desc">
+
                     설명 내용
+
                 </p>
+
                 <div class="flex flex-col gap-3" id="final-quiz-options"></div>
+
             </div>
+
         </div>
+
+
 
         <div id="view-final-test" class="view-content">
+
             <div class="text-center mb-6 mt-4">
+
                 <h2 class="text-3xl font-black title-font text-orange-500 mb-2" data-i18n="finalTestHeader">최종 자격 검사</h2>
+
                 <div class="inline-block bg-black text-white px-4 py-1 rounded-full font-bold text-sm" id="test-step-badge">
+
                     문제 1 / 2
+
                 </div>
+
             </div>
+
+
 
             <div class="flex items-end mb-6">
+
                 <div class="w-16 h-16 bg-white rounded-full border-2 border-black flex items-center justify-center shrink-0 z-10 mr-[-10px] overflow-hidden">
+
                     <img src="./lucy_doctor.png" alt="루시" class="w-full h-full object-contain pt-1 scale-125 transform origin-bottom">
+
                 </div>
+
                 <div class="comic-bubble text-sm font-bold leading-relaxed flex-1" data-i18n="finalTestLucy">
+
                     지금까지 배운 걸 테스트해볼까?<br>아래 설명을 읽고 <strong>어떤 나무</strong>인지 이름을 맞춰봐!
+
                 </div>
+
             </div>
 
+
+
             <div class="comic-border bg-white p-5" id="final-quiz-container">
+
                 <h4 class="font-black text-lg mb-3 text-center title-font text-[#2E9441]"><i class="fa-solid fa-leaf"></i> <span data-i18n="finalQuizTitle">나무 맞추기</span></h4>
+
                 <p class="font-bold text-sm mb-6 text-gray-800 p-3 bg-gray-100 rounded-lg border-2 border-dashed border-gray-300" id="final-quiz-desc">
+
                     설명 내용
+
                 </p>
+
                 <div class="flex flex-col gap-3" id="final-quiz-options"></div>
+
             </div>
+
         </div>
+
+
 
         <div id="view-cert-form" class="view-content">
+
             <h2 class="text-3xl font-black title-font text-center text-[#2E9441] mb-2 mt-4" data-i18n="certFormHeader">자격 시험 통과!</h2>
+
             <p class="text-sm font-bold text-center text-gray-600 mb-6" data-i18n="certFormDesc">마지막으로 가드너 인증서를 발급해줄게.</p>
 
+
+
             <div class="comic-border bg-white p-5 mb-8">
+
                 <label class="block font-black text-lg mb-2" data-i18n="nameInputLabel">네 이름을 알려줘!</label>
+
                 <input type="text" id="user-name-input" placeholder="이름 입력 (예: 찰리)" class="w-full border-3 border-black rounded-lg p-3 font-bold text-lg focus:outline-none focus:border-[#2E9441]" maxlength="10">
+
             </div>
+
+
 
             <button onclick="generateCertificate()" class="comic-btn w-full bg-[#2E9441] text-white py-4 text-xl" data-i18n="makeCertBtn">
+
                 인증서 만들기!
+
             </button>
+
         </div>
+
+
 
         <div id="view-certificate" class="view-content">
+
             <div class="cert-wrapper" id="cert-capture-area">
+
                 <div class="cert-title gmarket-sans-bold" data-i18n="certWrapperTitle">수료증</div>
+
                 <div class="cert-body gmarket-sans-medium" data-i18n="certWrapperBody">
+
                     위 사람은 스누피가든에서<br>
+
                     피너츠 친구들과 제주의 자연속에서<br>
+
                     온전한 쉼을 경험하고<br>
+
                     식물들과 다정하게 교감하였기에<br>
+
                     이 증서를 수여합니다.
+
                 </div>
+
                 <div class="cert-name-box gmarket-sans-medium" id="final-cert-name">찰리 브라운</div>
+
             </div>
+
             
+
             <div class="w-full max-w-[420px] px-4 mt-6 flex flex-col gap-3" id="cert-action-buttons">
+
                 <button onclick="downloadCertificate()" class="comic-btn w-full bg-[#FFCC00] text-black py-4 text-lg">
+
                      <i class="fa-solid fa-download mr-2"></i> <span data-i18n="downloadCertBtn">내 폰에 이미지로 저장하기</span>
+
                 </button>
+
                 <button onclick="showSurveyModal()" class="comic-btn w-full bg-[#FFCC00] text-black py-4 text-lg">
+
                     <i class="fa-solid fa-gift mr-2 animate-bounce"></i> <span data-i18n="startSurveyBtn">설문조사 참여하고 리워드 받기!</span>
+
                 </button>
+
                 <button onclick="switchTab('collection')" class="comic-btn w-full bg-white text-gray-600 py-3 text-sm" data-i18n="backToBookBtn">
+
                     도감으로 돌아가기
+
                 </button>
+
             </div>
+
         </div>
+
+
 
         <div id="toast" class="fixed top-20 left-1/2 transform -translate-x-1/2 bg-black text-white font-bold px-6 py-3 rounded-full z-[100] transition-all duration-300 opacity-0 pointer-events-none shadow-lg flex items-center">
+
             <i class="fa-solid fa-xmark text-red-400 mr-2 text-lg"></i>
+
             <span id="toast-msg">다시 한번 생각해봐!</span>
+
         </div>
+
+
 
         <div id="success-modal" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+
                 <div class="bg-white p-6 rounded-2xl comic-border w-10/12 max-w-sm text-center transform scale-90 transition-transform duration-300" id="success-card">
+
                     <h2 class="text-4xl font-black title-font text-[#2E9441] mb-2" data-i18n="successHeader">정답!</h2>
+
                     
+
                     <div class="w-32 h-32 mx-auto relative mb-4 rounded-lg comic-border overflow-hidden bg-white flex items-center justify-center p-2">
+
                         <img id="success-comic-img" src="" class="w-full h-full object-contain">
+
                         <div id="success-stamp" class="stamp-mark opacity-0" style="font-size: 1.5rem;">CLEAR</div>
+
                     </div>
+
                     
+
                     <h3 class="font-black text-xl mb-2" id="success-plant-name">식물명</h3>
+
                     <p class="font-bold text-sm text-gray-600 mb-6" id="success-desc" data-i18n="successDesc">도감에 등록되었습니다!</p>
+
                     <button onclick="closeSuccessAndGoToMap()" class="comic-btn w-full bg-[#2E9441] text-white py-3 text-lg" data-i18n="goNextMapBtn">다음 코스로 이동 (지도)</button>
+
             </div>
+
         </div>
+
+
 
         <div id="all-clear-modal" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+
             <div class="bg-white p-6 rounded-2xl comic-border w-10/12 max-w-sm text-center transform scale-90 transition-transform duration-300" id="all-clear-card">
+
                 <h2 class="text-3xl font-black title-font text-orange-500 mb-2" data-i18n="allClearHeader">모든 나무 발견!</h2>
+
                 <div class="w-24 h-24 mx-auto mb-4 bg-white rounded-full border-[3px] border-black flex items-center justify-center overflow-hidden">
+
                     <img src="./lucy_doctor.png" alt="루시" class="w-full h-full object-contain pt-2 scale-110">
+
                </div>
+
                 <p class="font-bold text-sm text-gray-700 mb-6 leading-relaxed" data-i18n="allClearDesc">
+
                     대단해!<br>스누피 가든의 나무들을 모두 찾았어.<br>이제 가드너 자격 검사에 도전해볼까?
+
                 </p>
+
                 <button onclick="closeAllClearAndStartTest()" class="comic-btn w-full bg-orange-500 text-white py-4 text-lg animate-bounce" data-i18n="startFinalTestBtn">
+
                     <i class="fa-solid fa-graduation-cap mr-2"></i> 최종 자격 검사 시작!
+
                 </button>
+
                 <button onclick="closeAllClearAndGoToCollection()" class="mt-3 text-sm font-bold text-gray-500 underline" data-i18n="doLaterBtn">
+
                     나중에 하기 (도감으로 이동)
+
                 </button>
+
             </div>
+
         </div>
+
+
 
         <div id="detail-modal" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+
             <div class="bg-[#FFCC00] p-6 rounded-2xl comic-border w-10/12 max-w-sm transform scale-90 transition-transform duration-300" id="detail-card">
+
                 <div class="flex justify-between items-center mb-4">
+
                     <h3 class="text-2xl font-black title-font" id="detail-plant-name">식물명</h3>
+
                     <button onclick="closeDetailModal()" class="text-black text-2xl font-black"><i class="fa-solid fa-xmark"></i></button>
+
                </div>
+
                 
+
                 <div class="w-full bg-white border-2 border-black rounded overflow-hidden flex justify-center items-center p-2 mb-4">
+
                     <img id="detail-comic-img" src="" alt="코믹스트립" class="w-full h-auto max-h-[250px] object-contain">
+
                 </div>
+
                 
+
                 <div class="comic-bubble text-sm font-bold leading-relaxed mb-2 bg-white" id="detail-desc">
+
                     설명 내용
+
                 </div>
+
             </div>
+
         </div>
+
+
 
         <div id="survey-modal" class="fixed inset-0 bg-black/80 z-[60] flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+
             <div class="bg-white p-6 rounded-2xl comic-border w-10/12 max-w-sm text-center transform scale-90 transition-transform duration-300" id="survey-card">
+
                 <h2 class="text-2xl font-black title-font text-[#2E9441] mb-2"><i class="fa-solid fa-gift text-red-500 mr-1 animate-bounce"></i> <span data-i18n="surveyGiftTitle">가드너 특별 선물!</span></h2>
+
                 
+
                 <div class="w-24 h-24 mx-auto mb-4 bg-white rounded-full border-[3px] border-black flex items-center justify-center overflow-hidden">
+
                     <img src="./lucy_doctor.png" alt="루시" class="w-full h-full object-contain pt-2 scale-110">
+
                 </div>
+
                 
+
                 <p class="font-bold text-[14px] text-gray-700 mb-5 leading-relaxed" data-i18n="surveyModalDesc">
+
                     가드너 클래스 탐험이 완료되었습니다!<br>
+
                     더 멋진 스누피 가든을 만들기 위해<br>
+
                     <span class="text-[#E52E2D] font-black">만족도 설문조사</span>에 참여해 주세요.
+
                 </p>
 
+
+
                 <div class="bg-yellow-50 border-2 border-dashed border-[#FFCC00] rounded-lg p-3 mb-6">
+
                     <p class="text-xs font-black text-gray-800 leading-normal" data-i18n="surveyGiftNotice">
+
                         🎁 만족도 참여 시 소정의 리워드를 증정해 드리고 있습니다!
+
                     </p>
+
                 </div>
+
                 
+
                 <div class="flex flex-col gap-2">
+
                     <a href="https://forms.gle/jCNteHFDe8kcyhu9" target="_blank" onclick="closeSurveyModal(); trackSurveyClick();" class="comic-btn w-full bg-[#FFCC00] text-black py-3.5 text-base flex items-center justify-center gap-2">
+
                         <i class="fa-solid fa-square-poll-horizontal text-lg"></i> <span data-i18n="surveySubmitBtn">설문하고 선물 받기!</span>
+
                     </a>
+
                     <button onclick="closeSurveyModal()" class="mt-2 text-xs font-bold text-gray-400 hover:text-gray-600 underline" data-i18n="seeCertFirstBtn">
+
                         수료증 먼저 보러가기
+
                     </button>
+
                 </div>
+
            </div>
+
         </div>
 
+
+
         <nav class="bottom-nav" id="bottom-nav">
+
             <div class="nav-item active" onclick="switchTab('home')">
+
                 <i class="fa-solid fa-house"></i>
+
                 <span data-i18n="navHome">홈</span>
+
             </div>
+
             <div class="nav-item" onclick="switchTab('map')">
+
                  <i class="fa-solid fa-map"></i>
+
                 <span data-i18n="navMap">지도보기</span>
+
             </div>
+
             <div class="nav-item" onclick="switchTab('collection')">
+
                 <i class="fa-solid fa-book"></i>
+
                 <span data-i18n="navBook">내 도감</span>
+
            </div>
+
         </nav>
 
+
+
         <script>
+
             // 🌐 [100% 보장 다국어 사전셋] 구글 자동번역 대신 직접 완벽 매핑
+
             const I18N_TEXTS = {
+
                 ko: {
+
                     headerTitle: "가드너 클래스: 나무 찾기 미션",
+
                     homeWelcome: `"안녕! 스누피 가든에 온 걸 환영해!<br>하단에 있는 <span class='text-[#2E9441] font-black'>지도 버튼</span>을 눌러 코스를 시작해봐.<br>나무의 비밀을 알려줄게!"`,
+
                     tipTitle: "진행 팁",
+
                     tipDesc: "야외가든 지도를 열고 노란색으로 반짝이는 핀을 찾아가세요! 정해진 순서대로 나무들을 발견해야 합니다.",
+
                     reportTitle: "관찰 보고서",
+
                     mapHeader: "야외가든 탐험 지도",
+
                     bookTitle: "내 나무 도감",
+
                     bookFoundPrefix: "발견한 식물:",
+
                     resetBtn: "초기화",
+
                     finalTestBtn: "최종 자격 검사 보기!",
+
                     surveyReopenBtn: "설문조사 참여하고 리워드 받기!",
+
                     finalTestHeader: "최종 자격 검사",
+
                     finalTestLucy: "지금까지 배운 걸 테스트해볼까?<br>아래 설명을 읽고 <strong>어떤 나무</strong>인지 이름을 맞춰봐!",
+
                     finalQuizTitle: "나무 맞추기",
+
                     certFormHeader: "자격 시험 통과!",
+
                     certFormDesc: "마지막으로 가드너 인증서를 발급해줄게.",
+
                     nameInputLabel: "네 이름을 알려줘!",
+
                     makeCertBtn: "인증서 만들기!",
+
                     certWrapperTitle: "수료증",
+
                     certWrapperBody: "위 사람은 스누피가든에서<br>피너츠 친구들과 제주의 자연속에서<br>온전한 쉼을 경험하고<br>식물들과 다정하게 교감하였기에<br>이 증서를 수여합니다.",
+
                     downloadCertBtn: "내 폰에 이미지로 저장하기",
+
                     startSurveyBtn: "설문조사 참여하고 리워드 받기!",
+
                     backToBookBtn: "도감으로 돌아가기",
+
                     successHeader: "정답!",
+
                     successDesc: "도감에 등록되었습니다!",
+
                     goNextMapBtn: "다음 코스로 이동 (지도)",
+
                     allClearHeader: "모든 나무 발견!",
+
                     allClearDesc: "대단해!<br>스누피 가든의 나무들을 모두 찾았어.<br>이제 가드너 자격 검사에 도전해볼까?",
+
                     startFinalTestBtn: "최종 자격 검사 시작!",
+
                     doLaterBtn: "나중에 하기 (도감으로 이동)",
+
                     surveyGiftTitle: "가드너 특별 선물!",
+
                     surveyModalDesc: "가드너 클래스 탐험이 완료되었습니다!<br>더 멋진 스누피 가든을 만들기 위해<br><span class='text-[#E52E2D] font-black'>만족도 설문조사</span>에 참여해 주세요.",
+
                     surveyGiftNotice: "🎁 만족도 참여 시 소정의 리워드를 증정해 드리고 있습니다!",
+
                     surveySubmitBtn: "설문하고 선물 받기!",
+
                     seeCertFirstBtn: "수료증 먼저 보러가기",
+
                     navHome: "홈", navMap: "지도보기", navBook: "내 도감",
+
                     clearText: "도전완료", challengeText: "도전하기"
+
                 },
+
                 en: {
+
                     headerTitle: "Gardener Class: Tree Mission",
+
                     homeWelcome: `"Hello! Welcome to Snoopy Garden!<br>Press the <span class='text-[#2E9441] font-black'>Map button</span> at the bottom to start.<br>I will tell you the secrets of trees!"`,
+
                     tipTitle: "Mission Tip",
+
                     tipDesc: "Open the outdoor garden map and locate the glowing yellow pins! You must discover trees in order.",
+
                     reportTitle: "Observation Report",
+
                     mapHeader: "Outdoor Garden Exploration Map",
+
                     bookTitle: "My Tree Collection",
+
                     bookFoundPrefix: "Trees Found:",
+
                     resetBtn: "Reset",
+
                     finalTestBtn: "Take Final Test!",
+
                     surveyReopenBtn: "Take survey & get a reward!",
+
                     finalTestHeader: "Final Evaluation",
+
                     finalTestLucy: "Shall we test what you've learned so far?<br>Read the hint below and guess <strong>which tree</strong> it is!",
+
                     finalQuizTitle: "Guess the Tree",
+
                     certFormHeader: "Evaluation Passed!",
+
                     certFormDesc: "Lastly, I'll issue your Gardner Certificate.",
+
                     nameInputLabel: "Tell me your name!",
+
                     makeCertBtn: "Create Certificate!",
+
                     certWrapperTitle: "Certificate",
+
                     certWrapperBody: "This certificate is awarded to the person above for experiencing perfect relaxation in Jeju's nature with Peanuts friends and communicating warmly with the plants at Snoopy Garden.",
+
                     downloadCertBtn: "Save Image to Phone",
+
                     startSurveyBtn: "Take survey & get a reward!",
+
                     backToBookBtn: "Back to Collection",
+
                     successHeader: "Correct!",
+
                     successDesc: "Registered in your collection!",
+
                     goNextMapBtn: "Go to Next Course (Map)",
+
                     allClearHeader: "All Trees Discovered!",
+
                     allClearDesc: "Amazing!<br>You found all the trees in Snoopy Garden.<br>Shall we try the Final Evaluation now?",
+
                     startFinalTestBtn: "Start Final Test!",
+
                     doLaterBtn: "Do it later (Go to Collection)",
+
                     surveyGiftTitle: "Gardener Special Gift!",
+
                     surveyModalDesc: "Gardener Class exploration is complete!<br>To make Snoopy Garden even better,<br>please participate in our <span class='text-[#E52E2D] font-black'>Satisfaction Survey</span>.",
+
                     surveyGiftNotice: "🎁 A small reward will be given upon completing the survey!",
+
                     surveySubmitBtn: "Take Survey & Get Reward!",
+
                     seeCertFirstBtn: "See Certificate First",
+
                     navHome: "Home", navMap: "Map", navBook: "Collection",
+
                     clearText: "CLEAR", challengeText: "START"
+
                 }
+
             };
+
+
 
             // 주소창의 파라미터 체크하여 현재 언어 셋팅 처리
+
             const urlParams = new URLSearchParams(window.location.search);
+
             let currentLang = urlParams.get('lang') === 'en' ? 'en' : 'ko';
 
+
+
             // 페이지 UI 정적 텍스트 전체 번역 함수
+
             function applyTranslations() {
+
                 document.querySelectorAll('[data-i18n]').forEach(el => {
+
                     const key = el.getAttribute('data-i18n');
+
                     if (I18N_TEXTS[currentLang][key]) {
+
                         el.innerHTML = I18N_TEXTS[currentLang][key];
+
                     }
+
                 });
+
             }
+
+
 
             // --- 자동 저장 및 초기화 로직 ---
+
             function saveGame() {
+
                 localStorage.setItem('gardener_state', JSON.stringify(state));
+
             }
+
+
 
             function loadGame() {
+
                 const saved = localStorage.getItem('gardener_state');
+
                 if (saved) {
+
                     const parsed = JSON.parse(saved);
+
                     Object.assign(state, parsed);
+
                 }
+
             }
+
+
 
             function resetProgress() {
+
                 const msg = currentLang === 'ko' ? "정말 모든 기록을 삭제하고 처음부터 시작하시겠습니까?" : "Are you sure you want to delete all records and start over?";
+
                 if (confirm(msg)) {
-                    gtag('event', 'reset_progress', { 'event_category': 'game_flow' });
+
+                    window.dataLayer = window.dataLayer || []; window.dataLayer.push({ 'event': 'reset_progress', 'event_category': 'game_flow' });
+
                     localStorage.removeItem('gardener_state');
+
                     location.reload();
+
                 }
+
             }
+
             // --------------------------------
 
+
+
             const state = {
+
                 collectedIds: [],
+
                 currentPlantId: null,
+
                 hasCertificate: false,
+
                 map: { scale: 1, x: 0, y: 0, isDragging: false, startX: 0, startY: 0, minScale: 0.3, maxScale: 3 },
+
                 finalTest: { questions: [], currentStep: 0 }
+
             };
+
             
+
             // 다국어 완벽 대응 식물 DB 데이터 분할 구성
+
             const DB_PLANTS = {
+
                 "p_1": {
+
                     id: "p_1", 
+
                     name: currentLang === 'ko' ? "팽나무" : "Hackberry", 
+
                     type: currentLang === 'ko' ? "관찰 식물" : "Plants",
+
                     mapCoords: { x: 488, y: 852 },
+
                     comicImg: "./팽나무.png",
+
                     lucyMessage: currentLang === 'ko' ? "송당 마을의 신목인 이 나무에 종이를 묶어 빌면 이루어질지도 몰라! 무엇을 담아 빌었을까?" : "If you tie paper to this sacred tree of Songdang Village, it might come true! What did they put in to wish?",
+
                     fullDesc: currentLang === 'ko' ? "소원 비는 마을 송당의 신목으로, 예부터 이곳에 소원을 담은 종이를 묶어 소원을 빌기도 했습니다." : "As a sacred tree of Songdang, a wish-making village, people have tied papers with wishes on them to pray since ancient times.",
+
                     quiz: { 
+
                         question: currentLang === 'ko' ? "소원 비는 마을 송당의 신목으로, 예부터 이곳에 ( )을/를 담은 종이를 묶어 소원을 빌기도 했습니다." : "As a sacred tree of Songdang, people have tied papers with ( ) since ancient times.", 
+
                         options: currentLang === 'ko' ? ["금은보화", "소원", "편지"] : ["Treasure", "Wishes", "Letters"], 
+
                         correctIndex: 1 
+
                     }
+
                 },
+
                 "p_2": {
+
                     id: "p_2", 
+
                     name: currentLang === 'ko' ? "돈나무 지그재그 수벽" : "Pittosporum Hedge", 
+
                     type: currentLang === 'ko' ? "관찰 식물" : "Plants",
+
                     mapCoords: { x: 632, y: 632 },
+
                     comicImg: "./돈나무 지그재그 수벽.png",
+
                     lucyMessage: currentLang === 'ko' ? "찰리 브라운의 옷 패턴처럼 생겼지? 이 나무의 이름엔 부자가 되길 바라는 아주 기분 좋은 의미가 담겨 있어!" : "Looks like Charlie Brown's shirt pattern, right? The name of this tree carries a wonderful meaning of wishing to become rich!",
+
                     fullDesc: currentLang === 'ko' ? "피너츠 시그니쳐 패턴인 지그재그 형태로 조성한 돈나무 수벽입니다. 잎이 많고 수형이 좋아 수벽을 만드는데 적합합니다. 열매 안에 붉은 종자 여러 개가 있는데 이처럼 돈이 많아 부자가 되었으면 하는 바람에서 유래되었습니다." : "This is a Pittosporum hedge designed in the signature Peanuts zigzag pattern. The name comes from the hope that the red seeds inside the fruit resemble money, wishing for wealth.",
+
                     quiz: { 
+
                         question: currentLang === 'ko' ? "열매 안에 붉은 종자 여러 개가 있는데 이처럼 ( )이/가 많아 부자가 되었으면 하는 바람에서 유래되었습니다." : "There are red seeds in the fruit, which led to the name wishing to have a lot of ( ) and become rich.", 
+
                         options: currentLang === 'ko' ? ["복", "돈", "친구"] : ["Luck", "Money", "Friends"], 
+
                         correctIndex: 1 
+
                     }
+
                 },
+
                 "p_3": {
+
                     id: "p_3", 
+
                     name: currentLang === 'ko' ? "낙우송" : "Bald Cypress", 
+
                     type: currentLang === 'ko' ? "관찰 식물" : "Plants",
+
                     mapCoords: { x: 733, y: 529 },
+
                     comicImg: "./낙우송.png",
+
                     lucyMessage: currentLang === 'ko' ? "가을에 노랗게 물들면 정말 예뻐!\n잎이 떨어지는 모습이 마치 새의 이것과 닮았다고 해서 이름이 지어졌대." : "It turns beautiful yellow in autumn!\nIt is named because the falling leaves resemble a bird's item.",
+
                     fullDesc: currentLang === 'ko' ? "물을 좋아하는 나무로 강변에서 잘 자라며, 침엽수이면서도 가을에는 노란빛 단풍이 듭니다.\n소나무 같은 잎이 떨어질 때 깃털과 닮아 지어진 이름입니다." : "A water-loving tree that grows well on riverbanks. It is named because its pine-like leaves resemble feathers when they fall.",
+
                     quiz: { 
+
                         question: currentLang === 'ko' ? "소나무 같은 잎이 떨어질 때 ( )과/와 닮아 지어진 이름입니다." : "It is named because its pine-like leaves resemble ( ) when they fall.", 
+
                         options: currentLang === 'ko' ? ["눈송이", "깃털", "빗방울"] : ["Snowflakes", "Feathers", "Raindrops"], 
+
                         correctIndex: 1 
+
                     }
+
                 },
+
                 "p_4": {
+
                     id: "p_4", 
+
                     name: currentLang === 'ko' ? "금목서" : "Sweet Osmanthus", 
+
                     type: currentLang === 'ko' ? "관찰 식물" : "Plants",
+
                     mapCoords: { x: 635, y: 949 },
+
                     comicImg: "./금목서(만리향).png",
+
                     lucyMessage: currentLang === 'ko' ? "킁킁, 어디서 달콤한 향기 나지 않아?\n향기가 아주 멀리까지 퍼져서 멋진 별명을 가지고 있어!" : "Sniff sniff, do you smell something sweet?\nIt has a wonderful nickname because its scent spreads incredibly far!",
+
                     fullDesc: currentLang === 'ko' ? "달콤한 향이 무척 강하고 만리까지 간다고 하여 '만리향'이라 부릅니다.\n꽃은 향수의 재료로 다양하게 쓰입니다." : "It is called 'Manrihyang' because its sweet scent is so strong that it travels ten thousand li. Flowers are widely used for perfumes.",
+
                     quiz: { 
+
                         question: currentLang === 'ko' ? "달콤한 향이 무척 강하고 만리까지 간다고 하여 '( )'(이)라 부릅니다." : "It is called '( )' because its sweet scent travels ten thousand li.", 
+
                         options: currentLang === 'ko' ? ["천리향", "백리향", "만리향"] : ["Cheonrihyang", "Baekrihyang", "Manrihyang"], 
+
                         correctIndex: 2 
+
                     }
+
                 },
+
                 "p_5": {
+
                     id: "p_5", 
+
                     name: currentLang === 'ko' ? "구실잣밤나무" : "Castanopsis Sieboldii", 
+
                     type: currentLang === 'ko' ? "관찰 식물" : "Plants",
+
                     mapCoords: { x: 876, y: 818 },
+
                     comicImg: "./구실잣밤나무.png",
+
                     lucyMessage: currentLang === 'ko' ? "이 나무의 열매는 다람쥐들이 좋아하는 이것이랑 아주 비슷하게 생겼어!\n구워 먹을 수도 있단다." : "The fruit of this tree looks a lot like what squirrels love!\nYou can even roast and eat it.",
+
                     fullDesc: currentLang === 'ko' ? "도토리처럼 생긴 열매를 날로 먹거나 구워서 먹을 수 있으며 꽃향기가 강하고 아름다워 정원수로 쓰입니다." : "The fruit looks like an acorn and can be eaten raw or roasted. It is used as a garden tree for its strong and beautiful scent.",
+
                     quiz: { 
+
                         question: currentLang === 'ko' ? "( )처럼 생긴 열매를 날로 먹거나 구워서 먹을 수 있으며 꽃향기가 강하고 아름다워 정원수로 쓰입니다." : "The fruit looks like an ( ) and can be eaten raw or roasted.", 
+
                         options: currentLang === 'ko' ? ["도토리", "호두", "잣"] : ["Acorn", "Walnut", "Pine nut"], 
+
                         correctIndex: 0 
+
                     }
+
                 },
+
                 "p_6": {
+
                     id: "p_6", 
+
                     name: currentLang === 'ko' ? "굴거리나무" : "Macropodum", 
+
                     type: currentLang === 'ko' ? "관찰 식물" : "Plants",
+
                     mapCoords: { x: 953, y: 682 },
+
                     comicImg: "./굴거리나무.png",
+
                     lucyMessage: currentLang === 'ko' ? "이 나무의 길고 축 처진 잎사귀를 잘 봐.\n꼭 내 친구 스누피의 어디를 닮은 것 같지 않아?" : "Look closely at the long, drooping leaves of this tree.\nDon't they look exactly like a part of my friend Snoopy?",
+
                     fullDesc: currentLang === 'ko' ? "대기오염이나 바람에 강해서 남부 지방에서 가로수로 많이 사용합니다.\n길고 아래로 쳐진 잎이 스누피의 귀 모양을 닮아있습니다." : "It is widely used as a street tree in southern regions due to its resistance to pollution. The long, drooping leaves resemble Snoopy's ears.",
+
                     quiz: { 
+
                         question: currentLang === 'ko' ? "길고 아래로 쳐진 잎이 스누피의 ( ) 모양을 닮아있습니다." : "The long, drooping leaves resemble Snoopy's ( ).", 
+
                         options: currentLang === 'ko' ? ["코", "귀", "꼬리"] : ["Nose", "Ears", "Tail"], 
+
                         correctIndex: 1 
+
                     }
+
                 },
+
                 "p_7": {
+
                     id: "p_7", 
+
                     name: currentLang === 'ko' ? "호랑가시나무" : "Horned Holly", 
+
                     type: currentLang === 'ko' ? "관찰 식물" : "Plants",
+
                     mapCoords: { x: 984, y: 505 },
+
                     comicImg: "./호랑가시나무.png",
+
                     lucyMessage: currentLang === 'ko' ? "앗, 잎이 뾰족뾰족해!\n이 단단한 가시가 아주 무서운 동물의 발톱을 닮았다고 해서 이런 이름이 붙었어." : "Oh, the leaves are so sharp!\nIt got this name because the hard thorns resemble a scary animal's claws.",
+
                     fullDesc: currentLang === 'ko' ? "잎의 가장자리가 단단한 침으로 변하는데 마치 호랑이의 발톱처럼 보인다고 해서 '호랑이가시', '호랑가시나무' 등으로 부릅니다.\n꽃보다 빨간 열매가 예쁘며 크리스마스를 상징하는 식물입니다." : "The edges of the leaves turn into hard spines that look like a tiger's claws, giving it the name. Its red berries represent Christmas.",
+
                     quiz: { 
+
                         question: currentLang === 'ko' ? "잎의 가장자리가 단단한 침으로 변하는데 마치 ( )처럼 보인다고 해서 '호랑이가시', '호랑가시나무' 등으로 부릅니다." : "The edges of the leaves turn into hard spines that look like a ( )'s claws.", 
+
                         options: currentLang === 'ko' ? ["사자의 이빨", "호랑이의 발톱", "고양이의 수염"] : ["Lion's Teeth", "Tiger's Claws", "Cat's Whiskers"], 
+
                         correctIndex: 1 
+
                     }
+
                 },
+
                 "p_8": {
+
                     id: "p_8", 
+
                     name: currentLang === 'ko' ? "꽝꽝나무" : "Box-leaved Holly", 
+
                     type: currentLang === 'ko' ? "관찰 식물" : "Plants",
+
                     mapCoords: { x: 1079, y: 367 },
+
                     comicImg: "./꽝꽝나무.png",
+
                     lucyMessage: currentLang === 'ko' ? "이 잎을 불에 태우면 깜짝 놀랄만한 소리가 난대!\n아주 재미있는 이름이지?" : "They say if you burn these leaves, it makes a surprising sound!\nIsn't it a funny name?",
+
                     fullDesc: currentLang === 'ko' ? "잎이 불에 탈 때 '꽝꽝' 소리가 난다 하여 '꽝꽝나무'라 부릅니다.\n겨울에도 녹색을 유지하며 덤불처럼 자라지요. 새로운 싹이 잘 맺혀 전정을 해주면서 토피어리나 울타리로 많이 이용됩니다." : "It is called 'Kwang-kwang-namu' because the leaves make a popping sound when burned. It stays green in winter and is used for topiary.",
+
                     quiz: { 
+
                         question: currentLang === 'ko' ? "잎이 불에 탈 때 '( )' 소리가 난다 하여 '꽝꽝나무'라 부릅니다." : "It is named because the leaves make a '( )' sound when burned.", 
+
                         options: currentLang === 'ko' ? ["지글지글", "타닥타닥", "꽝꽝"] : ["Sizzle", "Crackle", "Kwang-Kwang"], 
+
                         correctIndex: 2 
+
                     }
+
                 },
+
                 "p_9": {
+
                     id: "p_9", 
+
                     name: currentLang === 'ko' ? "왕벚나무" : "King Cherry", 
+
                     type: currentLang === 'ko' ? "관찰 식물" : "Plants",
+
                     mapCoords: { x: 1292, y: 177 },
+
                     comicImg: "./왕벚나무.png",
+
                     lucyMessage: currentLang === 'ko' ? "봄이 되면 가장 먼저 아름다운 꽃을 피우는 이 나무!\n원산지가 바로 여기란 사실 알고 있었어?" : "This tree blooms beautiful flowers first when spring comes!\nDid you know its origin is right here?",
+
                     fullDesc: currentLang === 'ko' ? "제주도가 원산지인 우리나라 특산식물입니다.\n봄의 전령사로 잎보다 먼저 피는 꽃이 장관을 이루며, 가을 단풍도 아름답습니다.\n꽃말은 '절세미인!'입니다." : "A native plant of Korea originated from Jeju Island. As a messenger of spring, flowers blooming before leaves create a magnificent view.",
+
                     quiz: { 
+
                         question: currentLang === 'ko' ? "( )이/가 원산지인 우리나라 특산식물입니다.\n봄의 전령사로 잎보다 먼저 피는 꽃이 장관을 이룹니다." : "It is a native Korean plant originating from ( ). Flowers bloom before leaves.", 
+
                         options: currentLang === 'ko' ? ["울릉도", "제주도", "거제도"] : ["Ulleungdo", "Jejudo", "Geojedo"], 
+
                         correctIndex: 1 
+
                     }
+
                 },
+
                 "p_10": {
+
                     id: "p_10", 
+
                     name: currentLang === 'ko' ? "하귤나무" : "Summer Orange", 
+
                     type: currentLang === 'ko' ? "관찰 식물" : "Plants",
+
                     mapCoords: { x: 1243, y: 565 },
+
                     comicImg: "./하귤나무.png",
+
                     lucyMessage: currentLang === 'ko' ? "보통 귤은 겨울에 먹지만, 이 귤은 아주 특별하게 다른 계절에 열매를 맺어!\n제주의 자몽이라고도 해." : "Normally, oranges are eaten in winter, but this special orange bears fruit in a different season! It's called Jeju's Grapefruit.",
+
                     fullDesc: currentLang === 'ko' ? "겨울이 아닌 여름에 난다고 해서 '하귤'입니다.\n새콤 쌉싸름한 맛과 통통한 과육 알알이 톡톡 터지는 식감에 '제주의 자몽'이라 불리기도 합니다." : "It is called 'Hagyul' because it ripens in summer rather than winter. Known as 'Jeju's Grapefruit' for its bittersweet taste.",
+
                     quiz: { 
+
                         question: currentLang === 'ko' ? "겨울이 아닌 ( )에 난다고 해서 '하귤'입니다." : "It is called 'Hagyul' because it grows in ( ) instead of winter.", 
+
                         options: currentLang === 'ko' ? ["봄", "여름", "가을"] : ["Spring", "Summer", "Autumn"], 
+
                         correctIndex: 1 
+
                     }
+
                 },
+
                 "p_11": {
+
                     id: "p_11", 
+
                     name: currentLang === 'ko' ? "삼나무" : "Japanese Cedar", 
+
                     type: currentLang === 'ko' ? "관찰 식물" : "Plants",
+
                     mapCoords: { x: 1345, y: 530 },
+
                     comicImg: "./삼나무.png",
+
                     lucyMessage: currentLang === 'ko' ? "키가 아담한 이 친구는 물기를 아주 좋아해서 숲 속 촉촉한 곳에서 잘 자란단다." : "This compact friend loves moisture, so it grows well in moist places deep within the forest.",
+
                     fullDesc: currentLang === 'ko' ? "우리나라 중부 이남의 산에서 자라는 낙엽 관목.\n키는 약 1m 내외이고, 습기가 많은 곳에서 자란다." : "A deciduous shrub growing in mountains south of central Korea. It grows to about 1m and prefers moist environments.",
+
                     quiz: { 
+
                         question: currentLang === 'ko' ? "우리나라 중부 이남의 산에서 자라는 낙엽 관목.\n키는 약 1m 내외이고, ( )이/가 많은 곳에서 자란다." : "A deciduous shrub that grows up to about 1m in places with high ( ).", 
+
                         options: currentLang === 'ko' ? ["바람", "햇빛", "습기"] : ["Wind", "Sunlight", "Moisture"], 
+
                         correctIndex: 2 
+
                     }
+
                 },
+
                 "p_12": {
+
                     id: "p_12", 
+
                     name: currentLang === 'ko' ? "카네이션동백" : "Carnation Camellia", 
+
                     type: currentLang === 'ko' ? "관찰 식물" : "Plants",
+
                     mapCoords: { x: 1233, y: 929 },
+
                     comicImg: "./카네이션동백.png",
+
                     lucyMessage: currentLang === 'ko' ? "어버이날 선물하는 꽃이랑 정말 비슷하게 생겼지?\n하지만 사실은 동백나무야. 꽃말이 정말 낭만적이지!" : "Looks so much like the flower gifted on Parents' Day, right?\nBut it's actually a Camellia. The flower language is so romantic!",
+
                     fullDesc: currentLang === 'ko' ? "동백꽃의 생김새가 카네이션과 비슷하지만 동백인 나무입니다.\n꽃말은 '그 누구보다 더 당신을 사랑합니다'입니다." : "A tree that is a Camellia but looks like a carnation. Its language means 'I love you more than anyone else.'",
+
                     quiz: { 
+
                         question: currentLang === 'ko' ? "동백꽃의 생김새가 카네이션과 비슷하지만 동백인 나무입니다.\n꽃말은 '( )'입니다." : "The flower language of Carnation Camellia is '( )'.", 
+
                         options: currentLang === 'ko' ? ["그 누구보다 더 당신을 사랑합니다", "당신을 영원히 기억합니다", "나의 마음을 받아주세요"] : ["I love you more than anyone", "I remember you forever", "Please accept my heart"], 
+
                         correctIndex: 0 
+
                     }
+
                 },
+
                 "p_13": {
+
                     id: "p_13", 
+
                     name: currentLang === 'ko' ? "치자나무" : "Cape Jasmine", 
+
                     type: currentLang === 'ko' ? "관찰 식물" : "Plants",
+
                     mapCoords: { x: 1147, y: 1108 },
+
                     comicImg: "./치자나무.png",
+
                     lucyMessage: currentLang === 'ko' ? "이 열매로 천을 물들이면 아주 예쁜 색이 나와!\n향기도 좋고 새들도 좋아하는 매력적인 나무지." : "Dyeing fabric with this fruit produces a very pretty color!\nIt's a charming tree with a great scent loved by birds.",
+
                     fullDesc: currentLang === 'ko' ? "가을에 주황색으로 익는 열매는 염료나 약용으로 쓰입니다.\n재스민 향과 비슷한 강한 향기가 특징이며, 열매는 새들의 먹이가 됩니다." : "Fruits ripening in orange in autumn are used for dyes or medicine. Characterized by a strong scent similar to jasmine.",
+
                     quiz: { 
+
                         question: currentLang === 'ko' ? "가을에 ( )(으)로 익는 열매는 염료나 약용으로 쓰입니다." : "Fruits that ripen in ( ) in autumn are used as dyes or medicine.", 
+
                         options: currentLang === 'ko' ? ["보라색", "빨간색", "주황색"] : ["Purple", "Red", "Orange"], 
+
                         correctIndex: 2 
+
                     }
+
                 },
+
                 "p_14": {
+
                     id: "p_14", 
+
                     name: currentLang === 'ko' ? "아왜나무" : "Sweet Viburnum", 
+
                     type: currentLang === 'ko' ? "관찰 식물" : "Plants",
+
                     mapCoords: { x: 914, y: 1221 },
+
                     comicImg: "./아왜나무.png",
+
                     lucyMessage: currentLang === 'ko' ? "불이 났을 때 스스로를 보호하려고 아주 신기하게 대처하는 나무야!\n소방관 같은 나무지." : "This tree copes in a very fascinating way to protect itself during a fire!\nIt's like a firefighter tree.",
+
                     fullDesc: currentLang === 'ko' ? "두툼하고 큰 잎이 수분을 많이 가지고 있는데, 불과 만나면 거품을 내는 특성이 있어 '거품 나무'라고도 부릅니다.\n이 거품이 불길이 번지는 것을 막아주기 때문에 방화수로 쓰입니다." : "Thick leaves hold much moisture and form bubbles when meeting fire, earning the name 'Bubble Tree'. Used as a fire barrier.",
+
                     quiz: { 
+
                         question: currentLang === 'ko' ? "두툼하고 큰 잎이 수분을 많이 가지고 있는데, 불과 만나면 ( )을/를 내는 특성이 있어 '거품 나무'라고도 부릅니다." : "Thick leaves hold a lot of water and produce ( ) when exposed to fire.", 
+
                         options: currentLang === 'ko' ? ["연기", "물", "거품"] : ["Smoke", "Water", "Bubbles"], 
+
                         correctIndex: 2 
+
                     }
+
                 },
+
                 "p_15": {
+
                     id: "p_15", 
+
                     name: currentLang === 'ko' ? "장미" : "Rose", 
+
                     type: currentLang === 'ko' ? "관찰 식물" : "Plants",
+
                     mapCoords: { x: 773, y: 1129 },
+
                     comicImg: "./장미.png",
+
                     lucyMessage: currentLang === 'ko' ? "사랑을 고백할 때 이 꽃만 한 게 없지!\n너무 예뻐서 꽃들의 여왕님이라고도 불려." : "Nothing beats this flower when confessing love!\nIt's so beautiful that it's also called the Queen of Flowers.",
+
                     fullDesc: currentLang === 'ko' ? "'꽃의 여왕'이라는 별명에 어울리는 아름다움으로, 사랑을 표현할 때 가장 많이 선물하는 식물입니다." : "With beauty fitting the nickname 'Queen of Flowers,' it is the most gifted plant to express love.",
+
                     quiz: { 
+
                         question: currentLang === 'ko' ? "'( )'(이)라는 별명에 어울리는 아름다움으로, 사랑을 표현할 때 가장 많이 선물하는 식물입니다." : "It is the most popular flower to express love, fitting the nickname '( )'.", 
+
                         options: currentLang === 'ko' ? ["꽃의 요정", "꽃의 여왕", "꽃의 천사"] : ["Fairy of Flowers", "Queen of Flowers", "Angel of Flowers"], 
+
                         correctIndex: 1 
+
                     }
+
                 },
+
                 "p_16": {
+
                     id: "p_16", 
+
                     name: currentLang === 'ko' ? "꽃댕강나무" : "Glossy Abelia", 
+
                     type: currentLang === 'ko' ? "관찰 식물" : "Plants",
+
                     mapCoords: { x: 672, y: 1044 },
+
                     comicImg: "./꽃댕강나무.png",
+
                     lucyMessage: currentLang === 'ko' ? "작고 예쁜 꽃이 가을까지 계속 피어서 오랫동안 좋은 향기를 즐길 수 있어.\n스누피 가든이 널 환영해!" : "Small, pretty flowers bloom continuously until autumn, so you can enjoy the great fragrance for a long time. Welcome!",
+
                     fullDesc: currentLang === 'ko' ? "하얀 꽃과 연분홍색 꽃이 6월부터 10월까지 계속하여 피므로 은은한 향기와 아름다운 꽃을 가을까지 볼 수 있습니다.\n이 나무의 꽃말은 환영, 평안함입니다." : "White and pink flowers bloom continuously from June to October, providing a soft scent until autumn. Its meaning is welcome.",
+
                     quiz: { 
+
                         question: currentLang === 'ko' ? "하얀 꽃과 연분홍색 꽃이 계속하여 피므로 은은한 ( )와/과 아름다운 꽃을 가을까지 볼 수 있습니다." : "Since flowers bloom continuously, you can enjoy the soft ( ) and beautiful flowers until autumn.", 
+
                         options: currentLang === 'ko' ? ["색깔", "향기", "열매"] : ["Color", "Fragrance", "Fruit"], 
+
                         correctIndex: 1 
+
                     }
+
                 }
+
             };
+
+
 
             const ALL_PLANTS_LIST = [
+
                 DB_PLANTS.p_1, DB_PLANTS.p_2, DB_PLANTS.p_3, DB_PLANTS.p_4, 
+
                 DB_PLANTS.p_5, DB_PLANTS.p_6, DB_PLANTS.p_7, DB_PLANTS.p_8, 
+
                 DB_PLANTS.p_9, DB_PLANTS.p_10, DB_PLANTS.p_11, DB_PLANTS.p_12, 
+
                 DB_PLANTS.p_13, DB_PLANTS.p_14, DB_PLANTS.p_15, DB_PLANTS.p_16
+
             ];
 
+
+
             const MAP_CURVE_PATHS = {
+
                 0: "M 435.78 991.72 L 477.18 946.72 L 474.78 899.92 L 487.98 854.32",
+
                 1: "M 488.46 852.41 l 17.4-46.8 21.9-11.4 5.4-13.5 -3.6-16.2 s -25.5-18.6 -26.4-19.2 s -4.2-13.5 -4.2-13.5 l 13.5-12.6 12.6-8.1 5.1-3.9 6.9-22.8 -22.2-24.6 -46.8-41.1 -3.9-19.5 42.6-46.2 25.5-6 12 6.6 0.6 17.1 17.7 19.5 48.3 5.4 15 14.1 4.8 24",
+
                 2: "M 632.46 631.91 L 642.06 578.51 L 689.16 556.01 L 710.16 555.71 L 733.56 536.21 L 732.66 529.61",
+
                 3: "M 733.15 528.52 L 739.9 532.12 L 760.15 521.92 L 783.55 494.02 L 793.45 492.82 L 821.2 503.17 L 827.65 512.92 L 827.2 522.82 L 812.35 559.57 L 806.05 565.27 L 789.85 570.07 L 785.5 574.57 L 782.95 578.92 L 781.9 605.17 L 778 612.52 L 767.95 618.67 L 749.65 619.42 L 745.9 623.17 L 736.15 647.17 L 693.7 683.92 L 662.95 729.97 L 655.6 750.82 L 654.55 775.27 L 669.1 840.82 L 619.3 866.92 L 614.2 921.82 L 633.25 948.37",
+
                 4: "M 634.75 948.67 L 692.65 963.22 L 751.3 946.12 L 827.95 900.37 L 841 882.82 L 874.9 819.97",
+
                 5: "M 875.65 818.02 L 910.6 747.22 L 927.1 717.22 L 951.85 683.92",
+
                 6: "M 952.9 682.42 L 990.25 630.67 L 1000.45 612.37 L 999.4 595.72 L 982.75 579.52 L 955.75 555.22 L 953.35 545.02 L 955.6 538.12 L 982.6 506.77",
+
                 7: "M 983.5 505.42 L 1016.65 468.52 L 1024 467.62 L 1034.8 483.52 L 1034.95 503.32 L 1028.5 527.77 L 1031.2 538.87 L 1040.5 542.77 L 1071.1 545.02 L 1081.3 533.02 L 1057 407.62 L 1078.75 368.02",
+
                 8: "M 1079.28 367.27 l 7.54-11.59 20.03-9.9 s 18.79-16.31 19.12-16.54 19.01-14.29 19.01-14.29 l 15.98-1.58 27.23 20.59 10.58 46.46 21.94 23.4 11.36-1.24 62.21-18.79 5.96-9.79 3.38-15.75 -11.7-48.6 -20.48-8.44 -16.31-7.65 -12.15-33.41 s 2.36-7.65 3.49-8.77 20.81-10.57 20.81-10.57 l -1.58-11.25 -12.26-20.14 37.13-32.17",
+
                 9: "M 1291.71 176.81 L 1327.11 234.71 L 1327.71 243.11 L 1333.11 249.11 L 1319.31 262.91 L 1331.01 269.21 L 1317.21 283.01 L 1330.41 293.51 L 1318.41 300.71 L 1332.21 311.21 L 1332.21 315.71 L 1323.21 321.11 L 1333.41 359.21 L 1308.81 392.81 L 1250.61 418.61 L 1244.31 424.61 L 1245.21 563.51",
+
                  10: "M 1242.51 565.01 L 1185.51 578.21 L 1175.61 647.21 L 1239.81 666.11 L 1260.21 673.61 L 1288.41 673.31 L 1302.81 670.31 L 1306.41 660.41 L 1321.71 580.61 L 1320.81 513.11 L 1327.71 465.41 L 1337.31 458.81 L 1347.51 463.91 L 1345.71 528.11",
+
                 11: "M 1345.41 530.21 L 1344.81 578.21 L 1352.61 597.11 L 1340.31 687.71 L 1350.51 720.71 L 1298.91 897.11 L 1232.31 919.31 L 1235.01 928.31",
+
                  12: "M 1233.21 928.61 L 1227.21 922.01 L 1208.31 926.51 L 1201.41 921.71 L 1220.31 843.71 L 1216.41 832.61 L 1175.91 778.61 L 1106.31 772.91 L 1079.61 824.21 L 1081.11 829.01 L 1112.61 830.21 L 1118.01 834.11 L 1116.51 840.11 L 1094.61 851.21 L 1067.01 847.01 L 1056.51 838.91 L 975.81 855.41 L 964.71 863.51 L 959.91 877.91 L 961.41 912.41 L 995.01 940.91 L 1004.61 967.61 L 1031.31 995.81 L 1069.11 1003.61 L 1072.11 1008.71 L 1071.21 1063.31 L 1127.91 1076.51 L 1145.91 1108.31",
+
                  13: "M 1147.41 1107.71 L 1242.51 1127.81 L 1252.71 1199.81 L 1094.31 1242.71 L 1042.41 1230.41 L 996.81 1216.91 L 915.81 1221.41",
+
                 14: "M 914.01 1221.41 L 851.91 1186.61 L 853.71 1169.81 L 953.61 1036.31 L 952.11 1028.51 L 888.51 992.51 L 775.41 1128.41",
+
                 15: "M 773.31 1128.71 L 707.61 1082.51 L 671.61 1044.41"
+
             };
 
+
+
             // 페이지 로드 후 딕셔너리 번역 및 게임 로드 통합 실행
+
             window.addEventListener('DOMContentLoaded', () => {
+
                 loadGame();
+
                 applyTranslations(); // 🌐 정적 텍스트 전체 다국어 매핑 실행
-                gtag('event', 'app_start', { 'event_category': 'engagement' });
+
+                window.dataLayer = window.dataLayer || []; window.dataLayer.push({ 'event': 'app_start', 'event_category': 'engagement' });
+
             });
 
+
+
             function switchTab(tabName) {
+
                 document.querySelectorAll('.view-content').forEach(el => el.classList.remove('active'));
+
                 const nav = document.getElementById('bottom-nav');
+
                 const header = document.getElementById('main-header');
+
                 
-                gtag('event', 'screen_view', { 'screen_name': tabName });
+
+                window.dataLayer = window.dataLayer || []; window.dataLayer.push({ 'event': 'screen_view', 'screen_name': tabName });
+
                 if (['final-test', 'cert-form', 'certificate'].includes(tabName)) {
+
                     nav.style.display = 'none';
+
                     if(tabName === 'certificate') header.style.display = 'none';
+
                     else header.style.display = 'flex';
+
                 } else {
+
                     nav.style.display = 'flex';
+
                     header.style.display = 'flex';
+
                     document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+
                 }
+
                 
+
                 if(tabName === 'home') {
+
                     document.getElementById('view-home').classList.add('active');
+
                     document.querySelectorAll('.nav-item')[0].classList.add('active');
+
                 } else if(tabName === 'mission') {
+
                     document.getElementById('view-mission').classList.add('active');
+
                 } else if(tabName === 'map') {
+
                     document.getElementById('view-map').classList.add('active');
+
                     document.querySelectorAll('.nav-item')[1].classList.add('active');
+
                     
+
                     setTimeout(() => {
+
                         if(document.getElementById('map-content').children.length <= 1) { 
+
                             initMap();
+
                             setupMapDragging(document.getElementById('map-container'), document.getElementById('map-content'));
+
                         } else {
+
                             renderMapPins();
+
                             resetMapZoom(); // 👈 최상단 정렬 스크롤 원상복구 호출
+
                         }
+
                     }, 50);
+
                 } else if(tabName === 'collection') {
+
                     renderCollection();
+
                     document.getElementById('view-collection').classList.add('active');
+
                     document.querySelectorAll('.nav-item')[2].classList.add('active');
+
                 } else if(tabName === 'final-test') {
+
                     document.getElementById('view-final-test').classList.add('active');
+
                 } else if(tabName === 'cert-form') {
+
                     document.getElementById('view-cert-form').classList.add('active');
+
                 } else if(tabName === 'certificate') {
+
                     document.getElementById('view-certificate').classList.add('active');
+
                 }
+
             }
+
+
 
             function initMap() {
+
                 renderMapPins();
+
                 resetMapZoom();
+
             }
+
+
 
             function renderMapPins() {
+
                 const mapContent = document.getElementById('map-content');
+
                 Array.from(mapContent.children).forEach(child => {
+
                     if (child.tagName.toLowerCase() !== 'svg') {
+
                         mapContent.removeChild(child);
+
                     }
+
                 });
+
                 const currentTargetIndex = state.collectedIds.length;
+
                 drawMapLines(currentTargetIndex); 
 
+
+
                 ALL_PLANTS_LIST.forEach((plant, index) => {
+
                     const pin = document.createElement('div');
+
                     pin.className = 'map-pin';
+
                     const isCollected = state.collectedIds.includes(plant.id);
+
                     const isTarget = index === currentTargetIndex;
+
                     
+
                     if(isCollected) {
+
                         pin.classList.add('collected-pin');
+
                     } else if (isTarget) {
+
                          pin.classList.add('target-pin'); 
+
                     } else {
+
                         pin.classList.add('locked-pin'); 
+
                     }
+
+
 
                     pin.style.left = `${plant.mapCoords.x}px`;
+
                     pin.style.top = `${plant.mapCoords.y}px`;
+
                     
+
                     const popup = document.createElement('div');
+
                     popup.className = 'pin-popup';
+
          
+
                     let popupHtml = `<span>${plant.name}</span>`;
+
                     if(isCollected) {
+
                         const clearTxt = I18N_TEXTS[currentLang].clearText;
+
                         popupHtml += `<button class="mt-1 bg-gray-400 text-white text-xs px-3 py-1 rounded-full font-bold cursor-default">${clearTxt}</button>`;
+
                     } else {
+
                         const challengeTxt = I18N_TEXTS[currentLang].challengeText;
+
                         popupHtml += `<button onclick="loadMission('${plant.id}')" class="mt-1 bg-[#2E9441] text-white text-xs px-3 py-1 rounded-full font-bold shadow-md active:scale-95 transition-transform">${challengeTxt}</button>`;
+
                     }
+
                     popup.innerHTML = popupHtml;
+
                     popup.style.left = `${plant.mapCoords.x}px`;
+
                     popup.style.top = `${plant.mapCoords.y - 45}px`; 
+
                     
+
                     pin.onclick = (e) => {
+
                         e.stopPropagation();
+
                         if(isTarget || isCollected) {
+
                             focusOnPin(plant.mapCoords.x, plant.mapCoords.y, pin, popup);
+
                         }
+
                     };
+
                     mapContent.appendChild(pin);
+
                     mapContent.appendChild(popup);
+
                 });
+
             }
+
+
 
             function drawMapLines(targetIdx) {
+
                 const svg = document.getElementById('map-lines-svg');
+
                 svg.innerHTML = ''; 
 
+
+
                 const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+
                 svg.appendChild(defs);
 
+
+
                for (let i = 0; i < ALL_PLANTS_LIST.length; i++) {
+
     if (i > targetIdx) break;
+
     
+
     let pathData = MAP_CURVE_PATHS[i];
+
                     if(!pathData) continue;
 
+
+
                     const dashedPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+
                     dashedPath.setAttribute('d', pathData);
+
                     dashedPath.setAttribute('stroke', '#E52E2D'); 
+
                     dashedPath.setAttribute('stroke-width', '4');
+
                     dashedPath.setAttribute('stroke-dasharray', '8, 8');
+
                     dashedPath.setAttribute('fill', 'none');
 
+
+
                     if (i === targetIdx) {
+
                         const maskId = `draw-mask-${i}`;
+
                         const mask = document.createElementNS('http://www.w3.org/2000/svg', 'mask');
+
                         mask.setAttribute('id', maskId);
 
+
+
                         const maskPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+
                         maskPath.setAttribute('d', pathData);
+
                         maskPath.setAttribute('stroke', 'white');
+
                         maskPath.setAttribute('stroke-width', '10');
+
                         maskPath.setAttribute('fill', 'none');
+
                         mask.appendChild(maskPath);
+
                         defs.appendChild(mask);
 
+
+
                         dashedPath.setAttribute('mask', `url(#${maskId})`);
+
                         svg.appendChild(dashedPath);
+
+
 
                         requestAnimationFrame(() => {
+
                             const pathLength = maskPath.getTotalLength ? maskPath.getTotalLength() : 500; 
+
                             maskPath.style.strokeDasharray = pathLength;
+
                             maskPath.style.strokeDashoffset = pathLength;
+
                             maskPath.getBoundingClientRect(); 
+
                             maskPath.style.transition = 'stroke-dashoffset 2.5s ease-in-out';
+
                             maskPath.style.strokeDashoffset = '0';
+
                          });
+
                     } else {
+
                         svg.appendChild(dashedPath);
+
                     }
+
                 }
+
             }
+
+
 
             function updateMapTransform() {
+
                 constrainMap();
+
                 document.getElementById('map-content').style.transform = `translate(${state.map.x}px, ${state.map.y}px) scale(${state.map.scale})`;
+
             }
+
+
 
             function constrainMap() {
+
     const container = document.getElementById('map-container');
+
     if(!container) return;
+
     
+
     const mapWidth = 1500 * state.map.scale;
+
     const mapHeight = 2400 * state.map.scale;
+
     const containerWidth = container.clientWidth;
+
     const containerHeight = container.clientHeight;
 
+
+
     if (mapWidth <= containerWidth) {
+
         state.map.x = (containerWidth - mapWidth) / 2;
+
     } else {
+
         if (state.map.x > 0) state.map.x = 0;
+
         if (state.map.x < containerWidth - mapWidth) state.map.x = containerWidth - mapWidth;
+
     }
+
+
 
     if (mapHeight <= containerHeight) {
+
         state.map.y = 0; 
+
     } else {
+
         if (state.map.y > 0) state.map.y = 0; 
+
         if (state.map.y < containerHeight - mapHeight) state.map.y = containerHeight - mapHeight;
+
     }
+
 }
+
+
 
 function resetMapZoom() {
+
     const container = document.getElementById('map-container');
+
     if(!container || container.clientWidth === 0) return;
 
+
+
     // 1. 좌우 여백을 없애기 위해 '가로폭'을 기준으로만 스케일을 결정합니다.
+
     const scaleX = container.clientWidth / 1500;
+
     
+
     // 2. 최소 스케일과 현재 스케일을 가로폭 맞춤 비율로 고정합니다.
+
     state.map.minScale = scaleX;
+
     state.map.scale = scaleX;
 
+
+
     // 3. 가로가 꽉 찼으므로 X축 시작점은 0이며, Y축도 최상단(0)으로 고정합니다.
+
     state.map.x = 0;
+
     state.map.y = 0;
+
     
+
     // 4. 팝업 및 기존 핀 활성화 스타일 초기화
+
     document.querySelectorAll('.pin-popup').forEach(p => p.classList.remove('show'));
+
     document.querySelectorAll('.map-pin').forEach(p => p.classList.remove('active-pin'));
+
     
+
     // 5. 변경된 변형값 지도 레이어에 즉시 적용
+
     updateMapTransform();
+
 }
 
+
+
             function focusOnPin(pinX, pinY, activePinElement, popupElement) {
+
                 const container = document.getElementById('map-container');
+
                 const targetScale = 1.5; 
+
                 state.map.scale = targetScale;
+
                 state.map.x = (container.clientWidth / 2) - (pinX * targetScale);
+
                 state.map.y = (container.clientHeight / 2) - (pinY * targetScale) + 50; 
+
                 
+
                 updateMapTransform();
+
                 document.querySelectorAll('.pin-popup').forEach(p => p.classList.remove('show'));
+
                 document.querySelectorAll('.map-pin').forEach(p => p.classList.remove('active-pin'));
+
                 popupElement.classList.add('show');
+
             }
+
+
 
             function zoomMap(newScale, pointerX, pointerY) {
+
                 newScale = Math.max(state.map.minScale, Math.min(newScale, state.map.maxScale));
+
                 const scaleRatio = newScale / state.map.scale;
+
                 state.map.x = pointerX - (pointerX - state.map.x) * scaleRatio;
+
                 state.map.y = pointerY - (pointerY - state.map.y) * scaleRatio;
+
                 state.map.scale = newScale;
+
                 updateMapTransform();
+
             }
+
+
 
             function setupMapDragging(container, content) {
+
                 let initialDistance = 0;
+
                 let initialScale = 1;
 
+
+
                 const startDrag = (e) => {
+
                     if (e.touches && e.touches.length === 2) {
+
                         state.map.isDragging = false;
+
                         initialDistance = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+
                         initialScale = state.map.scale;
+
                         return;
+
                     }
+
                     if (e.touches && e.touches.length > 1) return;
+
                     state.map.isDragging = true;
+
                     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+
                     const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
                     state.map.startX = clientX - state.map.x;
+
                     state.map.startY = clientY - state.map.y;
+
                 };
+
                 const onDrag = (e) => {
+
                     if (e.touches && e.touches.length === 2) {
+
                         e.preventDefault();
+
                         const currentDistance = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+
                         const touchCenterX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+
                         const touchCenterY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+
                         const rect = container.getBoundingClientRect();
+
                         const pointerX = touchCenterX - rect.left;
+
                         const pointerY = touchCenterY - rect.top;
+
                         const newScale = initialScale * (currentDistance / initialDistance);
+
                         zoomMap(newScale, pointerX, pointerY);
+
                         return;
+
                     }
+
                     if (!state.map.isDragging) return;
+
                     e.preventDefault(); 
+
                     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+
                     const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
                     state.map.x = clientX - state.map.startX;
+
                     state.map.y = clientY - state.map.startY;
+
                     updateMapTransform();
+
                 };
+
                 const endDrag = (e) => { 
+
                     state.map.isDragging = false;
+
                     if (e && e.touches && e.touches.length === 1) {
+
                         state.map.startX = e.touches[0].clientX - state.map.x;
+
                         state.map.startY = e.touches[0].clientY - state.map.y;
+
                         state.map.isDragging = true;
+
                     }
+
                 };
+
                 const onWheel = (e) => {
+
                     e.preventDefault();
+
                     const rect = container.getBoundingClientRect();
+
                     const pointerX = e.clientX - rect.left;
+
                     const pointerY = e.clientY - rect.top;
+
                     const zoomSpeed = 0.1;
+
                     const delta = e.deltaY > 0 ? -1 : 1; 
+
                     const newScale = state.map.scale * (1 + (delta * zoomSpeed));
+
                     zoomMap(newScale, pointerX, pointerY);
+
                 };
+
+
 
                 container.addEventListener('touchstart', startDrag, {passive: false});
+
                 container.addEventListener('touchmove', onDrag, {passive: false});
+
                 container.addEventListener('touchend', endDrag);
+
                 container.addEventListener('mousedown', startDrag);
+
                 container.addEventListener('wheel', onWheel, {passive: false});
+
                 window.addEventListener('mouseup', endDrag);
+
                 window.addEventListener('mousemove', onDrag);
+
             }
 
+
+
             function loadMission(qrId) {
+
                 const data = DB_PLANTS[qrId];
+
                 if(!data) return;
 
+
+
                 state.currentPlantId = qrId;
+
                 
-                gtag('event', 'mission_start', {
+
+                window.dataLayer = window.dataLayer || [];
+                window.dataLayer.push({
+                    'event': 'mission_start',
                     'event_category': 'quiz',
                     'plant_id': qrId,
                     'plant_name': data.name
                 });
+
                 document.getElementById('plant-name').innerText = data.name;
+
                 
+
                 const imgEl = document.getElementById('comic-strip-img');
+
                 imgEl.src = data.comicImg;
+
                 imgEl.onerror = () => { imgEl.src = `https://placehold.co/400x400/FFCC00/000?text=${data.name}`; };
+
                 document.getElementById('lucy-dialogue').innerText = data.lucyMessage;
+
                 
+
                 const badge = document.getElementById('mission-type-badge');
+
                 badge.innerText = data.type;
+
                 badge.className = `text-white text-xs font-bold px-2 py-1 rounded-full ${data.type === '상록수' || data.type === 'Evergreen' ? 'bg-green-700' : 'bg-orange-500'}`;
+
                 
+
                 document.getElementById('quiz-question').innerText = data.quiz.question;
+
                 const optionsContainer = document.getElementById('quiz-options');
+
                 optionsContainer.innerHTML = '';
+
                 data.quiz.options.forEach((opt, index) => {
+
                     const btn = document.createElement('button');
+
                     btn.className = "comic-btn py-3 px-4 text-left w-full hover:bg-gray-50 text-sm";
+
                     btn.innerHTML = `<span class="font-black mr-2 text-lg text-gray-400">${index + 1}.</span> <span>${opt}</span>`;
+
                     btn.onclick = () => checkAnswer(btn, index, data.quiz.correctIndex, data);
+
                     optionsContainer.appendChild(btn);
+
                 });
+
                 switchTab('mission');
+
             }
 
+
+
             function checkAnswer(btnElement, selectedIndex, correctIndex, plantData) {
+
                 const isCorrect = selectedIndex === correctIndex;
-                gtag('event', 'quiz_submit', {
+
+                window.dataLayer = window.dataLayer || [];
+                window.dataLayer.push({
+                    'event': 'quiz_submit',
                     'event_category': 'quiz',
                     'plant_id': plantData.id,
                     'plant_name': plantData.name,
                     'is_correct': isCorrect ? 'yes' : 'no'
-                 });
+                });
+
+
 
                 if(isCorrect) {
+
                     if(!state.collectedIds.includes(plantData.id)) {
+
                         state.collectedIds.push(plantData.id);
+
                         saveGame();
+
                     }
+
                     showSuccessModal(plantData);
+
                 } else {
+
                     const container = document.getElementById('quiz-container');
+
                     container.classList.remove('shake');
+
                     void container.offsetWidth; 
+
                     container.classList.add('shake');
+
                     
+
                     const messages = currentLang === 'ko' 
+
                         ? ["다시 생각해볼까?", "설명을 다시 잘 읽어봐!", "정답이 숨어있을지도 몰라!"]
+
                         : ["Think again!", "Read the description carefully!", "The answer might be hidden!"];
+
                     showToast(messages[Math.floor(Math.random() * messages.length)]);
+
                 }
+
             }
+
+
 
             function showToast(msg) {
+
                 const toast = document.getElementById('toast');
+
                 const toastIcon = toast.querySelector('i'); 
+
                 
+
                 if (msg.includes('성공') || msg.includes('저장') || msg.includes('통과') || msg.includes('Success') || msg.includes('Saved')) {
+
                     toastIcon.className = 'fa-solid fa-check text-green-400 mr-2 text-lg';
+
                 } else {
+
                     toastIcon.className = 'fa-solid fa-xmark text-red-400 mr-2 text-lg';
+
                 }
 
+
+
                 document.getElementById('toast-msg').innerText = msg;
+
                 toast.classList.remove('opacity-0', 'translate-y-[-20px]');
+
                 toast.classList.add('opacity-100', 'translate-y-0');
+
                 setTimeout(() => {
+
                     toast.classList.remove('opacity-100', 'translate-y-0');
+
                     toast.classList.add('opacity-0', 'translate-y-[-20px]');
+
                 }, 2000);
+
             }
+
+
 
             function showSuccessModal(plantData) {
+
                 document.getElementById('success-plant-name').innerText = plantData.name;
+
                 const imgEl = document.getElementById('success-comic-img');
+
                 imgEl.src = plantData.comicImg;
+
                 imgEl.onerror = () => { imgEl.src = `https://placehold.co/400x400/FFCC00/000?text=${plantData.name}`; };
+
                 
+
                 const modal = document.getElementById('success-modal');
+
                 const card = document.getElementById('success-card');
+
                 const stamp = document.getElementById('success-stamp');
+
                 
+
                 stamp.classList.remove('stamp-anim');
+
                 stamp.style.opacity = '0';
+
                 modal.classList.remove('opacity-0', 'pointer-events-none');
+
                 setTimeout(() => { 
+
                     card.classList.remove('scale-90'); 
+
                     card.classList.add('scale-100'); 
+
                     setTimeout(() => { stamp.classList.add('stamp-anim'); }, 300);
+
                 }, 50);
+
             }
+
+
 
             function closeSuccessAndGoToMap() {
+
                 const modal = document.getElementById('success-modal');
+
                 const card = document.getElementById('success-card');
+
                 
+
                 card.classList.remove('scale-100'); card.classList.add('scale-90');
+
                 modal.classList.add('opacity-0', 'pointer-events-none');
+
                 
+
                 setTimeout(() => { 
+
                     if (state.collectedIds.length === ALL_PLANTS_LIST.length && !state.hasCertificate) {
+
                         showAllClearModal();
+
                     } else {
+
                          switchTab('map'); 
+
                         renderMapPins();
+
                         resetMapZoom(); 
+
                     }
+
                 }, 300);
+
             }
+
+
 
             function showAllClearModal() {
-                gtag('event', 'all_plants_cleared', { 'event_category': 'game_flow' });
+
+                window.dataLayer = window.dataLayer || []; window.dataLayer.push({ 'event': 'all_plants_cleared', 'event_category': 'game_flow' });
+
                 const modal = document.getElementById('all-clear-modal');
+
                 const card = document.getElementById('all-clear-card');
+
                 modal.classList.remove('opacity-0', 'pointer-events-none');
+
                 setTimeout(() => {
+
                     card.classList.remove('scale-90');
+
                     card.classList.add('scale-100');
+
                 }, 50);
+
             }
+
+
 
             function closeAllClearAndStartTest() {
+
                 const modal = document.getElementById('all-clear-modal');
+
                 const card = document.getElementById('all-clear-card');
+
                 card.classList.remove('scale-100'); card.classList.add('scale-90');
+
                 modal.classList.add('opacity-0', 'pointer-events-none');
+
                 setTimeout(() => {
+
                     handleFinalAction();
+
                 }, 300);
+
             }
+
+
 
             function showSurveyModal() {
+
                 const modal = document.getElementById('survey-modal');
+
                 const card = document.getElementById('survey-card');
+
                 modal.classList.remove('opacity-0', 'pointer-events-none');
+
                 setTimeout(() => {
+
                     card.classList.remove('scale-90');
+
                     card.classList.add('scale-100');
+
                 }, 50);
+
             }
+
+
 
             function closeSurveyModal() {
+
                 const modal = document.getElementById('survey-modal');
+
                 const card = document.getElementById('survey-card');
+
                 card.classList.remove('scale-100'); card.classList.add('scale-90');
+
                 modal.classList.add('opacity-0', 'pointer-events-none');
+
             }
+
             
+
             function trackSurveyClick() {
-                gtag('event', 'survey_click', { 'event_category': 'engagement' });
+
+                window.dataLayer = window.dataLayer || []; window.dataLayer.push({ 'event': 'survey_click', 'event_category': 'engagement' });
+
             }
+
+
 
             function closeAllClearAndGoToCollection() {
+
                 const modal = document.getElementById('all-clear-modal');
+
                 const card = document.getElementById('all-clear-card');
+
                 card.classList.remove('scale-100'); card.classList.add('scale-90');
+
                 modal.classList.add('opacity-0', 'pointer-events-none');
+
                 setTimeout(() => {
+
                     switchTab('collection');
+
                 }, 300);
+
             }
 
+
+
             function showDetailModal(plantId) {
+
                 const data = DB_PLANTS[plantId];
-                gtag('event', 'view_book_detail', { 
+
+                window.dataLayer = window.dataLayer || [];
+                window.dataLayer.push({
+                    'event': 'view_book_detail',
                     'event_category': 'engagement',
                     'plant_id': plantId,
                     'plant_name': data.name
                 });
+
                 document.getElementById('detail-plant-name').innerText = data.name;
+
                 document.getElementById('detail-desc').innerText = data.lucyMessage;
+
                 
+
                 const imgEl = document.getElementById('detail-comic-img');
+
                 imgEl.src = data.comicImg;
+
                 imgEl.onerror = () => { imgEl.src = `https://placehold.co/400x400/FFCC00/000?text=${data.name}`; };
 
+
+
                 const modal = document.getElementById('detail-modal');
+
                 const card = document.getElementById('detail-card');
+
                 modal.classList.remove('opacity-0', 'pointer-events-none');
+
                 setTimeout(() => {
+
                     card.classList.remove('scale-90');
+
                     card.classList.add('scale-100');
+
                 }, 50);
+
             }
+
+
 
             function closeDetailModal() {
+
                 const modal = document.getElementById('detail-modal');
+
                 const card = document.getElementById('detail-card');
+
                 card.classList.remove('scale-100'); card.classList.add('scale-90');
+
                 modal.classList.add('opacity-0', 'pointer-events-none');
+
             }
+
+
 
             function renderCollection() {
+
                 const prefix = I18N_TEXTS[currentLang].bookFoundPrefix;
+
                 document.getElementById('collection-count').innerText = state.collectedIds.length;
+
                 const grid = document.getElementById('stamp-grid');
+
                 grid.innerHTML = '';
 
+
+
                 ALL_PLANTS_LIST.forEach((plant, index) => {
+
                     const isCollected = state.collectedIds.includes(plant.id);
+
                     const slot = document.createElement('div');
+
                     
+
                    if(isCollected) {
+
                         slot.className = "stamp-slot collected";
+
                         slot.style.backgroundImage = `url('${plant.comicImg}')`;
+
                         slot.innerHTML = `<div class="stamp-mark" style="font-size: 1rem;">CLEAR</div>`;
+
                         slot.onclick = () => showDetailModal(plant.id);
+
                     } else {
+
                         slot.className = "stamp-slot cursor-default";
+
                         slot.innerHTML = `
+
                              <i class="fa-solid fa-lock text-gray-400 text-xl mb-1"></i>
+
                             <span class="text-[10px] font-bold text-gray-400">No.${index + 1}</span>
+
                         `;
+
                     }
+
                     grid.appendChild(slot);
+
                 });
+
                 const btn = document.getElementById('final-test-btn');
+
                 const btnText = document.getElementById('final-btn-text');
+
                 const surveyBtn = document.getElementById('survey-reopen-btn');
+
                 if(state.collectedIds.length === ALL_PLANTS_LIST.length) { 
+
                     btn.classList.remove('hidden');
+
                     if(state.hasCertificate) {
+
                         btnText.innerText = currentLang === 'ko' ? "내 인증서 다시 보기" : "View My Certificate Again";
+
                         btn.classList.replace('bg-orange-500', 'bg-[#2E9441]');
+
                         btn.querySelector('i').classList.replace('fa-graduation-cap', 'fa-award');
+
                         surveyBtn.classList.remove('hidden');
+
                     } else {
+
                         btnText.innerText = I18N_TEXTS[currentLang].finalTestBtn;
+
                         surveyBtn.classList.add('hidden');
+
                     }
+
                 } else {
+
                     btn.classList.add('hidden');
+
                     surveyBtn.classList.add('hidden');
+
                 }
+
             }
+
+
 
             function handleFinalAction() {
+
                 if(state.hasCertificate) {
+
                     switchTab('certificate');
+
                 } else {
+
                     startFinalTest();
+
                 }
+
             }
+
+
 
             function startFinalTest() {
-                gtag('event', 'final_test_start', { 'event_category': 'final_test' });
+
+                window.dataLayer = window.dataLayer || []; window.dataLayer.push({ 'event': 'final_test_start', 'event_category': 'final_test' });
+
                 const shuffled = [...ALL_PLANTS_LIST].sort(() => 0.5 - Math.random());
+
                 state.finalTest.questions = shuffled.slice(0, 2);
+
                 state.finalTest.currentStep = 0;
+
                 
+
                 renderFinalTestQuestion();
+
                 switchTab('final-test');
+
             }
+
+
 
             function renderFinalTestQuestion() {
+
                 const step = state.finalTest.currentStep;
+
                 const plant = state.finalTest.questions[step];
+
                 
+
                 const prefixQuestion = currentLang === 'ko' ? '문제' : 'Q';
+
                 document.getElementById('test-step-badge').innerText = `${prefixQuestion} ${step + 1} / 2`;
+
                 
+
                 const hint = plant.fullDesc;
+
                 document.getElementById('final-quiz-desc').innerText = `"${hint}"`;
+
                 const optionsContainer = document.getElementById('final-quiz-options');
+
                 optionsContainer.innerHTML = '';
+
                 
+
                 const wrongOptions = ALL_PLANTS_LIST.filter(p => p.id !== plant.id).sort(() => 0.5 - Math.random()).slice(0, 3);
+
                 const finalOptions = [plant, ...wrongOptions].sort(() => 0.5 - Math.random());
 
+
+
                 finalOptions.forEach((opt, index) => {
+
                     const btn = document.createElement('button');
+
                     btn.className = "comic-btn py-3 px-4 text-center w-full hover:bg-gray-50 text-base text-gray-700";
+
                     btn.innerText = opt.name;
+
                     btn.onclick = () => handleFinalTestAnswer(opt.id, plant.id, btn);
+
                     optionsContainer.appendChild(btn);
+
                 });
+
             }
 
+
+
             function handleFinalTestAnswer(selectedId, correctId, btnElement) {
+
                 const isCorrect = selectedId === correctId;
+
                 const currentStepNum = state.finalTest.currentStep + 1;
+
                 
-                gtag('event', 'final_test_answer', {
+
+                window.dataLayer = window.dataLayer || [];
+                window.dataLayer.push({
+                    'event': 'final_test_answer',
                     'event_category': 'final_test',
                     'step': currentStepNum,
                     'is_correct': isCorrect ? 'yes' : 'no',
                     'target_plant_id': correctId
-                 });
+                });
+
                 if(isCorrect) {
+
                     btnElement.classList.replace('bg-white', 'bg-green-500');
+
                     btnElement.classList.replace('text-gray-700', 'text-white');
+
                     
+
                     setTimeout(() => {
+
                         state.finalTest.currentStep++;
+
                         if (state.finalTest.currentStep >= 2) {
+
                             showCertForm();
+
                         } else {
+
                             renderFinalTestQuestion();
+
                         }
+
                     }, 600);
+
                 } else {
+
                     const container = document.getElementById('final-quiz-container');
+
                     container.classList.remove('shake');
+
                     void container.offsetWidth; 
+
                     container.classList.add('shake');
+
                     
+
                     const errMsg = currentLang === 'ko' ? "어라? 아닌 것 같은데!" : "Oops! That doesn't seem right!";
+
                     showToast(errMsg);
+
                 }
+
             }
+
+
 
             function showCertForm() {
+
                 switchTab('cert-form');
+
             }
+
+
 
             function generateCertificate() {
+
                 const nameInput = document.getElementById('user-name-input').value.trim();
+
                 if (!nameInput) {
+
                     const alertMsg = currentLang === 'ko' ? "이름을 적어줘!" : "Please write your name!";
+
                     showToast(alertMsg);
+
                     return;
+
                 }
+
+
 
                 const nameEl = document.getElementById('final-cert-name');
+
                 nameEl.innerText = nameInput;
+
                 const len = nameInput.length;
+
                 if (len <= 3) {
+
                     nameEl.style.fontSize = "6cqi";
+
                 } else if (len <= 5) {
+
                     nameEl.style.fontSize = "5cqi";
+
                 } else if (len <= 8) {
+
                     nameEl.style.fontSize = "4cqi";
+
                 } else {
+
                     nameEl.style.fontSize = "3cqi";
+
                 }
 
+
+
                 state.hasCertificate = true;
+
                 saveGame();
+
                 
+
                 switchTab('certificate');
+
                 setTimeout(() => {
+
                     showSurveyModal();
+
                 }, 600);
+
             }
 
+
+
             function downloadCertificate() {
+
                 const certArea = document.getElementById('cert-capture-area');
-                gtag('event', 'download_certificate_click', { 'event_category': 'engagement' });
+
+                window.dataLayer = window.dataLayer || []; window.dataLayer.push({ 'event': 'download_certificate_click', 'event_category': 'engagement' });
+
                 
+
                 html2canvas(certArea, { scale: 3, useCORS: true, backgroundColor: null }).then(canvas => {
+
                     const link = document.createElement('a');
+
                     link.download = 'Lucy_Gardener_Certificate.png';
+
                     link.href = canvas.toDataURL('image/png');
+
                     link.click();
+
                     
+
                     const successMsg = currentLang === 'ko' ? '인증서가 성공적으로 저장되었습니다!' : 'Certificate saved successfully!';
+
                     showToast(successMsg);
-                    gtag('event', 'download_certificate_success', { 'event_category': 'engagement' });
+
+                    window.dataLayer = window.dataLayer || []; window.dataLayer.push({ 'event': 'download_certificate_success', 'event_category': 'engagement' });
+
                 }).catch(err => {
+
                     console.error('인증서 저장 실패:', err);
+
                     const failMsg = currentLang === 'ko' ? '인증서를 저장하는 데 문제가 생겼어요.' : 'Failed to save certificate.';
+
                     showToast(failMsg);
+
                 });
+
             }
+
         </script>
+
     </div>
+
 </body>
+
 </html>
+
